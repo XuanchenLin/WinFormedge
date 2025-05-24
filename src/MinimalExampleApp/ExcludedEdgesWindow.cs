@@ -50,7 +50,7 @@ internal class ExcludedEdgesWindow : Formedge
         var win = opts.UseDefaultWindow();
 
         win.ExtendsContentIntoTitleBar = true;
-        win.SystemBackdropType = SystemBackdropType.Manual;
+        win.SystemBackdropType = SystemBackdropType.None;
         win.ShowWindowDecorators = false;
         win.WindowEdgeOffsets = new Padding(13, 8, 21, 25);
 

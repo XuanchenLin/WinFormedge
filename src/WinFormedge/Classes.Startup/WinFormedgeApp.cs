@@ -18,9 +18,9 @@ using Windows.Win32;
 namespace WinFormedge;
 
 public delegate bool WindowProc(ref Message m);
-public class FormedgeApp
+public class WinFormedgeApp
 {
-    private static FormedgeApp? _current;
+    private static WinFormedgeApp? _current;
 
     private CoreWebView2Environment? _environment;
     public CoreWebView2Environment WebView2Environment
@@ -58,7 +58,8 @@ public class FormedgeApp
                 {
                     return IsDarkMode() ? SystemColorMode.Dark : SystemColorMode.Light;
                 }
-                else { 
+                else
+                {
                     return SystemColorMode == SystemColorMode.Dark ? SystemColorMode.Dark : SystemColorMode.Light;
                 }
 
@@ -85,7 +86,7 @@ public class FormedgeApp
 
     public string UserDataFolder => Path.Combine(AppDataFolder, "User Data");
 
-    public static FormedgeApp Current
+    public static WinFormedgeApp Current
     {
         get
         {
@@ -103,9 +104,10 @@ public class FormedgeApp
         return new AppBuilder();
     }
 
+    internal StartupApplicationContext? RunningApplicationContext { get; private set; }
 
 
-    internal FormedgeApp()
+    internal WinFormedgeApp()
     {
         _current = this;
     }
@@ -171,7 +173,7 @@ public class FormedgeApp
             EnableTrackingPrevention = false,
             IsCustomCrashReportingEnabled = true,
             ReleaseChannels = CoreWebView2ReleaseChannels.Stable,
-            ScrollBarStyle = FluentOverlayStyleScrollbar? CoreWebView2ScrollbarStyle.FluentOverlay : CoreWebView2ScrollbarStyle.Default,
+            ScrollBarStyle = FluentOverlayStyleScrollbar ? CoreWebView2ScrollbarStyle.FluentOverlay : CoreWebView2ScrollbarStyle.Default,
             ChannelSearchKind = CoreWebView2ChannelSearchKind.MostStable,
             AllowSingleSignOnUsingOSPrimaryAccount = false,
         };
@@ -180,15 +182,7 @@ public class FormedgeApp
 
         Startup?.ConfigureSchemeRegistrations(opts.CustomSchemeRegistrations);
 
-        AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
-        {
-            Startup?.OnApplicationException(e.ExceptionObject as Exception);
-        };
 
-        AppDomain.CurrentDomain.ProcessExit += (sender, e) =>
-        {
-            Startup?.OnApplicationTerminated();
-        };
 
         if (ShouldCleanupCache)
         {
@@ -208,10 +202,6 @@ public class FormedgeApp
                 Console.WriteLine($"Error deleting cache directory: {ex.Message}");
             }
         }
-        _environment = CoreWebView2Environment.CreateAsync(
-        BrowserExecutablePath,
-        UserDataFolder,
-        opts).GetAwaiter().GetResult();
 
 
 
@@ -223,14 +213,25 @@ public class FormedgeApp
             return;
         }
 
+        _environment = CoreWebView2Environment.CreateAsync(BrowserExecutablePath, UserDataFolder, opts).GetAwaiter().GetResult();
+
+        RunningApplicationContext = new StartupApplicationContext();
+
+        AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+        {
+            Startup?.OnApplicationException(e.ExceptionObject as Exception);
+        };
+
+        AppDomain.CurrentDomain.ProcessExit += (sender, e) =>
+        {
+            Startup?.OnApplicationTerminated();
+        };
+
+        startup.ConfigureAppContext(RunningApplicationContext);
 
 
-
-
-        var appContext = new FormedgeApplicationContext();
-        startup.ConfigureAppContext(appContext);
-
-
-        Application.Run(appContext);
+        Application.Run(RunningApplicationContext);
     }
 }
+
+

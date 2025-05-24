@@ -17,7 +17,7 @@ public partial class _WinFormClassDisabler
 }
 #endregion
 
-internal class DefaultWindow : FormBase
+class DefaultWindow : FormBase
 {
     private readonly DefaultWindowSettings _settings;
 

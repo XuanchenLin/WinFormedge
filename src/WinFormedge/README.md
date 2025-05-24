@@ -40,7 +40,8 @@ internal static class Program
 
         var app = FormedgeApp.CreateBuilder()
             .UseDevTools()
-            .UseWinFormedgeApp<MyFormedgeApp>().Build();
+            .UseWinFormedgeApp<MyFormedgeApp>()
+            .Build();
 
         app.Run();
     }
@@ -54,7 +55,7 @@ When the `FormedgeApp` class is created, it will automatically initialize the We
 
 The `AppStartup` class is the entry point of your WinFormedge application. It provides methods for configuring the application. You can override the `OnApplicationLaunched` method to perform any initialization tasks before the application starts.
 
-And you must override the `OnApplicationStartup` method to create the main window of your application. If the `OnApplicationStartup` method returns values created by `StartupOptions` class, the `FormedgeApp` class will create the main window of your application. Otherwise if the `OnApplicationStartup` method returns `null` the application will be closed.
+And you must override the `OnApplicationStartup` method to create the main window of your application. If the `OnApplicationStartup` method returns values created by `StartupSettings` class, the `FormedgeApp` class will create the main window of your application. Otherwise if the `OnApplicationStartup` method returns `null` the application will be closed.
 
 ```csharp
 using WinFormedge;
@@ -63,12 +64,7 @@ namespace MinimalExampleApp;
 
 internal class MyFormedgeApp : AppStartup
 {
-    protected override bool OnApplicationLaunched(string[] args)
-    {
-
-        return true;
-    }
-    protected override AppCreationAction? OnApplicationStartup(StartupOptions options)
+    protected override AppCreationAction? OnApplicationStartup(StartupSettings options)
     {
         return options.UseMainWindow(new MyWindow());
     }
@@ -89,13 +85,34 @@ internal class MyWindow : Formedge
 {
     public MyWindow()
     {
-        ExtendsContentIntoTitleBar = true;
-
-        Url = "https://cn.bing.com";
+        Url = "https://embedded.appresource.local/";
         Size = new Size(1440, 900);
+        AllowFullscreen = true;
+        BackColor = Color.Transparent;
+
+        // If you have embedded resources, you can set the virtual host name to access them.
+        SetVirtualHostNameToEmbeddedResourcesMapping(new EmbeddedFileResourceOptions { 
+            Scheme="https", 
+            HostName="embedded.appresource.local", 
+            ResourceAssembly=Assembly.GetExecutingAssembly(),
+            DefaultFolderName="Resources\\wwwroot"
+        });
 
         Load += MyWindow_Load;
         DOMContentLoaded += MyWindow_DOMContentLoaded;
+    }
+
+    // Configure the window settings for the Formedge window.
+    protected override WindowSettings ConfigureWindowSettings(HostWindowBuilder opts)
+    {
+        var win = opts.UseDefaultWindow();
+
+        // Extends the content of the WebView into the non-client area of the window.
+        win.ExtendsContentIntoTitleBar = true;
+        // Sets the backdrop type of the window to blur behind or something else.
+        win.SystemBackdropType = SystemBackdropType.BlurBehind;
+
+        return win;
     }
 
     private void MyWindow_Load(object? sender, EventArgs e)
@@ -107,11 +124,10 @@ internal class MyWindow : Formedge
     {
         // The DOM content is loaded and ready to use here.
         ExecuteScriptAsync(""""
-(()=>{
-const headerEl = document.querySelector("#hdr");
-headerEl.style.appRegion="drag";
-})();
-"""");
+        (()=>{
+            alert("Hello from WinFormedge!");
+        })();
+        """");
     }
 }
 ```
@@ -120,7 +136,7 @@ Codes above creates a `Formedge` window. By using `Url` property, you can set th
 
 The `Load` event is raised when the window and WebView2 are ready to use. You can use this event to perform any initialization tasks that require the WebView2 control to be ready.
 
-The `DOMContentLoaded` event is raised when the DOM content is loaded and ready to use. You can use this event to perform any tasks that require the DOM content to be loaded. As you can see in the example, you can use the `ExecuteScriptAsync` method to execute JavaScript code in the WebView2 control. The JavaScript code in the example sets the `appRegion` property of the header element to `drag`, which allows the user to drag the window by clicking and dragging the element on these rectangles.
+The `DOMContentLoaded` event is raised when the DOM content is loaded and ready to use. You can use this event to perform any tasks that require the DOM content to be loaded.
 
 **4. Run the application.**
 

@@ -13,15 +13,12 @@ using System.Threading.Tasks;
 namespace WinFormedge;
 public partial class Formedge
 {
-    /// <inheritdoc />
     public bool AllowExternalDrop
     {
         get => WebView.Controller.AllowExternalDrop;
         set => WebView.Controller.AllowExternalDrop = value;
     }
-    /// <inheritdoc />
     public bool CanGoBack => WebView.Browser?.CanGoBack ?? false;
-    /// <inheritdoc />
     public bool CanGoForward => WebView.Browser?.CanGoForward ?? false;
 
     public string DocumentTitle => WebView.Browser?.DocumentTitle ?? string.Empty;
@@ -37,7 +34,7 @@ public partial class Formedge
     public bool AllowDeveloperTools { get; set; } = true;
 
 
-    private Color _defaultBackgroundColor = FormedgeApp.Current.IsDarkMode ? Color.DimGray : Color.White;
+    private Color _defaultBackgroundColor = WinFormedgeApp.Current.IsDarkMode ? Color.DimGray : Color.White;
     internal protected Color BackColor
     {
         get => _defaultBackgroundColor;

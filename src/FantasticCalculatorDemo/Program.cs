@@ -10,7 +10,7 @@ internal static class Program
     [STAThread]
     static void Main()
     {
-        var app = FormedgeApp.CreateAppBuilder()
+        var app = WinFormedgeApp.CreateAppBuilder()
             .UseModernStyleScrollbar()
             .UseWinFormedgeApp<CalculatorApp>()
 #if DEBUG
