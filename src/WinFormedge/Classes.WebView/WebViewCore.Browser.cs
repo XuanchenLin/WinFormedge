@@ -24,7 +24,7 @@ partial class WebViewCore
         WebResourceManager.UnregisterWebResourceHander(resourceHandler);
     }
 
-    internal CoreWebView2Environment WebViewEnvironment => FormedgeApp.Current!.WebView2Environment;
+    internal CoreWebView2Environment WebViewEnvironment => WinFormedgeApp.Current!.WebView2Environment;
     
     internal CoreWebView2Controller Controller => _controller ?? throw new NullReferenceException(nameof(Controller));
 
@@ -92,7 +92,7 @@ partial class WebViewCore
     {
         var opts = WebViewEnvironment.CreateCoreWebView2ControllerOptions();
 
-        opts.ScriptLocale = FormedgeApp.Current.CultureName;
+        opts.ScriptLocale = WinFormedgeApp.Current.CultureName;
         opts.ProfileName = Application.ProductName;
         
 
@@ -107,8 +107,15 @@ partial class WebViewCore
         controller.ShouldDetectMonitorScaleChanges = true;
         controller.Bounds = Container.ClientRectangle;
         controller.DefaultBackgroundColor = Color.Transparent;
+        
+
 
         var webview = controller!.CoreWebView2;
+
+        webview.ProcessFailed += (_, args) =>
+        {
+            webview.Reload();
+        };
 
         webview.Settings.AreBrowserAcceleratorKeysEnabled = false;
         webview.Settings.AreDefaultScriptDialogsEnabled = true;
@@ -123,7 +130,7 @@ partial class WebViewCore
 
         ConfigureSettings?.Invoke(webview.Settings);
 
-        webview.Profile.PreferredColorScheme = FormedgeApp.Current.SystemColorMode switch
+        webview.Profile.PreferredColorScheme = WinFormedgeApp.Current.SystemColorMode switch
         {
             SystemColorMode.Dark => CoreWebView2PreferredColorScheme.Dark,
             SystemColorMode.Auto => CoreWebView2PreferredColorScheme.Auto,
@@ -147,6 +154,10 @@ partial class WebViewCore
             if (Fullscreen) return;
             Controller.Bounds = Container.ClientRectangle;
         };
+
+        
+
+
 
         WebResourceManager.Initialize(webview);
 

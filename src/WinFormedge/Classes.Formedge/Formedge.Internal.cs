@@ -505,7 +505,7 @@ public abstract partial class Formedge
     {
         bool IsRequiredContextMenuItem(int commandId)
         {
-            if (FormedgeApp.Current.EnableDevTools && commandId == 50162 && AllowDeveloperTools)
+            if (WinFormedgeApp.Current.EnableDevTools && commandId == 50162 && AllowDeveloperTools)
             {
                 return true;
             }

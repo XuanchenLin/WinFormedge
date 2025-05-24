@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 
 namespace WinFormedge.WebResource;
-internal class EmbeddedFileResourceHandler : WebResourceHandler
+class EmbeddedFileResourceHandler : WebResourceHandler
 {
     public override string Scheme { get; }
     public override string HostName { get; }

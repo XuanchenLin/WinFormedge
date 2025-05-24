@@ -16,7 +16,7 @@ public sealed class AppCreationAction
     {
     }
 
-    internal void ConfigureAppContext(FormedgeApplicationContext appContext)
+    internal void ConfigureAppContext(StartupApplicationContext appContext)
     {
         if (EdgeForm != null)
         {

@@ -130,7 +130,7 @@ partial class WebViewCore
 
     private void HandleSystemColorMode()
     {
-        BOOL mode = FormedgeApp.Current.GetSystemColorMode() == SystemColorMode.Dark ? true : false;
+        BOOL mode = WinFormedgeApp.Current.GetSystemColorMode() == SystemColorMode.Dark ? true : false;
 
         if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000))
         {

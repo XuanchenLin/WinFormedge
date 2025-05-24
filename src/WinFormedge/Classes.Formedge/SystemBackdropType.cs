@@ -8,10 +8,9 @@ namespace WinFormedge;
 public enum SystemBackdropType
 {
     Auto,
-    BlurBehind,
-    Manual,
-    Acrylic,
     None,
+    BlurBehind,
+    Acrylic,
     Mica,
     MicaAlt,
     Transient,

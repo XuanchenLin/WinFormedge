@@ -93,9 +93,9 @@ public class AppBuilder
         return this;
     }
 
-    public FormedgeApp Build()
+    public WinFormedgeApp Build()
     {
-        return new FormedgeApp()
+        return new WinFormedgeApp()
         {
             EnableDevTools = _enableDevTools,
             ShouldCleanupCache = _shouldCleanupCache,

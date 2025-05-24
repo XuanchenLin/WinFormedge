@@ -17,7 +17,7 @@ public partial class _WinFormClassDisabler
 #endregion
 
 
-public abstract class FormBase : Form
+abstract class FormBase : Form
 {
     public FormBase()
     {
@@ -156,7 +156,7 @@ public abstract class FormBase : Form
         get => _systemBackdropType;
         set
         {
-            if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 17763) && value >= SystemBackdropType.Manual)
+            if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 0) && value >= SystemBackdropType.BlurBehind)
             {
                 return;
             }
@@ -264,7 +264,6 @@ public abstract class FormBase : Form
                 {
                     case SystemBackdropType.None:
                     case SystemBackdropType.BlurBehind:
-                    case SystemBackdropType.Manual:
                     case SystemBackdropType.Acrylic:
                     case SystemBackdropType.Mica:
                     case SystemBackdropType.Transient:
@@ -480,7 +479,7 @@ public abstract class FormBase : Form
         {
             var cursor = MARCOS.ToPoint(lParam);
 
-            var border = new Point(GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXFRAME) + GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXPADDEDBORDER), GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CYFRAME) + GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXPADDEDBORDER));
+            var border = new Point(GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXFRAME)/* + GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXPADDEDBORDER)*/, GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CYFRAME) /*+ GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXPADDEDBORDER)*/);
 
 
             if (!GetWindowRect((HWND)Parent!.Handle, out var windowRect))
@@ -997,7 +996,7 @@ public abstract class FormBase : Form
         if (value == SystemBackdropType.Acrylic)
         {
             WindowAccentCompositor compositor = new(Handle, true);
-            var mode = FormedgeApp.Current.GetSystemColorMode();
+            var mode = WinFormedgeApp.Current.GetSystemColorMode();
 
             if (_backColor != null)
             {

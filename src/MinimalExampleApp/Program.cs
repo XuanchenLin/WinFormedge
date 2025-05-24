@@ -15,7 +15,7 @@ internal static class Program
 
         ApplicationConfiguration.Initialize();
 
-        var app = FormedgeApp.CreateAppBuilder()
+        var app = WinFormedgeApp.CreateAppBuilder()
             .UseCulture(Application.CurrentCulture.Name)
             .UseDevTools()
             .UseModernStyleScrollbar()

@@ -5,7 +5,7 @@
 
 namespace WinFormedge;
 
-internal class FormedgeApplicationContext : ApplicationContext
+class StartupApplicationContext : ApplicationContext
 {
 
     internal enum RunningType
