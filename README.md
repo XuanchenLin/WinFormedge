@@ -83,7 +83,7 @@ When the `FormedgeApp` class is created, it will automatically initialize the We
 
 The `AppStartup` class is the entry point of your WinFormedge application. It provides methods for configuring the application. You can override the `OnApplicationLaunched` method to perform any initialization tasks before the application starts.
 
-And you must override the `OnApplicationStartup` method to create the main window of your application. If the `OnApplicationStartup` method returns values created by `StartupOptions` class, the `FormedgeApp` class will create the main window of your application. Otherwise if the `OnApplicationStartup` method returns `null` the application will be closed.
+And you must override the `OnApplicationStartup` method to create the main window of your application. If the `OnApplicationStartup` method returns values created by `StartupSettings` class, the `FormedgeApp` class will create the main window of your application. Otherwise if the `OnApplicationStartup` method returns `null` the application will be closed.
 
 ```csharp
 using WinFormedge;
@@ -97,7 +97,7 @@ internal class MyFormedgeApp : AppStartup
 
         return true;
     }
-    protected override AppCreationAction? OnApplicationStartup(StartupOptions options)
+    protected override AppCreationAction? OnApplicationStartup(StartupSettings options)
     {
         return options.UseMainWindow(new MyWindow());
     }
@@ -119,6 +119,10 @@ internal class MyWindow : Formedge
 {
     public MyWindow()
     {
+        win.MinimumSize = new Size(960, 480);
+        win.Size = new Size(1280, 800);
+        win.AllowFullScreen = true;
+
         Load += MyWindow_Load;
         DOMContentLoaded += MyWindow_DOMContentLoaded;
 
@@ -147,10 +151,7 @@ headerEl.style.appRegion="drag";
         var win = opts.UseDefaultWindow();
 
         win.ExtendsContentIntoTitleBar = true;
-        win.MinimumSize = new Size(960, 480);
-        win.Size = new Size(1280, 800);
         win.SystemBackdropType = SystemBackdropType.MicaAlt;
-        win.AllowFullScreen = true;
 
         return win;
     }

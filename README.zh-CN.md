@@ -79,7 +79,7 @@ internal static class Program
 
 `AppStartup` 类是 `WinFormedge` 应用程序的入口点，提供了配置应用程序的方法。您可以重写 OnApplicationLaunched 方法以在应用程序启动前执行初始化任务。
 
-您必须重写 `OnApplicationStartup` 方法来创建应用程序的主窗口。当该方法返回由 `StartupOptions` 类生成的值时，`FormedgeApp` 类将创建应用程序主窗口；若方法返回 `null`，则应用程序将直接关闭。
+您必须重写 `OnApplicationStartup` 方法来创建应用程序的主窗口。当该方法返回由 `StartupSettings` 类生成的值时，`FormedgeApp` 类将创建应用程序主窗口；若方法返回 `null`，则应用程序将直接关闭。
 
 ```C#
 using WinFormedge;
@@ -92,7 +92,7 @@ internal class MyFormedgeApp : AppStartup
     {
         return true;
     }
-    protected override AppCreationAction? OnApplicationStartup(StartupOptions options)
+    protected override AppCreationAction? OnApplicationStartup(StartupSettings options)
     {
         return options.UseMainWindow(new MyWindow());
     }
@@ -114,6 +114,10 @@ internal class MyWindow : Formedge
 {
     public MyWindow()
     {
+        win.MinimumSize = new Size(960, 480);
+        win.Size = new Size(1280, 800);
+        win.AllowFullScreen = true;
+
         Load += MyWindow_Load;
         DOMContentLoaded += MyWindow_DOMContentLoaded;
 
@@ -142,10 +146,7 @@ headerEl.style.appRegion="drag";
         var win = opts.UseDefaultWindow();
 
         win.ExtendsContentIntoTitleBar = true;
-        win.MinimumSize = new Size(960, 480);
-        win.Size = new Size(1280, 800);
         win.SystemBackdropType = SystemBackdropType.MicaAlt;
-        win.AllowFullScreen = true;
 
         return win;
     }
