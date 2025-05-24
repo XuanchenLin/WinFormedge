@@ -203,6 +203,7 @@ public class WinFormedgeApp
             }
         }
 
+        _environment = CoreWebView2Environment.CreateAsync(BrowserExecutablePath, UserDataFolder, opts).GetAwaiter().GetResult();
 
 
         var startup = Startup?.OnApplicationStartup(new StartupSettings());
@@ -213,7 +214,7 @@ public class WinFormedgeApp
             return;
         }
 
-        _environment = CoreWebView2Environment.CreateAsync(BrowserExecutablePath, UserDataFolder, opts).GetAwaiter().GetResult();
+
 
         RunningApplicationContext = new StartupApplicationContext();
 

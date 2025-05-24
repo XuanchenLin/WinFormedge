@@ -479,7 +479,7 @@ abstract class FormBase : Form
         {
             var cursor = MARCOS.ToPoint(lParam);
 
-            var border = new Point(GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXFRAME) + GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXPADDEDBORDER), GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CYFRAME) + GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXPADDEDBORDER));
+            var border = new Point(GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXFRAME)/* + GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXPADDEDBORDER)*/, GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CYFRAME) /*+ GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXPADDEDBORDER)*/);
 
 
             if (!GetWindowRect((HWND)Parent!.Handle, out var windowRect))
