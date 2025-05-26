@@ -125,6 +125,11 @@ public abstract partial class Formedge
     internal protected bool AllowFullscreen { get; set; }
 
     /// <summary>
+    /// Gets the activated state of the current window.
+    /// </summary>
+    internal protected bool IsActivated => _currentWindowActivated;
+
+    /// <summary>
     /// Configures the window settings using the provided <see cref="HostWindowBuilder"/>.
     /// </summary>
     /// <param name="opts">The host window builder.</param>
@@ -133,6 +138,7 @@ public abstract partial class Formedge
     {
         return opts.UseDefaultWindow();
     }
+
 
     /// <summary>
     /// Called when the WebView2 context menu is requested. Can be overridden to customize the context menu.

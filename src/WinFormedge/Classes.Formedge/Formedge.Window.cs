@@ -87,8 +87,6 @@ public partial class Formedge : IWin32Window
     /// </summary>
     public Point Location { get => HostWindow.Location; set => HostWindow.Location = value; }
 
-    private string _windowCaption = "WinFormedge";
-
     /// <summary>
     /// Gets or sets the window caption (title).
     /// </summary>
@@ -255,10 +253,6 @@ public partial class Formedge : IWin32Window
     /// <returns>A DialogResult value.</returns>
     public DialogResult ShowDialog() => HostWindow.ShowDialog();
 
-    //public void CenterToParent() => HostWindow.CenterToParent();
-
-    //public void CenterToScreen() => HostWindow.CenterToScreen();
-
     /// <summary>
     /// Updates the window caption based on the current settings.
     /// </summary>
@@ -293,5 +287,7 @@ public partial class Formedge : IWin32Window
     {
         return false;
     }
+
+    private string _windowCaption = "WinFormedge";
 }
 

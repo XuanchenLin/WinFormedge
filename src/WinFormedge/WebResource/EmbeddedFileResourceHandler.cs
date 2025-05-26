@@ -112,11 +112,6 @@ class EmbeddedFileResourceHandler : WebResourceHandler
 
         var namespaces = mainAssembly.DefinedTypes.Select(x => x.Namespace).Distinct().ToArray();
 
-        /// <summary>
-        /// Adjusts the resource name to use the default namespace if necessary.
-        /// </summary>
-        /// <param name="rawName">The raw resource name.</param>
-        /// <returns>The adjusted resource name.</returns>
         string ChangeResourceName(string rawName)
         {
             var targetName = namespaces.Where(x => x != null && !string.IsNullOrEmpty(x) && rawName.StartsWith(x!)).OrderByDescending(x => x!.Length).FirstOrDefault();

@@ -60,7 +60,7 @@
     </PropertyGroup>
     
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
-        <Version>0.1.3240.5</Version>
+        <Version>0.1.3240.6</Version>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     </PropertyGroup>
     
@@ -86,7 +86,7 @@
         <Using Include="System.Text.Json.Serialization.Metadata" />
         <Using Include="System.Security" />
         <Using Include="System.Windows.Forms" />
-        <Using Include="WinFormedge.Browser" />
+        <Using Include="WinFormedge" />
         <Using Include="WinFormedge.WebResource" />
         <Using Include="WinFormedge.HostForms" />
     </ItemGroup>
