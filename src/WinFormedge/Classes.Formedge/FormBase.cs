@@ -3,9 +3,7 @@
 // This project is licensed under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Reflection;
 
 namespace WinFormedge.HostForms;
 
@@ -16,9 +14,14 @@ public partial class _WinFormClassDisabler
 }
 #endregion
 
-
+/// <summary>
+/// Provides a base class for custom forms with advanced window style, borderless, shadow, and system backdrop support.
+/// </summary>
 abstract class FormBase : Form
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FormBase"/> class.
+    /// </summary>
     public FormBase()
     {
         InitializeComponent();
@@ -27,6 +30,9 @@ abstract class FormBase : Form
 
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the form is shown as a popup window.
+    /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool Popup
     {
@@ -42,6 +48,9 @@ abstract class FormBase : Form
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the content extends into the title bar (borderless).
+    /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool ExtendsContentIntoTitleBar
     {
@@ -57,6 +66,9 @@ abstract class FormBase : Form
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the form is resizable.
+    /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool Resizable
     {
@@ -72,6 +84,9 @@ abstract class FormBase : Form
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the system menu is enabled.
+    /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool SystemMenu
     {
@@ -87,6 +102,9 @@ abstract class FormBase : Form
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the window shadow is decorated.
+    /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool ShadowDecorated
     {
@@ -102,6 +120,9 @@ abstract class FormBase : Form
         }
     }
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the form is in fullscreen mode.
+    /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool Fullscreen
     {
@@ -118,6 +139,9 @@ abstract class FormBase : Form
         }
     }
 
+    /// <summary>
+    /// Gets or sets the background color of the form. Alpha is forced to 255 except for Color.Transparent.
+    /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public new Color BackColor
     {
@@ -143,6 +167,9 @@ abstract class FormBase : Form
         }
     }
 
+    /// <summary>
+    /// Gets or sets the padding offsets for the window edge, used for borderless resizing.
+    /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Padding WindowEdgeOffsets
     {
@@ -150,6 +177,9 @@ abstract class FormBase : Form
         set => _windowBorderResizer.BorderOffset = value;
     }
 
+    /// <summary>
+    /// Gets or sets the system backdrop type for the window (e.g., Mica, Acrylic, BlurBehind).
+    /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public SystemBackdropType SystemBackdropType
     {
@@ -178,6 +208,10 @@ abstract class FormBase : Form
         }
     }
 
+    /// <summary>
+    /// Shows the form with the specified owner window.
+    /// </summary>
+    /// <param name="owner">The owner window.</param>
     public new void Show(IWin32Window? owner)
     {
         AssignOwnerFromHandle(owner);
@@ -185,6 +219,11 @@ abstract class FormBase : Form
         base.Show(owner);
     }
 
+    /// <summary>
+    /// Shows the form as a modal dialog with the specified owner window.
+    /// </summary>
+    /// <param name="owner">The owner window.</param>
+    /// <returns>A <see cref="DialogResult"/> indicating how the dialog was closed.</returns>
     public new DialogResult ShowDialog(IWin32Window? owner)
     {
         AssignOwnerFromHandle(owner);
@@ -192,8 +231,16 @@ abstract class FormBase : Form
         return base.ShowDialog(owner);
     }
 
+    /// <summary>
+    /// Gets the window handle as <see cref="HWND"/>.
+    /// </summary>
     internal HWND hWnd => (HWND)Handle;
 
+    /// <summary>
+    /// Performs hit testing for non-client area (NCA) for custom borderless resizing.
+    /// </summary>
+    /// <param name="lParam">The lParam from the message, containing the cursor position.</param>
+    /// <returns>The hit test result code.</returns>
     internal uint HitTestNCA(nint lParam)
     {
         var cursor = MARCOS.ToPoint(lParam);
@@ -226,6 +273,10 @@ abstract class FormBase : Form
         };
     }
 
+    /// <summary>
+    /// Gets the non-client area metrics (padding) for the current window style.
+    /// </summary>
+    /// <returns>The <see cref="Padding"/> representing the non-client area.</returns>
     internal protected Padding GetNonClientMetrics()
     {
         var rect = new RECT();
@@ -250,6 +301,9 @@ abstract class FormBase : Form
         };
     }
 
+    /// <summary>
+    /// Gets the parameters required to create the window, including custom styles and extended styles.
+    /// </summary>
     protected override CreateParams CreateParams
     {
         get
@@ -279,6 +333,9 @@ abstract class FormBase : Form
         }
     }
 
+    /// <summary>
+    /// Creates the window handle and applies custom window styles and system backdrop.
+    /// </summary>
     protected override void CreateHandle()
     {
         var size = Size;
@@ -296,6 +353,9 @@ abstract class FormBase : Form
         HandleFullScreen(Fullscreen);
     }
 
+    /// <summary>
+    /// Sets the bounds of the window, with special handling for borderless and DPI scenarios.
+    /// </summary>
     protected override void SetBoundsCore(int x, int y, int width, int height, BoundsSpecified specified)
     {
         if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000))
@@ -321,6 +381,9 @@ abstract class FormBase : Form
         base.SetBoundsCore(x, y, width, height, specified);
     }
 
+    /// <summary>
+    /// Releases the window handle and resets internal state.
+    /// </summary>
     protected override void DestroyHandle()
     {
         base.DestroyHandle();
@@ -328,6 +391,10 @@ abstract class FormBase : Form
         _shouldPatchBoundsSize = false;
     }
 
+    /// <summary>
+    /// Processes Windows messages for the form, handling custom non-client area and DPI logic.
+    /// </summary>
+    /// <param name="m">The Windows message.</param>
     protected override void WndProc(ref Message m)
     {
         var msg = (uint)m.Msg;
@@ -392,6 +459,10 @@ abstract class FormBase : Form
         base.WndProc(ref m);
     }
 
+    /// <summary>
+    /// Processes default Windows messages for the form.
+    /// </summary>
+    /// <param name="m">The Windows message.</param>
     protected override void DefWndProc(ref Message m)
     {
         //var handled = OnDefWindowProc?.Invoke(ref m) ?? false;
@@ -401,6 +472,10 @@ abstract class FormBase : Form
         base.DefWndProc(ref m);
     }
 
+    /// <summary>
+    /// Handles the resize event and updates the resizer visibility.
+    /// </summary>
+    /// <param name="e">The event arguments.</param>
     protected override void OnResize(EventArgs e)
     {
         base.OnResize(e);
@@ -409,12 +484,24 @@ abstract class FormBase : Form
 
     }
 
+    /// <summary>
+    /// The standard windowed style.
+    /// </summary>
     const WINDOW_STYLE WINDOWED_STYLE = WINDOW_STYLE.WS_OVERLAPPEDWINDOW;
 
+    /// <summary>
+    /// The borderless style used when extending content into the title bar.
+    /// </summary>
     const WINDOW_STYLE BORDERLESS_STYLE = WINDOW_STYLE.WS_OVERLAPPED | WINDOW_STYLE.WS_THICKFRAME | WINDOW_STYLE.WS_CAPTION | WINDOW_STYLE.WS_SYSMENU | WINDOW_STYLE.WS_MINIMIZEBOX | WINDOW_STYLE.WS_MAXIMIZEBOX;
 
+    /// <summary>
+    /// The style used for fullscreen windows.
+    /// </summary>
     const WINDOW_STYLE FULL_SCREEN_STYLE = WINDOW_STYLE.WS_POPUP | WINDOW_STYLE.WS_SYSMENU | WINDOW_STYLE.WS_MINIMIZEBOX;
 
+    /// <summary>
+    /// The style used for popup windows.
+    /// </summary>
     const WINDOW_STYLE POPUP_STYLE = WINDOW_STYLE.WS_POPUP | WINDOW_STYLE.WS_SYSMENU | WINDOW_STYLE.WS_MINIMIZEBOX | WINDOW_STYLE.WS_MAXIMIZEBOX;
 
     private bool _resizable = true;
@@ -444,6 +531,9 @@ abstract class FormBase : Form
 
     SystemBackdropType _systemBackdropType = SystemBackdropType.Auto;
 
+    /// <summary>
+    /// Defines bitmask values for hit test regions in the non-client area.
+    /// </summary>
     private enum HitTestNCARegionMask : byte
     {
         client = 0b0000,
@@ -454,13 +544,22 @@ abstract class FormBase : Form
     }
 
     #region Resizer of borderless window
+    /// <summary>
+    /// Provides a transparent control for handling borderless window resizing.
+    /// </summary>
     private class WebView2BorderlessResizer : Control
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WebView2BorderlessResizer"/> class.
+        /// </summary>
         public WebView2BorderlessResizer()
         {
             Dock = DockStyle.Fill;
         }
 
+        /// <summary>
+        /// Gets or sets the border offset for resizing.
+        /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Padding BorderOffset
         {
@@ -475,6 +574,11 @@ abstract class FormBase : Form
             }
         }
 
+        /// <summary>
+        /// Performs hit testing for the resizer control.
+        /// </summary>
+        /// <param name="lParam">The lParam from the message, containing the cursor position.</param>
+        /// <returns>The hit test result code.</returns>
         internal uint HitTestNCA(nint lParam)
         {
             var cursor = MARCOS.ToPoint(lParam);
@@ -510,6 +614,9 @@ abstract class FormBase : Form
             };
         }
 
+        /// <summary>
+        /// Gets the parameters required to create the resizer control, including extended styles.
+        /// </summary>
         protected override CreateParams CreateParams
         {
             get
@@ -525,6 +632,10 @@ abstract class FormBase : Form
             }
         }
 
+        /// <summary>
+        /// Handles the resize event and updates the drag region.
+        /// </summary>
+        /// <param name="eventargs">The event arguments.</param>
         protected override void OnResize(EventArgs eventargs)
         {
             base.OnResize(eventargs);
@@ -540,6 +651,10 @@ abstract class FormBase : Form
 
         }
 
+        /// <summary>
+        /// Processes Windows messages for the resizer control, handling mouse hit testing and resizing.
+        /// </summary>
+        /// <param name="m">The Windows message.</param>
         protected override void WndProc(ref Message m)
         {
             var msg = (uint)m.Msg;
@@ -594,7 +709,9 @@ abstract class FormBase : Form
 
         Padding _borders = Padding.Empty;
 
-
+        /// <summary>
+        /// Gets the DPI-scaled border offset.
+        /// </summary>
         private Padding DpiScaledBorderOffset
         {
             get
@@ -603,6 +720,10 @@ abstract class FormBase : Form
                 return new Padding((int)(BorderOffset.Left * scaleFactor), (int)(BorderOffset.Top * scaleFactor), (int)(BorderOffset.Right * scaleFactor), (int)(BorderOffset.Bottom * scaleFactor));
             }
         }
+
+        /// <summary>
+        /// Creates the drag region for the resizer control.
+        /// </summary>
         private void CreateDragRegion()
         {
             var border = new Point(GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXFRAME) + GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXPADDEDBORDER), GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CYFRAME) + GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXPADDEDBORDER));
@@ -629,14 +750,26 @@ abstract class FormBase : Form
     #endregion
 
     #region WindowComposition
+    /// <summary>
+    /// Provides window accent composition (blur/acrylic) for legacy Windows versions.
+    /// </summary>
     private class WindowAccentCompositor
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WindowAccentCompositor"/> class.
+        /// </summary>
+        /// <param name="windowHandle">The window handle.</param>
+        /// <param name="isAcrylic">Whether to use acrylic blur.</param>
         public WindowAccentCompositor(nint windowHandle, bool isAcrylic = false)
         {
             _handle = windowHandle;
             _isAcrylic = isAcrylic;
         }
 
+        /// <summary>
+        /// Applies the accent composition with the specified color.
+        /// </summary>
+        /// <param name="color">The color to use for the accent.</param>
         public void Composite(Color color)
         {
             var gradientColor = color.R | (color.G << 8) | (color.B << 16) | (color.A << 24);
@@ -645,6 +778,10 @@ abstract class FormBase : Form
 
         private readonly bool _isAcrylic;
         nint _handle;
+
+        /// <summary>
+        /// Accent state for the window composition.
+        /// </summary>
         private enum AccentState
         {
             ACCENT_DISABLED = 0,
@@ -655,6 +792,9 @@ abstract class FormBase : Form
             ACCENT_INVALID_STATE
         }
 
+        /// <summary>
+        /// Window composition attribute for accent policy.
+        /// </summary>
         private enum WindowCompositionAttribute
         {
             WCA_ACCENT_POLICY = 19
@@ -663,6 +803,11 @@ abstract class FormBase : Form
         [DllImport("user32.dll")]
         private static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
 
+        /// <summary>
+        /// Applies the accent composition to the window.
+        /// </summary>
+        /// <param name="handle">The window handle.</param>
+        /// <param name="color">The gradient color value.</param>
         private void Composite(IntPtr handle, int color)
         {
             var accent = new AccentPolicy { AccentState = _isAcrylic ? AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND : AccentState.ACCENT_ENABLE_BLURBEHIND, GradientColor = color };
@@ -685,6 +830,7 @@ abstract class FormBase : Form
                 Marshal.FreeHGlobal(accentPtr);
             }
         }
+
         [StructLayout(LayoutKind.Sequential)]
         private struct AccentPolicy
         {
@@ -704,6 +850,9 @@ abstract class FormBase : Form
     }
     #endregion
 
+    /// <summary>
+    /// Initializes the form's components and default properties.
+    /// </summary>
     private void InitializeComponent()
     {
         this.SuspendLayout();
@@ -718,6 +867,10 @@ abstract class FormBase : Form
         this.ResumeLayout(false);
     }
 
+    /// <summary>
+    /// Assigns the owner form from the specified <see cref="IWin32Window"/> handle.
+    /// </summary>
+    /// <param name="owner">The owner window.</param>
     private void AssignOwnerFromHandle(IWin32Window? owner)
     {
         if (owner is not null)
@@ -730,8 +883,10 @@ abstract class FormBase : Form
         }
     }
 
-
-
+    /// <summary>
+    /// Corrects the window position and size for DPI and screen bounds.
+    /// </summary>
+    /// <param name="rawSize">The original size before correction.</param>
     private void CorrectWindowPos(Size rawSize)
     {
         var screen = Screen.FromPoint(MousePosition);
@@ -796,6 +951,10 @@ abstract class FormBase : Form
 
         }
     }
+
+    /// <summary>
+    /// Handles changes to the window style and updates the window accordingly.
+    /// </summary>
     private void HandleWindowStyleChanged()
     {
         if (!IsHandleCreated) return;
@@ -838,6 +997,11 @@ abstract class FormBase : Form
 
         PerformResizerVisiblity();
     }
+
+    /// <summary>
+    /// Handles entering or exiting fullscreen mode.
+    /// </summary>
+    /// <param name="fullScreen">True to enter fullscreen, false to exit.</param>
     private void HandleFullScreen(bool fullScreen)
     {
         if (!IsHandleCreated) return;
@@ -883,6 +1047,9 @@ abstract class FormBase : Form
         PerformResizerVisiblity();
     }
 
+    /// <summary>
+    /// Updates the visibility of the borderless resizer control based on window state.
+    /// </summary>
     private void PerformResizerVisiblity()
     {
         if (_windowBorderResizer is null || !IsHandleCreated || RecreatingHandle) return;
@@ -901,6 +1068,11 @@ abstract class FormBase : Form
         }
     }
 
+    /// <summary>
+    /// Determines whether the specified window is maximized.
+    /// </summary>
+    /// <param name="hwnd">The window handle.</param>
+    /// <returns>True if maximized; otherwise, false.</returns>
     private bool IsMaximized(HWND hwnd)
     {
         WINDOWPLACEMENT placement = new();
@@ -911,6 +1083,12 @@ abstract class FormBase : Form
         return placement.showCmd == SHOW_WINDOW_CMD.SW_MAXIMIZE;
     }
 
+    /// <summary>
+    /// Adjusts the maximized client rectangle for custom borderless windows.
+    /// </summary>
+    /// <param name="hwnd">The window handle.</param>
+    /// <param name="rect">The rectangle to adjust.</param>
+    /// <returns>True if adjusted; otherwise, false.</returns>
     private bool AdjustMaximizedClientRect(HWND hwnd, ref RECT rect)
     {
         if (!IsMaximized(hwnd)) return false;
@@ -925,7 +1103,10 @@ abstract class FormBase : Form
         return true;
     }
 
-
+    /// <summary>
+    /// Gets the current window style based on the form's properties.
+    /// </summary>
+    /// <returns>The <see cref="WINDOW_STYLE"/> value.</returns>
     private WINDOW_STYLE GetWindowStyle()
     {
         var style = Fullscreen ? FULL_SCREEN_STYLE : Popup ? POPUP_STYLE : ExtendsContentIntoTitleBar ? BORDERLESS_STYLE : WINDOWED_STYLE;
@@ -952,6 +1133,13 @@ abstract class FormBase : Form
 
         return style;
     }
+
+    /// <summary>
+    /// Adjusts the window rectangle for the specified style and DPI.
+    /// </summary>
+    /// <param name="rect">The rectangle to adjust.</param>
+    /// <param name="style">The window style.</param>
+    /// <param name="exStyle">The extended window style.</param>
     private void AdjustWindowRect(ref RECT rect, WINDOW_STYLE style, WINDOW_EX_STYLE exStyle)
     {
         if (DeviceDpi != 96 && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 14393))
@@ -972,6 +1160,11 @@ abstract class FormBase : Form
 
     //public new void CenterToParent() => base.CenterToParent();
     //public new void CenterToScreen() => base.CenterToScreen();
+
+    /// <summary>
+    /// Handles changes to the system backdrop type and applies the appropriate effect.
+    /// </summary>
+    /// <param name="value">The new <see cref="SystemBackdropType"/> value.</param>
     private void HandleSystemBackdropTypeChanged(SystemBackdropType value)
     {
         if (!IsHandleCreated)

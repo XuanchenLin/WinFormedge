@@ -5,9 +5,16 @@
 
 namespace WinFormedge.WebResource;
 
+/// <summary>
+/// Provides constants for HTTP status codes and a method to get the standard reason phrase for each code.
+/// </summary>
 public static class StatusCodes
 {
-
+    /// <summary>
+    /// Returns the standard reason phrase for a given HTTP status code.
+    /// </summary>
+    /// <param name="status">The HTTP status code.</param>
+    /// <returns>The reason phrase associated with the status code, or "Unknown Status Code" if not recognized.</returns>
     public static string GetStatusPhrase(int status)
     {
         switch (status)
@@ -480,6 +487,4 @@ public static class StatusCodes
     /// HTTP status code 511.
     /// </summary>
     public const int Status511NetworkAuthenticationRequired = 511;
-
-
 }

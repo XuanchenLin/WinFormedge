@@ -3,22 +3,28 @@
 // This project is licensed under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WinFormedge;
 partial class WebViewCore
 {
 
+    /// <summary>
+    /// Represents a fullscreen window used to display the WebViewCore instance in fullscreen mode.
+    /// Handles the transition of the WebView between its container and the fullscreen window,
+    /// as well as system color mode and non-client region support.
+    /// </summary>
     class FullscreenWindow : Form
     {
+        /// <summary>
+        /// Stores the original value of non-client region support to restore after exiting fullscreen.
+        /// </summary>
         private bool _isNonClientRegionSupportEnabled;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FullscreenWindow"/> class.
+        /// </summary>
+        /// <param name="webview">The <see cref="WebViewCore"/> instance to display in fullscreen.</param>
         public FullscreenWindow(WebViewCore webview)
         {
             FormBorderStyle = FormBorderStyle.None;
@@ -34,8 +40,16 @@ partial class WebViewCore
             _isNonClientRegionSupportEnabled = webview.Browser?.Settings.IsNonClientRegionSupportEnabled ?? false;
         }
 
+        /// <summary>
+        /// Gets the <see cref="WebViewCore"/> instance associated with this fullscreen window.
+        /// </summary>
         public WebViewCore WebView { get; }
 
+        /// <summary>
+        /// Handles the creation of the window handle, sets up the WebView controller's parent and bounds,
+        /// and disables non-client region support for fullscreen.
+        /// </summary>
+        /// <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
@@ -46,20 +60,26 @@ partial class WebViewCore
             WebView.Controller.ParentWindow = Handle;
 
             WebView.Browser!.Settings.IsNonClientRegionSupportEnabled = false;
-
-
         }
 
+        /// <summary>
+        /// Handles window resize events, updates the WebView controller's bounds,
+        /// and restores non-client region support if needed.
+        /// </summary>
+        /// <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
 
             WebView.Controller.Bounds = ClientRectangle;
             WebView.Browser!.Settings.IsNonClientRegionSupportEnabled = _isNonClientRegionSupportEnabled;
-
-
         }
 
+        /// <summary>
+        /// Handles the window shown event, hides the original container, maximizes the window,
+        /// and activates the fullscreen window.
+        /// </summary>
+        /// <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
         protected override void OnShown(EventArgs e)
         {
             WebView.Container.Hide();
@@ -71,6 +91,11 @@ partial class WebViewCore
             Activate();
         }
 
+        /// <summary>
+        /// Handles the window closing event, restores the WebView controller's parent and bounds
+        /// to the original container, and shows the container.
+        /// </summary>
+        /// <param name="e">A <see cref="CancelEventArgs"/> that contains the event data.</param>
         protected override void OnClosing(CancelEventArgs e)
         {
             WebView.Controller.ParentWindow = WebView.Container.Handle;
@@ -82,6 +107,11 @@ partial class WebViewCore
             base.OnClosing(e);
         }
 
+        /// <summary>
+        /// Processes Windows messages for the fullscreen window.
+        /// Ignores system command messages to prevent unwanted system menu actions.
+        /// </summary>
+        /// <param name="m">A <see cref="Message"/> that represents the Windows message to process.</param>
         protected override void WndProc(ref Message m)
         {
             var msg = (uint)m.Msg;
@@ -98,8 +128,15 @@ partial class WebViewCore
     }
 
 
+    /// <summary>
+    /// The host control for the WebViewCore instance.
+    /// </summary>
     internal Control _hostControl;
 
+    /// <summary>
+    /// Gets the container control for the WebViewCore instance.
+    /// Returns the top-level control if available, otherwise returns the host control itself.
+    /// </summary>
     public Control Container
     {
         get
@@ -108,7 +145,17 @@ partial class WebViewCore
         }
     }
 
+    /// <summary>
+    /// Temporary container control used during handle recreation.
+    /// </summary>
     private Control? _temporaryContainerControl;
+
+    /// <summary>
+    /// Handles the creation of the host control's handle.
+    /// Sets up the WebView controller's parent window and manages temporary containers as needed.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     private void HostHandleCreated(object? sender, EventArgs e)
     {
         if (Container.RecreatingHandle)
@@ -128,6 +175,9 @@ partial class WebViewCore
         HandleSystemColorMode();
     }
 
+    /// <summary>
+    /// Applies the system color mode (dark or light) to the container window using DWM attributes.
+    /// </summary>
     private void HandleSystemColorMode()
     {
         BOOL mode = WinFormedgeApp.Current.GetSystemColorMode() == SystemColorMode.Dark ? true : false;
@@ -141,6 +191,12 @@ partial class WebViewCore
         }
     }
 
+    /// <summary>
+    /// Handles the destruction of the host control's handle.
+    /// Creates a temporary container control to hold the WebView controller during handle recreation.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     private void HostHandleDestroyed(object? sender, EventArgs e)
     {
         if (Container.RecreatingHandle)
@@ -151,6 +207,12 @@ partial class WebViewCore
         }
     }
 
+    /// <summary>
+    /// Processes Windows messages for the host control.
+    /// Handles system setting changes and background erase requests.
+    /// </summary>
+    /// <param name="m">A <see cref="Message"/> that represents the Windows message to process.</param>
+    /// <returns>True if the message was handled; otherwise, false.</returns>
     internal bool HostWndProc(ref Message m)
     {
         var msg = (uint)m.Msg;
@@ -171,6 +233,11 @@ partial class WebViewCore
         return false;
     }
 
+    /// <summary>
+    /// Handles the WM_SETTINGCHANGE message with the ImmersiveColorSet parameter.
+    /// Updates the system color mode if the immersive color set has changed.
+    /// </summary>
+    /// <param name="lParam">The LPARAM value from the Windows message.</param>
     private void OnWmSettingChangeWithImmersiveColorSet(nint lParam)
     {
         const string IMMERSIVE_COLOR_SET = "ImmersiveColorSet";

@@ -56,6 +56,7 @@
         <SignAssembly>False</SignAssembly>
         <DebugType>portable</DebugType>
         <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
     
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
@@ -73,4 +74,21 @@
             <PackagePath>\</PackagePath>
         </None>
     </ItemGroup>
+    <ItemGroup>
+        <Using Include="System.Reflection" />
+        <Using Include="System.Collections.Concurrent" />
+        <Using Include="System.Globalization" />
+        <Using Include="System.Runtime.InteropServices" />
+        <Using Include="System.Text" />
+        <Using Include="System.Text.RegularExpressions" />
+        <Using Include="System.Text.Json" />
+        <Using Include="System.Text.Json.Serialization" />
+        <Using Include="System.Text.Json.Serialization.Metadata" />
+        <Using Include="System.Security" />
+        <Using Include="System.Windows.Forms" />
+        <Using Include="WinFormedge.Browser" />
+        <Using Include="WinFormedge.WebResource" />
+        <Using Include="WinFormedge.HostForms" />
+    </ItemGroup>
+    
 </Project>
