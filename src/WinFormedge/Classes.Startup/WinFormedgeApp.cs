@@ -3,26 +3,30 @@
 // This project is licensed under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Globalization;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-
-
-using Windows.Win32;
 
 namespace WinFormedge;
 
+/// <summary>
+/// Represents a delegate for processing Windows messages.
+/// </summary>
+/// <param name="m">The Windows message to process.</param>
+/// <returns>True if the message was handled; otherwise, false.</returns>
 public delegate bool WindowProc(ref Message m);
+/// <summary>
+/// Represents the main application class for WinFormedge.
+/// Manages application-wide settings, WebView2 environment, culture, color mode, and startup logic.
+/// </summary>
 public class WinFormedgeApp
 {
     private static WinFormedgeApp? _current;
 
     private CoreWebView2Environment? _environment;
+
+    /// <summary>
+    /// Gets the initialized WebView2 environment for the application.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Thrown if the environment is not initialized.</exception>
     public CoreWebView2Environment WebView2Environment
     {
         get
@@ -36,14 +40,45 @@ public class WinFormedgeApp
         }
     }
 
+    /// <summary>
+    /// Gets a value indicating whether developer tools are enabled.
+    /// </summary>
     internal bool EnableDevTools { get; init; }
+
+    /// <summary>
+    /// Gets a value indicating whether the browser cache should be cleaned up on startup.
+    /// </summary>
     internal bool ShouldCleanupCache { get; init; }
+
+    /// <summary>
+    /// Gets the culture name used by the application.
+    /// </summary>
     internal string CultureName { get; init; } = Application.CurrentCulture.Name;
+
+    /// <summary>
+    /// Gets the custom browser executable path, if specified.
+    /// </summary>
     internal string? BrowserExecutablePath { get; init; }
+
+    /// <summary>
+    /// Gets the custom application data directory, if specified.
+    /// </summary>
     internal string? CustomAppDataDirectory { get; init; }
+
+    /// <summary>
+    /// Gets the system color mode for the application.
+    /// </summary>
     internal SystemColorMode SystemColorMode { get; init; }
+
+    /// <summary>
+    /// Gets a value indicating whether the fluent overlay style scrollbar is enabled.
+    /// </summary>
     internal bool FluentOverlayStyleScrollbar { get; init; }
 
+    /// <summary>
+    /// Determines the effective system color mode (light or dark) based on settings and OS.
+    /// </summary>
+    /// <returns>The effective <see cref="SystemColorMode"/>.</returns>
     internal SystemColorMode GetSystemColorMode()
     {
 
@@ -73,19 +108,40 @@ public class WinFormedgeApp
         return SystemColorMode.Light;
     }
 
+    /// <summary>
+    /// Gets a value indicating whether the application is currently in dark mode.
+    /// </summary>
     internal bool IsDarkMode => GetSystemColorMode() == SystemColorMode.Dark;
 
-
+    /// <summary>
+    /// Gets the application startup logic instance.
+    /// </summary>
     internal AppStartup? Startup { get; init; }
 
+    /// <summary>
+    /// Gets the default application data directory path.
+    /// </summary>
     internal string DefaultAppDataDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Application.ProductName ?? "FormedgeApp");
 
+    /// <summary>
+    /// Gets the <see cref="CultureInfo"/> used by the application.
+    /// </summary>
     public CultureInfo Culture => new CultureInfo(CultureName);
 
+    /// <summary>
+    /// Gets the application data folder path, using custom or default location.
+    /// </summary>
     public string AppDataFolder => CustomAppDataDirectory ?? DefaultAppDataDirectory;
 
+    /// <summary>
+    /// Gets the user data folder path for browser data.
+    /// </summary>
     public string UserDataFolder => Path.Combine(AppDataFolder, "User Data");
 
+    /// <summary>
+    /// Gets the current <see cref="WinFormedgeApp"/> instance.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Thrown if the application is not initialized.</exception>
     public static WinFormedgeApp Current
     {
         get
@@ -98,20 +154,32 @@ public class WinFormedgeApp
         }
     }
 
-
+    /// <summary>
+    /// Creates a new <see cref="AppBuilder"/> for configuring and building a <see cref="WinFormedgeApp"/> instance.
+    /// </summary>
+    /// <returns>A new <see cref="AppBuilder"/> instance.</returns>
     public static AppBuilder CreateAppBuilder()
     {
         return new AppBuilder();
     }
 
+    /// <summary>
+    /// Gets the running application context for startup, if available.
+    /// </summary>
     internal StartupApplicationContext? RunningApplicationContext { get; private set; }
 
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WinFormedgeApp"/> class and sets it as the current instance.
+    /// </summary>
     internal WinFormedgeApp()
     {
         _current = this;
     }
 
+    /// <summary>
+    /// Builds and sets additional browser command-line arguments for the WebView2 environment.
+    /// </summary>
+    /// <param name="opts">The WebView2 environment options to configure.</param>
     private void BuildAdditionalBrowserArguments(CoreWebView2EnvironmentOptions opts)
     {
         var browserArgs = new NameValueCollection();
@@ -153,7 +221,9 @@ public class WinFormedgeApp
         opts.AdditionalBrowserArguments = string.Join(" ", browserArgsArray);
     }
 
-
+    /// <summary>
+    /// Runs the WinFormedge application, initializing culture, WebView2 environment, and main window.
+    /// </summary>
     public void Run()
     {
         var retval = Startup?.OnApplicationLaunched(Environment.GetCommandLineArgs()) ?? true;

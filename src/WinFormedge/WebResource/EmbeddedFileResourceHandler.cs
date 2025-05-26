@@ -3,25 +3,52 @@
 // This project is licensed under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-
-
 namespace WinFormedge.WebResource;
+/// <summary>
+/// Handles web resource requests by serving files embedded as resources in an assembly.
+/// Supports localization via satellite assemblies and fallback logic.
+/// </summary>
 class EmbeddedFileResourceHandler : WebResourceHandler
 {
+    /// <summary>
+    /// Gets the URI scheme handled by this resource handler.
+    /// </summary>
     public override string Scheme { get; }
+
+    /// <summary>
+    /// Gets the host name handled by this resource handler.
+    /// </summary>
     public override string HostName { get; }
+
+    /// <summary>
+    /// Gets the web resource context for this handler.
+    /// </summary>
     public override CoreWebView2WebResourceContext WebResourceContext { get; }
+
+    /// <summary>
+    /// Gets the assembly containing the embedded resources to serve.
+    /// </summary>
     public Assembly ResourceAssembly { get; }
+
+    /// <summary>
+    /// Gets the root folder name within the assembly for embedded resources, if specified.
+    /// </summary>
     public string? FolderName { get; }
+
+    /// <summary>
+    /// Gets the default namespace used to resolve embedded resource names.
+    /// </summary>
     public string? DefaultNamespace => Options.DefaultNamespace ?? ResourceAssembly.EntryPoint?.DeclaringType?.Namespace ?? ResourceAssembly.GetName().Name!;
+
+    /// <summary>
+    /// Gets the options used to configure this embedded file resource handler.
+    /// </summary>
     public EmbeddedFileResourceOptions Options { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EmbeddedFileResourceHandler"/> class with the specified options.
+    /// </summary>
+    /// <param name="opts">The options for configuring the handler.</param>
     public EmbeddedFileResourceHandler(EmbeddedFileResourceOptions opts)
     {
         Scheme = opts.Scheme;
@@ -32,7 +59,12 @@ class EmbeddedFileResourceHandler : WebResourceHandler
         Options = opts;
     }
 
-
+    /// <summary>
+    /// Returns a <see cref="WebResourceResponse"/> for the given web resource request.
+    /// Attempts to resolve the request to an embedded resource, including support for satellite assemblies and fallback logic.
+    /// </summary>
+    /// <param name="webResourceRequest">The web resource request.</param>
+    /// <returns>A <see cref="WebResourceResponse"/> containing the resource stream and content type, or a 404 response if not found.</returns>
     protected override WebResourceResponse GetResourceResponse(WebResourceRequest webResourceRequest)
     {
         var requestUrl = webResourceRequest.RequestUrl;
@@ -53,12 +85,9 @@ class EmbeddedFileResourceHandler : WebResourceHandler
 
         Assembly? satelliteAssembly = null;
 
-
-
         try
         {
             var fileInfo = new FileInfo(new Uri(mainAssembly.Location).LocalPath);
-
 
             var satelliteFilePath = Path.Combine(fileInfo.DirectoryName ?? string.Empty, $"{Thread.CurrentThread.CurrentCulture}", $"{Path.GetFileNameWithoutExtension(fileInfo.Name)}.resources.dll");
 
@@ -83,7 +112,6 @@ class EmbeddedFileResourceHandler : WebResourceHandler
 
         var namespaces = mainAssembly.DefinedTypes.Select(x => x.Namespace).Distinct().ToArray();
 
-
         string ChangeResourceName(string rawName)
         {
             var targetName = namespaces.Where(x => x != null && !string.IsNullOrEmpty(x) && rawName.StartsWith(x!)).OrderByDescending(x => x!.Length).FirstOrDefault();
@@ -106,9 +134,7 @@ class EmbeddedFileResourceHandler : WebResourceHandler
             x.IsSatellite
         });
 
-
         var resource = embeddedResources.SingleOrDefault(x => x.Name.Equals(resourceName, StringComparison.CurrentCultureIgnoreCase));
-
 
         if (resource == null && !webResourceRequest.HasFileName)
         {
@@ -160,6 +186,13 @@ class EmbeddedFileResourceHandler : WebResourceHandler
         return response;
     }
 
+    /// <summary>
+    /// Constructs the fully qualified resource name for an embedded resource based on the relative path and optional root path.
+    /// Handles special characters and namespace adjustments.
+    /// </summary>
+    /// <param name="relativePath">The relative path of the requested resource.</param>
+    /// <param name="rootPath">The root folder name, if any.</param>
+    /// <returns>The fully qualified resource name.</returns>
     private string GetResourceName(string relativePath, string? rootPath = null)
     {
         var filePath = relativePath;
@@ -171,7 +204,6 @@ class EmbeddedFileResourceHandler : WebResourceHandler
         filePath = filePath.Replace('\\', '/');
 
         var endTrimIndex = filePath.LastIndexOf('/');
-
 
         if (endTrimIndex > -1)
         {
@@ -190,7 +222,6 @@ class EmbeddedFileResourceHandler : WebResourceHandler
             {
                 path = path.Replace(parttern, '_');
             }
-
 
             filePath = $"{path}{filePath.Substring(endTrimIndex)}".Trim('/');
         }

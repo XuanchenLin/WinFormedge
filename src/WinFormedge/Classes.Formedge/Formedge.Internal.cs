@@ -3,24 +3,17 @@
 // This project is licensed under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace WinFormedge;
-
-using System.Diagnostics;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Windows.Forms;
-
-using WinFormedge.HostForms;
-using WinFormedge.WebResource;
-
+/// <summary>
+/// Provides the core implementation for the Formedge window, including window creation, event handling, 
+/// and integration with WebView2 for browser-based UI.
+/// </summary>
 public abstract partial class Formedge
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Formedge"/> class, sets up the host window, 
+    /// configures window settings, and initializes the WebView2 browser.
+    /// </summary>
     public Formedge()
     {
         _hostWindowBuilder = new HostWindowBuilder();
@@ -43,14 +36,21 @@ public abstract partial class Formedge
         _windowStyleSettings.DefWndProc += DefWndProcCore;
 
         HostWindowCreatedCore();
-
     }
 
+    /// <summary>
+    /// Removes the mapping between a virtual host name and embedded resources.
+    /// </summary>
+    /// <param name="options">The embedded file resource options to clear.</param>
     public void ClearVirtualHostNameToEmbeddedResourcesMapping(EmbeddedFileResourceOptions options)
     {
         UnregisterWebResourceHandler(new EmbeddedFileResourceHandler(options));
     }
 
+    /// <summary>
+    /// Removes the mapping between a virtual host name and a local folder.
+    /// </summary>
+    /// <param name="hostName">The virtual host name to clear.</param>
     public void ClearVirtualHostNameToFolderMapping(string hostName)
     {
         if (CoreWebView2 != null)
@@ -59,16 +59,30 @@ public abstract partial class Formedge
         }
     }
 
+    /// <summary>
+    /// Registers a custom web resource handler for the WebView2 instance.
+    /// </summary>
+    /// <param name="resourceHandler">The web resource handler to register.</param>
     public void RegisterWebResourceHander(WebResourceHandler resourceHandler)
     {
         WebView.RegisterWebResourceHander(resourceHandler);
     }
 
+    /// <summary>
+    /// Maps a virtual host name to embedded resources using the specified options.
+    /// </summary>
+    /// <param name="options">The embedded file resource options to use for mapping.</param>
     public void SetVirtualHostNameToEmbeddedResourcesMapping(EmbeddedFileResourceOptions options)
     {
         RegisterWebResourceHander(new EmbeddedFileResourceHandler(options));
     }
 
+    /// <summary>
+    /// Maps a virtual host name to a local folder with the specified access kind.
+    /// </summary>
+    /// <param name="hostName">The virtual host name.</param>
+    /// <param name="folderPath">The local folder path.</param>
+    /// <param name="accessKind">The access kind for the resource.</param>
     public void SetVirtualHostNameToFolderMapping(string hostName, string folderPath, CoreWebView2HostResourceAccessKind accessKind)
     {
         if (CoreWebView2 != null)
@@ -81,78 +95,164 @@ public abstract partial class Formedge
         }
     }
 
+    /// <summary>
+    /// Unregisters a previously registered web resource handler.
+    /// </summary>
+    /// <param name="resourceHandler">The web resource handler to unregister.</param>
     public void UnregisterWebResourceHandler(WebResourceHandler resourceHandler)
     {
         WebView.UnregisterWebResourceHander(resourceHandler);
     }
 
+    /// <summary>
+    /// Gets the host window (WinForms Form) for this Formedge instance.
+    /// </summary>
     internal Form HostWindow { get; }
+
+    /// <summary>
+    /// Gets the WebViewCore instance used for browser integration.
+    /// </summary>
     internal WebViewCore WebView { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the window has a system title bar.
+    /// </summary>
     internal protected bool HasSystemTitlebar => _windowStyleSettings.HasSystemTitlebar;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether fullscreen is allowed.
+    /// </summary>
     internal protected bool AllowFullscreen { get; set; }
+
+    /// <summary>
+    /// Gets the activated state of the current window.
+    /// </summary>
+    internal protected bool IsActivated => _currentWindowActivated;
+
+    /// <summary>
+    /// Configures the window settings using the provided <see cref="HostWindowBuilder"/>.
+    /// </summary>
+    /// <param name="opts">The host window builder.</param>
+    /// <returns>The configured <see cref="WindowSettings"/>.</returns>
     internal protected virtual WindowSettings ConfigureWindowSettings(HostWindowBuilder opts)
     {
         return opts.UseDefaultWindow();
     }
 
+
+    /// <summary>
+    /// Called when the WebView2 context menu is requested. Can be overridden to customize the context menu.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     protected virtual void OnContextMenuRequested(object? sender, CoreWebView2ContextMenuRequestedEventArgs e)
     {
     }
 
-
+    /// <summary>
+    /// Called when the window is activated.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     protected virtual void OnActivated(object? sender, EventArgs e)
     {
         Activated?.Invoke(this, EventArgs.Empty);
     }
 
-
+    /// <summary>
+    /// Called when the window is deactivated.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     protected virtual void OnDeactivate(object? sender, EventArgs e)
     {
         Deactivate?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Called when the window is closed.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     protected virtual void OnFormClosed(object? sender, FormClosedEventArgs e)
     {
         FormClosed?.Invoke(this, e);
     }
 
+    /// <summary>
+    /// Called when the window is closing.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     protected virtual void OnFormClosing(object? sender, FormClosingEventArgs e)
     {
         FormClosing?.Invoke(this, e);
     }
 
+    /// <summary>
+    /// Called when the window is moved.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     protected virtual void OnMove(object? sender, EventArgs e)
     {
         Move?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Called when the window is resized.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     protected virtual void OnResize(object? sender, EventArgs e)
     {
         Resize?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Called when the window resize operation begins.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     protected virtual void OnResizeBegin(object? sender, EventArgs e)
     {
         ResizeBegin?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Called when the window resize operation ends.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     protected virtual void OnResizeEnd(object? sender, EventArgs e)
     {
         ResizeEnd?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Called when the window is shown.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     protected virtual void OnShown(object? sender, EventArgs e)
     {
         Shown?.Invoke(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Called when the window's visibility changes.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     protected virtual void OnVisibleChanged(object? sender, EventArgs e)
     {
         VisibleChanged?.Invoke(this, e);
     }
 
+    /// <summary>
+    /// The passcode used for secure message passing between JavaScript and the host.
+    /// </summary>
     private readonly string FORMEDGE_MESSAGE_PASSCODE = Guid.NewGuid().ToString("N");
-    //internal bool AllowSystemMenuOnNonClientRegion => _windowStyleSettings.AllowSystemMenuOnNonClientRegion;
 
     private readonly WindowSettings _windowStyleSettings;
     private readonly HostWindowBuilder _hostWindowBuilder;
@@ -163,6 +263,9 @@ public abstract partial class Formedge
 
     private Action? _setVirtualHostNameToFolderMapping;
 
+    /// <summary>
+    /// Attaches core event handlers to the host window after creation.
+    /// </summary>
     private void HostWindowCreatedCore()
     {
         HostWindow.Activated += OnActivatedCore;
@@ -177,6 +280,11 @@ public abstract partial class Formedge
         HostWindow.FormClosed += OnFormClosed;
     }
 
+    /// <summary>
+    /// Handles the FormClosing event, invokes <see cref="OnFormClosing"/>, and closes the WebView if not cancelled.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnFormClosingCore(object? sender, FormClosingEventArgs e)
     {
         OnFormClosing(this, e);
@@ -187,12 +295,14 @@ public abstract partial class Formedge
         }
     }
 
+    /// <summary>
+    /// Called when the WebView2 browser is created. Sets up host objects, scripts, and event handlers.
+    /// </summary>
     private void WebViewCreatedCore()
     {
         if (WebView.Browser == null) throw new InvalidOperationException();
 
         _formedgeHostObject = new FormedgeHostObject(this);
-
 
         var controller = WebView.Controller;
         var webview = WebView.Browser;
@@ -210,7 +320,6 @@ public abstract partial class Formedge
         webview.DOMContentLoaded += OnDOMContentLoaded;
         webview.WebMessageReceived += CoreWebView2WebMessageReceivedCore;
 
-
         webview.ContextMenuRequested += OnContextMenuRequestedCore;
         webview.DocumentTitleChanged += OnDocumentTitleChangedCore;
         webview.StatusBarTextChanged += OnStatusBarTextChangedCore;
@@ -223,11 +332,9 @@ public abstract partial class Formedge
 
         var version = typeof(Formedge).Assembly.GetName().Version?.ToString() ?? webview.Environment.BrowserVersionString;
 
-
         script = script.Replace("{{FORMEDGE_MESSAGE_PASSCODE}}", FORMEDGE_MESSAGE_PASSCODE);
         script = script.Replace("{{WINFORMEDGE_VERSION}}", version);
         script = script.Replace("{{HAS_TITLE_BAR}}", HasSystemTitlebar ? "true" : "false");
-
 
         webview.AddHostObjectToScript("hostWindow", _formedgeHostObject!);
 
@@ -238,15 +345,18 @@ public abstract partial class Formedge
             webview.AddScriptToExecuteOnDocumentCreatedAsync(_windowStyleSettings.WindowSpecifiedJavaScript);
         }
 
-
         OnLoad();
     }
+
+    /// <summary>
+    /// Handles messages received from JavaScript via WebView2, including window commands and movement/resize requests.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void CoreWebView2WebMessageReceivedCore(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
     {
         try
         {
-            
-
             var jsdoc = JsonDocument.Parse(e.WebMessageAsJson);
             if (jsdoc == null || jsdoc.RootElement.ValueKind != JsonValueKind.Object)
             {
@@ -279,18 +389,20 @@ public abstract partial class Formedge
                         HandleJSWIndowResizeBy(jsdoc.RootElement);
                         return;
                 }
-
-
             }
         }
         catch
         {
-
+            // Swallow exceptions to avoid breaking message handling.
         }
 
         OnWebMessageReceived(sender, e);
     }
 
+    /// <summary>
+    /// Handles a JavaScript request to resize the window by a delta.
+    /// </summary>
+    /// <param name="jsonElement">The JSON element containing dx and dy.</param>
     private void HandleJSWIndowResizeBy(JsonElement jsonElement)
     {
         if (!jsonElement.TryGetProperty("dx", out var elX) || !jsonElement.TryGetProperty("dy", out var elY)) return;
@@ -301,6 +413,10 @@ public abstract partial class Formedge
         Size = new Size(Width + dx, Height + dy);
     }
 
+    /// <summary>
+    /// Handles a JavaScript request to resize the window to a specific size.
+    /// </summary>
+    /// <param name="jsonElement">The JSON element containing width and height.</param>
     private void HandleJSWIndowResizeTo(JsonElement jsonElement)
     {
         if (!jsonElement.TryGetProperty("width", out var elX) || !jsonElement.TryGetProperty("height", out var elY)) return;
@@ -311,6 +427,10 @@ public abstract partial class Formedge
         Size = new Size(dx, dy);
     }
 
+    /// <summary>
+    /// Handles a JavaScript request to move the window by a delta.
+    /// </summary>
+    /// <param name="jsonElement">The JSON element containing dx and dy.</param>
     private void HandleJSWindowMoveBy(JsonElement jsonElement)
     {
         if (!jsonElement.TryGetProperty("dx", out var elX) || !jsonElement.TryGetProperty("dy", out var elY)) return;
@@ -321,6 +441,10 @@ public abstract partial class Formedge
         Location = new Point(Left + dx, Top + dy);
     }
 
+    /// <summary>
+    /// Handles a JavaScript request to move the window to a specific location.
+    /// </summary>
+    /// <param name="jsonElement">The JSON element containing x and y.</param>
     private void HandleJSWindowMoveTo(JsonElement jsonElement)
     {
         if (!jsonElement.TryGetProperty("x", out var elX) || !jsonElement.TryGetProperty("y", out var elY)) return;
@@ -331,12 +455,15 @@ public abstract partial class Formedge
         Location = new Point(x, y);
     }
 
+    /// <summary>
+    /// Handles a JavaScript window command such as minimize, maximize, fullscreen, or close.
+    /// </summary>
+    /// <param name="jsonElement">The JSON element containing the command.</param>
     private void HandleJSWindowAppCommand(JsonElement jsonElement)
     {
         if (!jsonElement.TryGetProperty("command", out var elCommand)) return;
 
         var command = elCommand.GetString();
-
 
         switch (command)
         {
@@ -359,10 +486,8 @@ public abstract partial class Formedge
             case "close":
                 Close();
                 break;
-
         }
     }
-
 
     //private bool _isSnapLayoutsRequired = false;
 
@@ -378,22 +503,33 @@ public abstract partial class Formedge
     //    {
     //        SendMessage((HWND)HostWindow.Handle, WM_NCMOUSEHOVER, (WPARAM)HTMAXBUTTON, MARCOS.FromPoint(Control.MousePosition));
     //    }
-
-
     //}
+
+    /// <summary>
+    /// Core window procedure handler for custom message processing.
+    /// </summary>
+    /// <param name="m">The Windows message.</param>
+    /// <returns>True if the message was handled; otherwise, false.</returns>
     private bool WndProcCore(ref Message m)
     {
         return WndProc(ref m);
     }
 
+    /// <summary>
+    /// Default window procedure handler for message processing.
+    /// </summary>
+    /// <param name="m">The Windows message.</param>
+    /// <returns>True if the message was handled; otherwise, false.</returns>
     private bool DefWndProcCore(ref Message m)
     {
         return DefWndProc(ref m);
-
-
     }
 
-
+    /// <summary>
+    /// Handles the Resize event, notifies JavaScript of window state and size changes.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnResizeCore(object? sender, EventArgs e)
     {
         if (Fullscreen) return;
@@ -401,7 +537,6 @@ public abstract partial class Formedge
         OnResize(this, e);
 
         if (WebView.Browser == null) return;
-
 
         var state = HostWindow.WindowState.ToString().ToLower();
 
@@ -422,8 +557,6 @@ public abstract partial class Formedge
             }));
         }
 
-        
-
         WebView.Browser.PostWebMessageAsJson(JsonSerializer.Serialize(new
         {
             passcode = FORMEDGE_MESSAGE_PASSCODE,
@@ -433,9 +566,13 @@ public abstract partial class Formedge
             width = HostWindow.Width,
             height = HostWindow.Height
         }));
-
     }
 
+    /// <summary>
+    /// Handles the Move event, notifies JavaScript of window position changes.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnMoveCore(object? sender, EventArgs e)
     {
         if (Fullscreen) return;
@@ -445,7 +582,6 @@ public abstract partial class Formedge
         if (WebView.Browser == null) return;
 
         var screen = Screen.FromHandle(Handle);
-
 
         var x = HostWindow.Left;
         var y = HostWindow.Top;
@@ -462,9 +598,14 @@ public abstract partial class Formedge
             screenY = scrY,
         }));
     }
+
+    /// <summary>
+    /// Handles the Activated event, notifies JavaScript, and sets focus to the WebView2 controller.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnActivatedCore(object? sender, EventArgs e)
     {
-
         _currentWindowActivated = true;
 
         if (WebView.Initialized)
@@ -482,13 +623,15 @@ public abstract partial class Formedge
             message = "FormedgeNotifyWindowActivated",
             state = true
         }));
-
-
     }
 
+    /// <summary>
+    /// Handles the Deactivate event, notifies JavaScript.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnDeactivateCore(object? sender, EventArgs e)
     {
-
         _currentWindowActivated = false;
         OnDeactivate(this, e);
 
@@ -501,6 +644,12 @@ public abstract partial class Formedge
             state = false
         }));
     }
+
+    /// <summary>
+    /// Handles the WebView2 context menu request, filters menu items, and invokes <see cref="OnContextMenuRequested"/>.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnContextMenuRequestedCore(object? sender, CoreWebView2ContextMenuRequestedEventArgs e)
     {
         bool IsRequiredContextMenuItem(int commandId)
@@ -521,7 +670,7 @@ public abstract partial class Formedge
 
             if (IsRequiredContextMenuItem(item.CommandId) || item.Kind == CoreWebView2ContextMenuItemKind.Separator)
             {
-                // 避免连续添加多个分隔符
+                // Avoid adding consecutive separators
                 if (item.Kind == CoreWebView2ContextMenuItemKind.Separator)
                 {
                     if (editingItems.Count == 0 || editingItems[^1].Kind != CoreWebView2ContextMenuItemKind.Separator)
@@ -556,14 +705,22 @@ public abstract partial class Formedge
         OnContextMenuRequested(sender, e);
     }
 
+    /// <summary>
+    /// Handles the DocumentTitleChanged event and updates the window caption.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnDocumentTitleChangedCore(object? sender, object e)
     {
         UpdateWindowCaption();
     }
 
+    /// <summary>
+    /// Handles the StatusBarTextChanged event. (No implementation.)
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments.</param>
     private void OnStatusBarTextChangedCore(object? sender, object e)
     {
     }
-
-
 }

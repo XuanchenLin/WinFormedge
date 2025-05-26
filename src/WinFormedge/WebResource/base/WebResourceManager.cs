@@ -5,20 +5,31 @@
 
 namespace WinFormedge.WebResource;
 
+/// <summary>
+/// Manages web resource handlers and integrates with CoreWebView2 to handle web resource requests.
+/// </summary>
 sealed class WebResourceManager
 {
-
+    /// <summary>
+    /// Gets the list of registered web resource handlers.
+    /// </summary>
     public List<WebResourceHandler> Handlers { get; } = new();
-
 
     private CoreWebView2? _webView2 = null;
 
     private bool _initialized = false;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="WebResourceManager"/> class.
+    /// </summary>
     internal WebResourceManager()
     {
     }
 
+    /// <summary>
+    /// Initializes the manager with the specified <see cref="CoreWebView2"/> instance and registers all handlers.
+    /// </summary>
+    /// <param name="coreWebView2">The CoreWebView2 instance to initialize with.</param>
     public void Initialize(CoreWebView2 coreWebView2)
     {
         _webView2 = coreWebView2;
@@ -31,13 +42,15 @@ sealed class WebResourceManager
         _initialized = true;
 
         coreWebView2.WebResourceRequested += CoreWebView2WebResourceRequested;
-
     }
 
+    /// <summary>
+    /// Handles the <see cref="CoreWebView2.WebResourceRequested"/> event and dispatches the request to the appropriate handler.
+    /// </summary>
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event arguments containing the web resource request.</param>
     private void CoreWebView2WebResourceRequested(object? sender, CoreWebView2WebResourceRequestedEventArgs e)
     {
-
-
         var uri = new Uri(e.Request.Uri);
         var webview = _webView2;
 
@@ -51,10 +64,8 @@ sealed class WebResourceManager
         if (uri == null)
         {
             e.Response = GetNotFoundResponse();
-
             return;
         }
-
 
         var matchedHandlers = Handlers.Where(x => x.WebResourceContext == CoreWebView2WebResourceContext.All || x.WebResourceContext == e.ResourceContext);
 
@@ -69,16 +80,17 @@ sealed class WebResourceManager
         if (targetHandler == null)
         {
             e.Response = GetNotFoundResponse();
-
             return;
         }
 
         targetHandler.HandleRequest(webview, e);
-
-
-
     }
 
+    /// <summary>
+    /// Adds a web resource requested filter to the specified <see cref="CoreWebView2"/> instance for the given handler.
+    /// </summary>
+    /// <param name="coreWebView2">The CoreWebView2 instance.</param>
+    /// <param name="handler">The web resource handler.</param>
     private static void AddResourceRequestedFilter(CoreWebView2 coreWebView2, WebResourceHandler handler)
     {
         var scheme = handler.Scheme.ToLower();
@@ -89,6 +101,12 @@ sealed class WebResourceManager
         coreWebView2.AddWebResourceRequestedFilter(url + "*", handler.WebResourceContext);
     }
 
+    /// <summary>
+    /// Constructs a filter URL from the specified scheme and host name.
+    /// </summary>
+    /// <param name="scheme">The URI scheme.</param>
+    /// <param name="hostName">The host name.</param>
+    /// <returns>The constructed filter URL.</returns>
     private static string GetFilterUrl(string scheme, string hostName)
     {
         var url = $"{scheme}://{hostName}";
@@ -99,6 +117,11 @@ sealed class WebResourceManager
         return url;
     }
 
+    /// <summary>
+    /// Registers a new web resource handler and adds its filter if already initialized.
+    /// </summary>
+    /// <param name="handler">The web resource handler to register.</param>
+    /// <exception cref="InvalidOperationException">Thrown if the handler is already registered.</exception>
     public void RegisterWebResourceHander(WebResourceHandler handler)
     {
         var scheme = handler.Scheme.ToLower();
@@ -118,6 +141,10 @@ sealed class WebResourceManager
         }
     }
 
+    /// <summary>
+    /// Unregisters a web resource handler and removes its filter if already initialized.
+    /// </summary>
+    /// <param name="handler">The web resource handler to unregister.</param>
     public void UnregisterWebResourceHander(WebResourceHandler handler)
     {
         var scheme = handler.Scheme.ToLower();
@@ -132,10 +159,7 @@ sealed class WebResourceManager
         if (_initialized)
         {
             var url = GetFilterUrl(scheme, hostName);
-
-
             _webView2!.RemoveWebResourceRequestedFilter(url + "*", handler.WebResourceContext);
         }
-
     }
 }

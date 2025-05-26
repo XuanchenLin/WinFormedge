@@ -56,10 +56,11 @@
         <SignAssembly>False</SignAssembly>
         <DebugType>portable</DebugType>
         <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
     
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
-        <Version>0.1.3240.5</Version>
+        <Version>0.1.3240.6</Version>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     </PropertyGroup>
     
@@ -73,4 +74,21 @@
             <PackagePath>\</PackagePath>
         </None>
     </ItemGroup>
+    <ItemGroup>
+        <Using Include="System.Reflection" />
+        <Using Include="System.Collections.Concurrent" />
+        <Using Include="System.Globalization" />
+        <Using Include="System.Runtime.InteropServices" />
+        <Using Include="System.Text" />
+        <Using Include="System.Text.RegularExpressions" />
+        <Using Include="System.Text.Json" />
+        <Using Include="System.Text.Json.Serialization" />
+        <Using Include="System.Text.Json.Serialization.Metadata" />
+        <Using Include="System.Security" />
+        <Using Include="System.Windows.Forms" />
+        <Using Include="WinFormedge" />
+        <Using Include="WinFormedge.WebResource" />
+        <Using Include="WinFormedge.HostForms" />
+    </ItemGroup>
+    
 </Project>
