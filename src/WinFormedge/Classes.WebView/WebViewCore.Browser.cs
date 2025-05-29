@@ -213,7 +213,8 @@ partial class WebViewCore
         Container.Resize += (_, _) =>
         {
             if (Fullscreen) return;
-            Controller.Bounds = Container.ClientRectangle;
+            
+            Controller.Bounds = new System.Drawing.Rectangle(0,0, Container.Width, Container.Height);
         };
 
 

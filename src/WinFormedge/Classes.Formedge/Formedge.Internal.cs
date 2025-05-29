@@ -536,7 +536,7 @@ public abstract partial class Formedge
 
         OnResize(this, e);
 
-        if (WebView.Browser == null) return;
+        if (CoreWebView2 == null) return;
 
         var state = HostWindow.WindowState.ToString().ToLower();
 
@@ -549,7 +549,7 @@ public abstract partial class Formedge
         {
             _currentWindowStateString = state;
 
-            WebView.Browser.PostWebMessageAsJson(JsonSerializer.Serialize(new
+            CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new
             {
                 passcode = FORMEDGE_MESSAGE_PASSCODE,
                 message = "FormedgeNotifyWindowStateChange",
@@ -557,7 +557,7 @@ public abstract partial class Formedge
             }));
         }
 
-        WebView.Browser.PostWebMessageAsJson(JsonSerializer.Serialize(new
+        CoreWebView2.PostWebMessageAsJson(JsonSerializer.Serialize(new
         {
             passcode = FORMEDGE_MESSAGE_PASSCODE,
             message = "FormedgeNotifyWindowResize",
