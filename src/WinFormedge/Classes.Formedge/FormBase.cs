@@ -1080,8 +1080,20 @@ abstract class FormBase : Form
         {
             return false;
         }
+
+        if (placement.showCmd == SHOW_WINDOW_CMD.SW_SHOWMINIMIZED)
+        {
+            _screenBeforeMinimized = Screen.FromHandle(hwnd);
+        }
+
+
         return placement.showCmd == SHOW_WINDOW_CMD.SW_MAXIMIZE;
     }
+
+    /// <summary>
+    /// Stores the screen before the window is minimized, used to restore the maximized client rectangle.
+    /// </summary>
+    Screen? _screenBeforeMinimized;
 
     /// <summary>
     /// Adjusts the maximized client rectangle for custom borderless windows.
@@ -1093,8 +1105,17 @@ abstract class FormBase : Form
     {
         if (!IsMaximized(hwnd)) return false;
 
+        Screen screen;
 
-        var screen = Screen.FromHandle(Handle);
+        if (_screenBeforeMinimized is not null)
+        {
+            screen = _screenBeforeMinimized;
+            _screenBeforeMinimized = null;
+        }
+        else
+        {
+            screen = Screen.FromHandle(Handle);
+        }
 
         if (screen is null) return false;
 
