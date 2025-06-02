@@ -898,12 +898,23 @@ abstract class FormBase : Form
 
         if (DeviceDpi != 96)
         {
+            AutoScaleDimensions = new SizeF(DeviceDpi, DeviceDpi);
+
             var scaleFactor = DeviceDpi / 96f;
 
 
             width = (int)(width * scaleFactor);
             height = (int)(height * scaleFactor);
 
+            if (!MinimumSize.IsEmpty)
+            {
+                MinimumSize = new Size((int)(MinimumSize.Width * scaleFactor), (int)(MinimumSize.Height * scaleFactor));
+            }
+
+            if (!MaximumSize.IsEmpty)
+            {
+                MaximumSize = new Size((int)(MaximumSize.Width * scaleFactor), (int)(MaximumSize.Height * scaleFactor));
+            }
 
 
             if (width > screen.WorkingArea.Width)
