@@ -5,6 +5,7 @@ using Microsoft.Web.WebView2.Core;
 using System.Reflection;
 
 namespace MinimalExampleApp;
+
 internal class FeaturesWindow : Formedge
 {
     public FeaturesWindow()
@@ -17,16 +18,17 @@ internal class FeaturesWindow : Formedge
         Load += MyWindow_Load;
         DOMContentLoaded += MyWindow_DOMContentLoaded;
 
-        SetVirtualHostNameToEmbeddedResourcesMapping(new EmbeddedFileResourceOptions { 
-            Scheme="https", 
-            HostName="embedded.appresource.local", 
-            ResourceAssembly=Assembly.GetExecutingAssembly(),
-            DefaultFolderName="Resources\\wwwroot"
+        SetVirtualHostNameToEmbeddedResourcesMapping(new EmbeddedFileResourceOptions
+        {
+            Scheme = "https",
+            HostName = "embedded.appresource.local",
+            ResourceAssembly = Assembly.GetExecutingAssembly(),
+            DefaultFolderName = "Resources\\wwwroot"
         });
 
         Url = "https://embedded.appresource.local";
         //Url = "https://cn.bing.com/";
-
+        //Url = "https://www.douyin.com";
     }
 
     protected override WindowSettings ConfigureWindowSettings(HostWindowBuilder opts)
@@ -35,13 +37,12 @@ internal class FeaturesWindow : Formedge
 
         win.ExtendsContentIntoTitleBar = true;
         win.SystemBackdropType = SystemBackdropType.BlurBehind;
-        
+
         return win;
     }
 
     private void MyWindow_Load(object? sender, EventArgs e)
     {
-
     }
 
     private void MyWindow_DOMContentLoaded(object? sender, CoreWebView2DOMContentLoadedEventArgs e)
@@ -58,6 +59,5 @@ headerEl.style.appRegion="drag";
     protected override void ConfigureWebView2Settings(CoreWebView2Settings settings)
     {
         base.ConfigureWebView2Settings(settings);
-        
     }
 }
