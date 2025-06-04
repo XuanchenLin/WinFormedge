@@ -4,11 +4,12 @@
 // See the LICENSE file in the project root for more information.
 
 namespace WinFormedge;
+
 /// <summary>
 /// Represents the core logic for managing the WebView2 browser instance, including initialization,
 /// fullscreen handling, and web resource management.
 /// </summary>
-partial class WebViewCore
+internal partial class WebViewCore
 {
     /// <summary>
     /// Occurs when the WebView2 instance has been created and initialized.
@@ -115,7 +116,7 @@ partial class WebViewCore
     /// <summary>
     /// Holds the current fullscreen window instance, if any.
     /// </summary>
-    FullscreenWindow? _fullscreenWindow = null;
+    private FullscreenWindow? _fullscreenWindow = null;
 
     /// <summary>
     /// Handles changes to the fullscreen state, creating or closing the fullscreen window as needed.
@@ -156,7 +157,6 @@ partial class WebViewCore
         opts.ScriptLocale = WinFormedgeApp.Current.CultureName;
         opts.ProfileName = Application.ProductName;
 
-
         var controller = _controller = await WebViewEnvironment.CreateCoreWebView2ControllerAsync(Container.Handle);
 
         if (controller == null || controller.CoreWebView2 == null)
@@ -168,8 +168,6 @@ partial class WebViewCore
         controller.ShouldDetectMonitorScaleChanges = true;
         controller.Bounds = Container.ClientRectangle;
         controller.DefaultBackgroundColor = Color.Transparent;
-
-
 
         var webview = controller!.CoreWebView2;
 
@@ -198,7 +196,6 @@ partial class WebViewCore
             _ => CoreWebView2PreferredColorScheme.Light,
         };
 
-
         //Container.VisibleChanged += (_, _) =>
         //{
         //    Controller.IsVisible = Container.Visible;
@@ -213,13 +210,19 @@ partial class WebViewCore
         Container.Resize += (_, _) =>
         {
             if (Fullscreen) return;
-            
-            Controller.Bounds = new System.Drawing.Rectangle(0,0, Container.Width, Container.Height);
+
+            if (IsIconic((HWND)Container.Handle))
+            {
+                Controller.IsVisible = false;
+                return;
+            }
+            else
+            {
+                Controller.IsVisible = true;
+            }
+
+            Controller.Bounds = new System.Drawing.Rectangle(0, 0, Container.ClientRectangle.Width, Container.ClientRectangle.Height);
         };
-
-
-
-
 
         WebResourceManager.Initialize(webview);
 
