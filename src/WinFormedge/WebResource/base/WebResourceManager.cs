@@ -8,7 +8,7 @@ namespace WinFormedge.WebResource;
 /// <summary>
 /// Manages web resource handlers and integrates with CoreWebView2 to handle web resource requests.
 /// </summary>
-sealed class WebResourceManager
+internal sealed class WebResourceManager
 {
     /// <summary>
     /// Gets the list of registered web resource handlers.
@@ -54,7 +54,7 @@ sealed class WebResourceManager
         var uri = new Uri(e.Request.Uri);
         var webview = _webView2;
 
-        CoreWebView2WebResourceResponse GetNotFoundResponse() => webview.Environment.CreateWebResourceResponse(null, StatusCodes.Status404NotFound, "Not Found", "");
+        //CoreWebView2WebResourceResponse GetNotFoundResponse() => webview.Environment.CreateWebResourceResponse(null, StatusCodes.Status404NotFound, "Not Found", "");
 
         if (webview == null)
         {
@@ -63,7 +63,7 @@ sealed class WebResourceManager
 
         if (uri == null)
         {
-            e.Response = GetNotFoundResponse();
+            //e.Response = GetNotFoundResponse();
             return;
         }
 
@@ -79,7 +79,7 @@ sealed class WebResourceManager
 
         if (targetHandler == null)
         {
-            e.Response = GetNotFoundResponse();
+            //e.Response = GetNotFoundResponse();
             return;
         }
 
