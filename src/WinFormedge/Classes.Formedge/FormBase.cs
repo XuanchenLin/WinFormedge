@@ -8,16 +8,17 @@ using System.ComponentModel;
 namespace WinFormedge.HostForms;
 
 #region FormIconDisablerPlaceHolder
+
 public partial class _WinFormClassDisabler
 {
-
 }
-#endregion
+
+#endregion FormIconDisablerPlaceHolder
 
 /// <summary>
 /// Provides a base class for custom forms with advanced window style, borderless, shadow, and system backdrop support.
 /// </summary>
-abstract class FormBase : Form
+internal abstract class FormBase : Form
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="FormBase"/> class.
@@ -27,7 +28,6 @@ abstract class FormBase : Form
         InitializeComponent();
 
         _windowBorderResizer = new WebView2BorderlessResizer() { Visible = false };
-
     }
 
     /// <summary>
@@ -129,13 +129,11 @@ abstract class FormBase : Form
         get => _fullscreen;
         set
         {
-
             if (value == _fullscreen) return;
 
             _fullscreen = value;
 
             HandleFullScreen(value);
-
         }
     }
 
@@ -163,7 +161,6 @@ abstract class FormBase : Form
                 _backColor = value;
                 base.BackColor = Color.FromArgb(255, value.R, value.G, value.B);
             }
-
         }
     }
 
@@ -277,7 +274,7 @@ abstract class FormBase : Form
     /// Gets the non-client area metrics (padding) for the current window style.
     /// </summary>
     /// <returns>The <see cref="Padding"/> representing the non-client area.</returns>
-    internal protected Padding GetNonClientMetrics()
+    protected internal Padding GetNonClientMetrics()
     {
         var rect = new RECT();
 
@@ -324,6 +321,7 @@ abstract class FormBase : Form
                     case SystemBackdropType.MicaAlt:
                         cp.ExStyle |= (int)WINDOW_EX_STYLE.WS_EX_NOREDIRECTIONBITMAP;
                         break;
+
                     default:
                         break;
                 }
@@ -364,7 +362,6 @@ abstract class FormBase : Form
             return;
         }
 
-
         if (ExtendsContentIntoTitleBar && _shouldPatchBoundsSize && ((specified & BoundsSpecified.Size) != BoundsSpecified.None) && WindowState == FormWindowState.Normal)
         {
             if (ClientSize.Width != width || ClientSize.Height != height)
@@ -372,11 +369,8 @@ abstract class FormBase : Form
                 var padding = GetNonClientMetrics();
                 width = width - padding.Horizontal;
                 height = height - padding.Vertical;
-
             }
         }
-
-
 
         base.SetBoundsCore(x, y, width, height, specified);
     }
@@ -411,13 +405,11 @@ abstract class FormBase : Form
                         {
                             BOOL useHostBackdropBrush = true;
                             DwmSetWindowAttribute((HWND)Handle, DWMWINDOWATTRIBUTE.DWMWA_USE_HOSTBACKDROPBRUSH, &useHostBackdropBrush, (uint)sizeof(BOOL));
-
-
                         }
-
                     }
                 }
                 break;
+
             case WM_NCCALCSIZE when wParam == 1 && ExtendsContentIntoTitleBar && !Popup && !Fullscreen:
                 {
                     var nccalc = Marshal.PtrToStructure<NCCALCSIZE_PARAMS>(lParam);
@@ -430,6 +422,7 @@ abstract class FormBase : Form
                     Marshal.StructureToPtr(nccalc, m.LParam, false);
                 }
                 return;
+
             case WM_NCCALCSIZE when wParam == 0 && !OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000):
                 {
                     //var rect = Marshal.PtrToStructure<RECT>(lParam);
@@ -438,7 +431,6 @@ abstract class FormBase : Form
                     //Console.WriteLine(r);
 
                     _shouldPatchBoundsSize = true;
-
                 }
                 break;
                 //case WM_NCHITTEST:
@@ -450,7 +442,6 @@ abstract class FormBase : Form
                 //        }
                 //    }
                 //    break;
-
         }
         //var handled = OnWindowProc?.Invoke(ref m) ?? false;
 
@@ -481,28 +472,27 @@ abstract class FormBase : Form
         base.OnResize(e);
 
         PerformResizerVisiblity();
-
     }
 
     /// <summary>
     /// The standard windowed style.
     /// </summary>
-    const WINDOW_STYLE WINDOWED_STYLE = WINDOW_STYLE.WS_OVERLAPPEDWINDOW;
+    private const WINDOW_STYLE WINDOWED_STYLE = WINDOW_STYLE.WS_OVERLAPPEDWINDOW;
 
     /// <summary>
     /// The borderless style used when extending content into the title bar.
     /// </summary>
-    const WINDOW_STYLE BORDERLESS_STYLE = WINDOW_STYLE.WS_OVERLAPPED | WINDOW_STYLE.WS_THICKFRAME | WINDOW_STYLE.WS_CAPTION | WINDOW_STYLE.WS_SYSMENU | WINDOW_STYLE.WS_MINIMIZEBOX | WINDOW_STYLE.WS_MAXIMIZEBOX;
+    private const WINDOW_STYLE BORDERLESS_STYLE = WINDOW_STYLE.WS_OVERLAPPED | WINDOW_STYLE.WS_THICKFRAME | WINDOW_STYLE.WS_CAPTION | WINDOW_STYLE.WS_SYSMENU | WINDOW_STYLE.WS_MINIMIZEBOX | WINDOW_STYLE.WS_MAXIMIZEBOX;
 
     /// <summary>
     /// The style used for fullscreen windows.
     /// </summary>
-    const WINDOW_STYLE FULL_SCREEN_STYLE = WINDOW_STYLE.WS_POPUP | WINDOW_STYLE.WS_SYSMENU | WINDOW_STYLE.WS_MINIMIZEBOX;
+    private const WINDOW_STYLE FULL_SCREEN_STYLE = WINDOW_STYLE.WS_POPUP | WINDOW_STYLE.WS_SYSMENU | WINDOW_STYLE.WS_MINIMIZEBOX;
 
     /// <summary>
     /// The style used for popup windows.
     /// </summary>
-    const WINDOW_STYLE POPUP_STYLE = WINDOW_STYLE.WS_POPUP | WINDOW_STYLE.WS_SYSMENU | WINDOW_STYLE.WS_MINIMIZEBOX | WINDOW_STYLE.WS_MAXIMIZEBOX;
+    private const WINDOW_STYLE POPUP_STYLE = WINDOW_STYLE.WS_POPUP | WINDOW_STYLE.WS_SYSMENU | WINDOW_STYLE.WS_MINIMIZEBOX | WINDOW_STYLE.WS_MAXIMIZEBOX;
 
     private bool _resizable = true;
 
@@ -527,9 +517,9 @@ abstract class FormBase : Form
 
     private WINDOWPLACEMENT? _wpPrev;
 
-    bool _shouldPatchBoundsSize = false;
+    private bool _shouldPatchBoundsSize = false;
 
-    SystemBackdropType _systemBackdropType = SystemBackdropType.Auto;
+    private SystemBackdropType _systemBackdropType = SystemBackdropType.Auto;
 
     /// <summary>
     /// Defines bitmask values for hit test regions in the non-client area.
@@ -544,6 +534,7 @@ abstract class FormBase : Form
     }
 
     #region Resizer of borderless window
+
     /// <summary>
     /// Provides a transparent control for handling borderless window resizing.
     /// </summary>
@@ -584,7 +575,6 @@ abstract class FormBase : Form
             var cursor = MARCOS.ToPoint(lParam);
 
             var border = new Point(GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXFRAME)/* + GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXPADDEDBORDER)*/, GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CYFRAME) /*+ GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXPADDEDBORDER)*/);
-
 
             if (!GetWindowRect((HWND)Parent!.Handle, out var windowRect))
             {
@@ -640,7 +630,6 @@ abstract class FormBase : Form
         {
             base.OnResize(eventargs);
 
-
             var parentHandle = Parent?.Handle ?? 0;
 
             if (parentHandle == 0) return;
@@ -648,7 +637,6 @@ abstract class FormBase : Form
             SetWindowPos((HWND)Handle, (HWND)parentHandle, 0, 0, 0, 0, SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_NOZORDER | SET_WINDOW_POS_FLAGS.SWP_NOSIZE);
 
             CreateDragRegion();
-
         }
 
         /// <summary>
@@ -671,21 +659,23 @@ abstract class FormBase : Form
                             break;
                         }
 
-
                         switch (region)
                         {
                             case HTTOP:
                             case HTBOTTOM:
                                 Cursor = Cursors.SizeNS;
                                 break;
+
                             case HTLEFT:
                             case HTRIGHT:
                                 Cursor = Cursors.SizeWE;
                                 break;
+
                             case HTTOPLEFT:
                             case HTBOTTOMRIGHT:
                                 Cursor = Cursors.SizeNWSE;
                                 break;
+
                             case HTTOPRIGHT:
                             case HTBOTTOMLEFT:
                                 Cursor = Cursors.SizeNESW;
@@ -693,6 +683,7 @@ abstract class FormBase : Form
                         }
                     }
                     return;
+
                 case WM_LBUTTONDOWN:
                     {
                         var hittest = HitTestNCA(m.LParam);
@@ -707,7 +698,7 @@ abstract class FormBase : Form
             base.WndProc(ref m);
         }
 
-        Padding _borders = Padding.Empty;
+        private Padding _borders = Padding.Empty;
 
         /// <summary>
         /// Gets the DPI-scaled border offset.
@@ -730,7 +721,6 @@ abstract class FormBase : Form
 
             var windowRect = new Region(ClientRectangle);
 
-
             if (BorderOffset.All != 0)
             {
                 var borderRect = new Rectangle(ClientRectangle.Left + DpiScaledBorderOffset.Left, ClientRectangle.Top + DpiScaledBorderOffset.Top, ClientRectangle.Width - DpiScaledBorderOffset.Horizontal, ClientRectangle.Height - DpiScaledBorderOffset.Vertical);
@@ -743,13 +733,13 @@ abstract class FormBase : Form
             windowRect.Exclude(excludedRect);
 
             Region = windowRect;
-
         }
     }
 
-    #endregion
+    #endregion Resizer of borderless window
 
     #region WindowComposition
+
     /// <summary>
     /// Provides window accent composition (blur/acrylic) for legacy Windows versions.
     /// </summary>
@@ -777,7 +767,7 @@ abstract class FormBase : Form
         }
 
         private readonly bool _isAcrylic;
-        nint _handle;
+        private nint _handle;
 
         /// <summary>
         /// Accent state for the window composition.
@@ -848,7 +838,8 @@ abstract class FormBase : Form
             public int SizeOfData;
         }
     }
-    #endregion
+
+    #endregion WindowComposition
 
     /// <summary>
     /// Initializes the form's components and default properties.
@@ -856,9 +847,9 @@ abstract class FormBase : Form
     private void InitializeComponent()
     {
         this.SuspendLayout();
-        // 
+        //
         // BrowserHostForm
-        // 
+        //
         this.ClientSize = new System.Drawing.Size(960, 640);
         this.Name = "WinFormedgeForm";
         this.Text = "WinFormedge";
@@ -902,7 +893,6 @@ abstract class FormBase : Form
 
             var scaleFactor = DeviceDpi / 96f;
 
-
             width = (int)(width * scaleFactor);
             height = (int)(height * scaleFactor);
 
@@ -915,7 +905,6 @@ abstract class FormBase : Form
             {
                 MaximumSize = new Size((int)(MaximumSize.Width * scaleFactor), (int)(MaximumSize.Height * scaleFactor));
             }
-
 
             if (width > screen.WorkingArea.Width)
             {
@@ -935,19 +924,13 @@ abstract class FormBase : Form
                 x = screen.Bounds.X + (screen.WorkingArea.Width - width) / 2;
                 y = screen.Bounds.Y + (screen.WorkingArea.Height - height) / 2;
             }
-
-
-
         }
 
         Location = new Point(x, y);
 
         Size = new Size(width, height);
 
-
-
         if (IsMaximized((HWND)Handle) || WindowState == FormWindowState.Maximized) return;
-
 
         if (StartPosition == FormStartPosition.CenterScreen || (StartPosition == FormStartPosition.CenterParent && Owner is null))
         {
@@ -957,9 +940,7 @@ abstract class FormBase : Form
         }
         else if (StartPosition == FormStartPosition.CenterParent && Owner is not null)
         {
-
             Location = new Point(Owner.Left + (Owner.Width - Size.Width) / 2, Owner.Top + (Owner.Height - Size.Height) / 2);
-
         }
     }
 
@@ -973,7 +954,6 @@ abstract class FormBase : Form
         var oldStyle = (WINDOW_STYLE)GetWindowLong((HWND)Handle, WINDOW_LONG_PTR_INDEX.GWL_STYLE);
 
         var newStyle = RecreatingHandle ? oldStyle : GetWindowStyle();
-
 
         //if (newStyle == oldStyle) return;
 
@@ -991,7 +971,6 @@ abstract class FormBase : Form
             }
         }
 
-
         SetWindowLong((HWND)Handle, WINDOW_LONG_PTR_INDEX.GWL_STYLE, (int)newStyle);
 
         if (!Popup)
@@ -999,12 +978,12 @@ abstract class FormBase : Form
             DwmExtendFrameIntoClientArea((HWND)Handle, SHADOW_DECORATORS[ShadowDecorated ? 1 : 0]);
         }
 
-
         SetWindowPos((HWND)Handle, HWND.Null, 0, 0, 0, 0, SET_WINDOW_POS_FLAGS.SWP_FRAMECHANGED | SET_WINDOW_POS_FLAGS.SWP_NOMOVE | SET_WINDOW_POS_FLAGS.SWP_NOSIZE);
 
-
-
-        ShowWindow(hWnd, _wpPrev?.showCmd ?? SHOW_WINDOW_CMD.SW_SHOW);
+        if (RecreatingHandle)
+        {
+            ShowWindow(hWnd, _wpPrev?.showCmd ?? SHOW_WINDOW_CMD.SW_SHOW);
+        }
 
         PerformResizerVisiblity();
     }
@@ -1019,7 +998,6 @@ abstract class FormBase : Form
 
         if (WindowState == FormWindowState.Minimized)
         {
-
             if (_wpPrev?.showCmd == SHOW_WINDOW_CMD.SW_SHOWMAXIMIZED)
             {
                 WindowState = FormWindowState.Maximized;
@@ -1065,7 +1043,6 @@ abstract class FormBase : Form
     {
         if (_windowBorderResizer is null || !IsHandleCreated || RecreatingHandle) return;
 
-
         if (Resizable && !Fullscreen && (ExtendsContentIntoTitleBar || Popup) && WindowState == FormWindowState.Normal)
         {
             Controls.Add(_windowBorderResizer);
@@ -1097,14 +1074,13 @@ abstract class FormBase : Form
             _screenBeforeMinimized = Screen.FromHandle(hwnd);
         }
 
-
         return placement.showCmd == SHOW_WINDOW_CMD.SW_MAXIMIZE;
     }
 
     /// <summary>
     /// Stores the screen before the window is minimized, used to restore the maximized client rectangle.
     /// </summary>
-    Screen? _screenBeforeMinimized;
+    private Screen? _screenBeforeMinimized;
 
     /// <summary>
     /// Adjusts the maximized client rectangle for custom borderless windows.
@@ -1182,8 +1158,8 @@ abstract class FormBase : Form
         {
             AdjustWindowRectEx(ref rect, style, false, exStyle);
         }
-
     }
+
     //[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     //internal WindowProc? OnWindowProc { get; set; }
 
@@ -1243,7 +1219,6 @@ abstract class FormBase : Form
             return;
         }
 
-
         var systemBackdropType = _systemBackdropType switch
         {
             SystemBackdropType.None => DWM_SYSTEMBACKDROP_TYPE.DWMSBT_NONE,
@@ -1259,7 +1234,5 @@ abstract class FormBase : Form
         }
 
         _systemBackdropType = value;
-
     }
 }
-

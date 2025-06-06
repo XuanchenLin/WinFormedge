@@ -3,6 +3,7 @@ using WinFormedge.WebResource;
 
 using Microsoft.Web.WebView2.Core;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace MinimalExampleApp;
 
@@ -43,6 +44,10 @@ internal class FeaturesWindow : Formedge
 
     private void MyWindow_Load(object? sender, EventArgs e)
     {
+        if (CoreWebView2 is not null)
+        {
+            CoreWebView2.AddHostObjectToScript("testWindow", new TestWindowHostObject(this));
+        }
     }
 
     private void MyWindow_DOMContentLoaded(object? sender, CoreWebView2DOMContentLoadedEventArgs e)
@@ -59,5 +64,26 @@ headerEl.style.appRegion="drag";
     protected override void ConfigureWebView2Settings(CoreWebView2Settings settings)
     {
         base.ConfigureWebView2Settings(settings);
+    }
+}
+
+[ComVisible(true)]
+[ClassInterface(ClassInterfaceType.AutoDual)]
+public class TestWindowHostObject
+{
+    private readonly FeaturesWindow _featuresWindow;
+
+    internal TestWindowHostObject(FeaturesWindow featuresWindow)
+    {
+        _featuresWindow = featuresWindow;
+    }
+
+    public void OpenSubWindow()
+    {
+        var subWindow = new FeaturesWindow
+        {
+            StartPosition = FormStartPosition.CenterScreen
+        };
+        subWindow.Show(_featuresWindow);
     }
 }

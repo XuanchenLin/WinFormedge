@@ -2,11 +2,13 @@
 
     <PropertyGroup Label="Globals">
       <WebView2LoaderPreference>Static</WebView2LoaderPreference>
+      <WebView2UseWinRT>False</WebView2UseWinRT>
+      <WebView2EnableCsWinRTProjection>False</WebView2EnableCsWinRTProjection>
     </PropertyGroup>
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFrameworks>net8.0-windows;net9.0-windows;</TargetFrameworks>
+        <TargetFramework>net9.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <UseWindowsForms>true</UseWindowsForms>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -18,12 +20,17 @@
         <ApplicationDefaultFont>Segoe UI,9pt</ApplicationDefaultFont>
 
 
-        <!--<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-        <PublishAot>true</PublishAot>
-        <_SuppressWinFormsTrimError>true</_SuppressWinFormsTrimError>-->
 
 
     </PropertyGroup>
+
+    <!--<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <PublishAot>true</PublishAot>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <_SuppressWinFormsTrimError>true</_SuppressWinFormsTrimError>
+        <CustomResourceTypesSupport>true</CustomResourceTypesSupport>
+        <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+    </PropertyGroup>-->
 
     <ItemGroup>
       <EmbeddedResource Include="Resources\wwwroot\**\*" />
@@ -32,5 +39,9 @@
     <ItemGroup>
         <ProjectReference Include="..\WinFormedge\WinFormedge.csproj" />
     </ItemGroup>
+
+    <!--<ItemGroup>
+        <RdXmlFile Include="rd.xml" />
+    </ItemGroup>-->
 
 </Project>
