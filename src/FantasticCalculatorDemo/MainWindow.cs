@@ -5,7 +5,7 @@ internal class MainCalculatorWindow : Formedge
 {
     public MainCalculatorWindow()
     {
-        WindowCaption = "计算器";
+        WindowTitle = "计算器";
         Icon = Properties.Resources.AppIcon;
         Size = new Size(320, 480);
         BackColor = Color.Transparent;

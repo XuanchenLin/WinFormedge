@@ -28,15 +28,35 @@ class DefaultWindow : FormBase
         Resizable = settings.Resizable;
     }
 
+    /// <inheritdoc/>
     protected override void WndProc(ref Message m)
     {
-        if (_settings.WndProc?.Invoke(ref m) ?? false) return;
+        var wndProcs = _settings.WndProc?.GetInvocationList() ?? [];
+
+        var result = false;
+
+        foreach (WindowProc wndProc in wndProcs)
+        {
+            result |= wndProc.Invoke(ref m);
+        }
+
+        if (result) return;
 
         base.WndProc(ref m);
     }
+
+    /// <inheritdoc/>
     protected override void DefWndProc(ref Message m)
     {
-        if (_settings.DefWndProc?.Invoke(ref m) ?? false) return;
+        var wndProcs = _settings.DefWndProc?.GetInvocationList() ?? [];
+
+        var result = false;
+        foreach (WindowProc wndProc in wndProcs)
+        {
+            result |= wndProc.Invoke(ref m);
+        }
+
+        if (result) return;
 
         base.DefWndProc(ref m);
     }

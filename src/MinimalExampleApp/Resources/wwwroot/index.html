@@ -22,8 +22,7 @@
             app-region: drag;
         }
 
-        .window--activated header{
-
+        .window--activated header {
         }
 
         .window--deactivated header {
@@ -37,9 +36,8 @@
             width: 60px;
         }
 
-
-        .window--activated #activated-status{
-            background-color:green;
+        .window--activated #activated-status {
+            background-color: green;
         }
 
         .window--deactivated #activated-status {
@@ -73,10 +71,21 @@
         <div>
             Activated: <span id="activated-status"></span>
         </div>
+
+        <div>
+            <button id="openChildWindow">开窗测试</button>
+        </div>
     </main>
 
-    
-
-
+    <script>
+        (() => {
+            const btn = document.getElementById("openChildWindow");
+            if (btn) {
+                btn.addEventListener("click", () => {
+                    chrome.webview.hostObjects.sync.testWindow.OpenSubWindow();
+                });
+            }
+        })();
+    </script>
 </body>
 </html>

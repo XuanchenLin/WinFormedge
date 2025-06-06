@@ -3,6 +3,8 @@
 // This project is licensed under the MIT License.
 // See the LICENSE file in the project root for more information.
 
+using System.Drawing;
+
 namespace WinFormedge;
 /// <summary>
 /// Provides the core implementation for the Formedge window, including window creation, event handling, 
@@ -17,25 +19,25 @@ public abstract partial class Formedge
     public Formedge()
     {
         _hostWindowBuilder = new HostWindowBuilder();
-        _windowStyleSettings = ConfigureWindowSettings(_hostWindowBuilder);
+        //_windowStyleSettings = ConfigureWindowSettings(_hostWindowBuilder);
 
-        var hostWindow = _windowStyleSettings.CreateHostWindow();
+        //var hostWindow = _windowStyleSettings.CreateHostWindow();
 
-        if (hostWindow is null) throw new InvalidOperationException("HostWindow can't be null.");
+        //if (hostWindow is null) throw new InvalidOperationException("HostWindow can't be null.");
 
-        _windowStyleSettings.ConfigureWinFormProps(hostWindow);
+        //_windowStyleSettings.ConfigureWinFormProps(hostWindow);
 
-        HostWindow = hostWindow;
+        //HostWindow = hostWindow;
 
-        WebView = new WebViewCore(HostWindow);
+        //WebView = new WebViewCore(HostWindow);
 
-        WebView.WebViewCreated += (_, _) => WebViewCreatedCore();
+        //WebView.WebViewCreated += (_, _) => WebViewCreatedCore();
 
-        _windowStyleSettings.WndProc += WebView.HostWndProc;
-        _windowStyleSettings.WndProc += WndProcCore;
-        _windowStyleSettings.DefWndProc += DefWndProcCore;
+        //_windowStyleSettings.WndProc += WebView.HostWndProc;
+        //_windowStyleSettings.WndProc += WndProcCore;
+        //_windowStyleSettings.DefWndProc += DefWndProcCore;
 
-        HostWindowCreatedCore();
+        //HostWindowCreatedCore();
     }
 
     /// <summary>
@@ -104,20 +106,105 @@ public abstract partial class Formedge
         WebView.UnregisterWebResourceHander(resourceHandler);
     }
 
+    private Form? _hostWindow;
+
+
     /// <summary>
     /// Gets the host window (WinForms Form) for this Formedge instance.
     /// </summary>
-    internal Form HostWindow { get; }
+    internal Form HostWindow
+    {
+        get
+        {
+            if (_hostWindow is null)
+            {
+                CreateWindow();
+            }
+            return _hostWindow!;
+        }
+    }
+
+    internal bool IsWindowCreated => _hostWindow != null;
+
+
+    private void CreateWindow()
+    {
+        _hostWindow = WindowStyleSettings.CreateHostWindow();
+
+        _hostWindow.MinimizeBox = _minimizable;
+        _hostWindow.MaximizeBox = _maximizable;
+        _hostWindow.ShowInTaskbar = _showInTaskbar;
+        _hostWindow.StartPosition = _startPosition;
+        _hostWindow.TopMost = _topMost;
+        _hostWindow.Text = _windowCaption;
+        _hostWindow.Enabled = _enabled;
+        if (_icon is not null)
+        {
+            _hostWindow.Icon = _icon;
+        }
+
+
+
+        if (_minimumSize.HasValue)
+        {
+            _hostWindow.MinimumSize = _minimumSize.Value;
+        }
+
+        if (_maximumSize.HasValue)
+        {
+            _hostWindow.MaximumSize = _maximumSize.Value;
+        }
+
+        if (_size.HasValue)
+        {
+            _hostWindow.Size = _size.Value;
+        }
+
+        if (_location.HasValue)
+        {
+            _hostWindow.Location = _location.Value;
+        }
+
+
+        WindowStyleSettings.ConfigureWinFormProps(_hostWindow);
+
+        WindowStyleSettings.WndProc += WndProcCore;
+        WindowStyleSettings.DefWndProc += DefWndProcCore;
+
+        _hostWindow.HandleCreated += (_, _) =>
+        {
+            Handle = HostWindow.Handle;
+        };
+
+        RegisterHostWindowEvents();
+    }
+    private WebViewCore? _webViewCore = null;
 
     /// <summary>
     /// Gets the WebViewCore instance used for browser integration.
     /// </summary>
-    internal WebViewCore WebView { get; }
+    internal WebViewCore WebView {
+        get
+        {
+            if (_webViewCore == null)
+            {
+                _webViewCore = new WebViewCore(HostWindow)
+                {
+
+                };
+
+                WebView.WebViewCreated += (_, _) => WebViewCreatedCore();
+                WindowStyleSettings.WndProc += WebView.HostWndProc;
+            }
+
+            return _webViewCore;
+        }
+    }
 
     /// <summary>
     /// Gets a value indicating whether the window has a system title bar.
     /// </summary>
-    internal protected bool HasSystemTitlebar => _windowStyleSettings.HasSystemTitlebar;
+    internal protected bool HasSystemTitlebar => WindowStyleSettings.HasSystemTitlebar;
 
     /// <summary>
     /// Gets or sets a value indicating whether fullscreen is allowed.
@@ -254,10 +341,26 @@ public abstract partial class Formedge
     /// </summary>
     private readonly string FORMEDGE_MESSAGE_PASSCODE = Guid.NewGuid().ToString("N");
 
-    private readonly WindowSettings _windowStyleSettings;
+
     private readonly HostWindowBuilder _hostWindowBuilder;
     private FormedgeHostObject? _formedgeHostObject = null;
     string? _currentWindowStateString = null;
+
+
+    private WindowSettings? _windowStyleSettings = null;
+
+    internal WindowSettings WindowStyleSettings
+    {
+        get
+        {
+            if (_windowStyleSettings is null)
+            {
+                _windowStyleSettings = ConfigureWindowSettings(_hostWindowBuilder);
+            }
+
+            return _windowStyleSettings;
+        }
+    }
 
     bool _currentWindowActivated = true;
 
@@ -266,7 +369,7 @@ public abstract partial class Formedge
     /// <summary>
     /// Attaches core event handlers to the host window after creation.
     /// </summary>
-    private void HostWindowCreatedCore()
+    private void RegisterHostWindowEvents()
     {
         HostWindow.Activated += OnActivatedCore;
         HostWindow.Deactivate += OnDeactivateCore;
@@ -340,9 +443,9 @@ public abstract partial class Formedge
 
         webview.AddScriptToExecuteOnDocumentCreatedAsync(script);
 
-        if (_windowStyleSettings.WindowSpecifiedJavaScript is not null)
+        if (WindowStyleSettings.WindowSpecifiedJavaScript is not null)
         {
-            webview.AddScriptToExecuteOnDocumentCreatedAsync(_windowStyleSettings.WindowSpecifiedJavaScript);
+            webview.AddScriptToExecuteOnDocumentCreatedAsync(WindowStyleSettings.WindowSpecifiedJavaScript);
         }
 
         OnLoad();
