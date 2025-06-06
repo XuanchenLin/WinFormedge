@@ -3,8 +3,9 @@
 // This project is licensed under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-namespace WinFormedge;
+using System.Drawing;
 
+namespace WinFormedge;
 
 /// <summary>
 /// Represents the main window class for the WinFormedge application.
@@ -12,6 +13,21 @@ namespace WinFormedge;
 /// </summary>
 public partial class Formedge : IWin32Window
 {
+    private bool _enabled = true;
+    private Icon? _icon = null;
+
+    private Point? _location;
+    private bool _maximizable = true;
+    private Size? _maximumSize;
+    private bool _minimizable = true;
+    private Size? _minimumSize;
+    private bool _showInTaskbar = true;
+    private Size? _size;
+    private FormStartPosition _startPosition = FormStartPosition.WindowsDefaultLocation;
+    private bool _topMost = false;
+    private bool _visible = true;
+    private string _windowCaption = "WinFormedge";
+    private FormWindowState _windowState = FormWindowState.Normal;
     /// <summary>
     /// Occurs when the window is activated.
     /// </summary>
@@ -23,44 +39,14 @@ public partial class Formedge : IWin32Window
     public event EventHandler? Deactivate;
 
     /// <summary>
-    /// Occurs when the window resize operation begins.
+    /// Occurs when the window has closed.
     /// </summary>
-    public event EventHandler? ResizeBegin;
-
-    /// <summary>
-    /// Occurs when the window is resized.
-    /// </summary>
-    public event EventHandler? Resize;
-
-    /// <summary>
-    /// Occurs when the window resize operation ends.
-    /// </summary>
-    public event EventHandler? ResizeEnd;
-
-    /// <summary>
-    /// Occurs when the window is moved.
-    /// </summary>
-    public event EventHandler? Move;
-
-    /// <summary>
-    /// Occurs when the window is shown.
-    /// </summary>
-    public event EventHandler? Shown;
-
-    /// <summary>
-    /// Occurs when the window's visibility changes.
-    /// </summary>
-    public event EventHandler? VisibleChanged;
+    public event FormClosedEventHandler? FormClosed;
 
     /// <summary>
     /// Occurs when the window is closing.
     /// </summary>
     public event FormClosingEventHandler? FormClosing;
-
-    /// <summary>
-    /// Occurs when the window has closed.
-    /// </summary>
-    public event FormClosedEventHandler? FormClosed;
 
     /// <summary>
     /// Occurs when the window receives focus.
@@ -73,128 +59,251 @@ public partial class Formedge : IWin32Window
     public event EventHandler? LostFocus;
 
     /// <summary>
-    /// Gets the window handle.
+    /// Occurs when the window is moved.
     /// </summary>
-    public nint Handle => HostWindow.Handle;
+    public event EventHandler? Move;
 
     /// <summary>
-    /// Gets or sets the size of the window.
+    /// Occurs when the window is resized.
     /// </summary>
-    public Size Size { get => HostWindow.Size; set => HostWindow.Size = value; }
+    public event EventHandler? Resize;
 
     /// <summary>
-    /// Gets or sets the location of the window.
+    /// Occurs when the window resize operation begins.
     /// </summary>
-    public Point Location { get => HostWindow.Location; set => HostWindow.Location = value; }
+    public event EventHandler? ResizeBegin;
+    /// <summary>
+    /// Occurs when the window resize operation ends.
+    /// </summary>
+    public event EventHandler? ResizeEnd;
+    /// <summary>
+    /// Occurs when the window is shown.
+    /// </summary>
+    public event EventHandler? Shown;
 
     /// <summary>
-    /// Gets or sets the window caption (title).
+    /// Occurs when the window's visibility changes.
     /// </summary>
-    public string WindowCaption
-    {
-        get => _windowCaption;
-        set
-        {
-            _windowCaption = value;
-            UpdateWindowCaption();
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the window is visible.
-    /// </summary>
-    public bool Visible { get => HostWindow.Visible; set => HostWindow.Visible = value; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the window is topmost.
-    /// </summary>
-    public bool TopMost { get => HostWindow.TopMost; set => HostWindow.TopMost = value; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the window is shown in the taskbar.
-    /// </summary>
-    public bool ShowInTaskbar { get => HostWindow.ShowInTaskbar; set => HostWindow.ShowInTaskbar = value; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the window can be maximized.
-    /// </summary>
-    public bool Maximizable { get => HostWindow.MaximizeBox; set => HostWindow.MaximizeBox = value; }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether the window can be minimized.
-    /// </summary>
-    public bool Minimizable { get => HostWindow.MinimizeBox; set => HostWindow.MinimizeBox = value; }
-
-    /// <summary>
-    /// Gets or sets the window icon.
-    /// </summary>
-    public Icon? Icon { get => HostWindow.Icon; set => HostWindow.Icon = value; }
-
-    /// <summary>
-    /// Gets or sets the left position of the window.
-    /// </summary>
-    public int Left { get => HostWindow.Left; set => HostWindow.Left = value; }
-
-    /// <summary>
-    /// Gets or sets the top position of the window.
-    /// </summary>
-    public int Top { get => HostWindow.Top; set => HostWindow.Top = value; }
-
-    /// <summary>
-    /// Gets or sets the width of the window.
-    /// </summary>
-    public int Width { get => HostWindow.Width; set => HostWindow.Width = value; }
-
-    /// <summary>
-    /// Gets or sets the height of the window.
-    /// </summary>
-    public int Height { get => HostWindow.Height; set => HostWindow.Height = value; }
-
-    /// <summary>
-    /// Gets or sets the maximum size of the window.
-    /// </summary>
-    public Size MaximumSize { get => HostWindow.MaximumSize; set => HostWindow.MaximumSize = value; }
-
-    /// <summary>
-    /// Gets or sets the minimum size of the window.
-    /// </summary>
-    public Size MinimumSize { get => HostWindow.MinimumSize; set => HostWindow.MinimumSize = value; }
-
+    public event EventHandler? VisibleChanged;
     /// <summary>
     /// Gets or sets a value indicating whether the window is enabled.
     /// </summary>
-    public bool Enabled { get => HostWindow.Enabled; set => HostWindow.Enabled = value; }
-
-    /// <summary>
-    /// Gets or sets the start position of the window.
-    /// </summary>
-    public FormStartPosition StartPosition { get => HostWindow.StartPosition; set => HostWindow.StartPosition = value; }
-
-    /// <summary>
-    /// Gets or sets the window state (normal, minimized, maximized).
-    /// </summary>
-    public FormWindowState WindowState
+    public bool Enabled
     {
-        get => HostWindow.WindowState;
+        get
+        {
+            if (IsWindowCreated)
+            {
+                return HostWindow.Enabled;
+            }
+            return _enabled;
+        }
         set
         {
-            if (Fullscreen) return;
+            _enabled = value;
 
-            HostWindow.WindowState = value;
+            if (IsWindowCreated)
+            {
+                HostWindow.Enabled = _enabled;
+            }
         }
     }
+
+
 
     /// <summary>
     /// Gets or sets a value indicating whether the window is in fullscreen mode.
     /// </summary>
     public bool Fullscreen
     {
-        get => _windowStyleSettings.Fullscreen;
+        get => WindowStyleSettings.Fullscreen;
         set
         {
             if (!AllowFullscreen) return;
 
-            _windowStyleSettings.Fullscreen = value;
+            WindowStyleSettings.Fullscreen = value;
+        }
+    }
+
+    /// <summary>
+    /// Gets the window handle.
+    /// </summary>
+    public nint Handle { get; private set; }
+
+    /// <summary>
+    /// Gets or sets the height of the window.
+    /// </summary>
+    public int Height
+    {
+        get => _hostWindow?.Height ?? 0;
+        set
+        {
+            if (IsWindowCreated)
+            {
+                HostWindow.Height = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the window icon.
+    /// </summary>
+    public Icon? Icon
+    {
+        get
+        {
+            if (IsWindowCreated)
+            {
+                return HostWindow.Icon;
+            }
+            return _icon;
+        }
+        set
+        {
+            _icon = value;
+
+            if (IsWindowCreated)
+            {
+                HostWindow.Icon = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether invoke is required for thread safety.
+    /// </summary>
+    public bool InvokeRequired => _hostWindow?.InvokeRequired ?? false;
+
+
+    /// <summary>
+    /// Gets or sets the left position of the window.
+    /// </summary>
+    public int Left
+    {
+        get => _hostWindow?.Left ?? 0;
+        set
+        {
+            if (IsWindowCreated)
+            {
+                HostWindow.Left = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the location of the window.
+    /// </summary>
+    public Point Location
+    {
+        get
+        {
+            if (IsWindowCreated)
+            {
+                return HostWindow.Location;
+            }
+            return _location ?? default;
+        }
+        set
+        {
+            _location = value;
+
+            if (IsWindowCreated)
+            {
+                HostWindow.Location = _location.Value;
+            }
+        }
+    }
+    /// <summary>
+    /// Gets or sets a value indicating whether the window can be maximized.
+    /// </summary>
+    public bool Maximizable
+    {
+        get
+        {
+            if (IsWindowCreated)
+            {
+                return HostWindow.MaximizeBox;
+            }
+            return _maximizable;
+        }
+        set
+        {
+            _maximizable = value;
+
+            if (IsWindowCreated)
+            {
+                HostWindow.MaximizeBox = _maximizable;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the maximum size of the window.
+    /// </summary>
+    public Size MaximumSize
+    {
+        get
+        {
+            if (IsWindowCreated)
+            {
+                return HostWindow.MaximumSize;
+            }
+            return _maximumSize ?? default;
+        }
+        set
+        {
+            _maximumSize = value;
+
+            if (IsWindowCreated)
+            {
+                HostWindow.MaximumSize = _maximumSize.Value;
+            }
+        }
+    }
+    /// <summary>
+    /// Gets or sets a value indicating whether the window can be minimized.
+    /// </summary>
+    public bool Minimizable
+    {
+        get
+        {
+            if (IsWindowCreated)
+            {
+                return HostWindow.MinimizeBox;
+            }
+            return _minimizable;
+        }
+        set
+        {
+            _minimizable = value;
+
+            if (IsWindowCreated)
+            {
+                HostWindow.MinimizeBox = _minimizable;
+            }
+        }
+    }
+    /// <summary>
+    /// Gets or sets the minimum size of the window.
+    /// </summary>
+    public Size MinimumSize
+    {
+        get
+        {
+            if (IsWindowCreated)
+            {
+                return HostWindow.MinimumSize;
+            }
+            return _minimumSize ?? default;
+        }
+        set
+        {
+            _minimumSize = value;
+
+            if (IsWindowCreated)
+            {
+                HostWindow.MinimumSize = _minimumSize.Value;
+            }
         }
     }
 
@@ -204,13 +313,193 @@ public partial class Formedge : IWin32Window
     public bool ShowDocumentTitle { get; set; } = false;
 
     /// <summary>
-    /// Toggles the fullscreen state of the window.
+    /// Gets or sets a value indicating whether the window is shown in the taskbar.
     /// </summary>
-    public void ToggleFullscreen()
+    public bool ShowInTaskbar
     {
-        Fullscreen = !Fullscreen;
+        get
+        {
+            if (IsWindowCreated)
+            {
+                return HostWindow.ShowInTaskbar;
+            }
+            return _showInTaskbar;
+        }
+        set
+        {
+            _showInTaskbar = value;
+
+            if (IsWindowCreated)
+            {
+                HostWindow.ShowInTaskbar = _showInTaskbar;
+            }
+        }
     }
 
+    /// <summary>
+    /// Gets or sets the size of the window.
+    /// </summary>
+    public Size Size
+    {
+        get
+        {
+            if (IsWindowCreated)
+            {
+                return HostWindow.Size;
+            }
+            return _size ?? default;
+        }
+        set
+        {
+            _size = value;
+
+            if (IsWindowCreated)
+            {
+                HostWindow.Size = _size.Value;
+            }
+
+        }
+    }    /// <summary>
+         /// Gets or sets the start position of the window.
+         /// </summary>
+    public FormStartPosition StartPosition
+    {
+        get
+        {
+            if (IsWindowCreated)
+            {
+                return HostWindow.StartPosition;
+            }
+            return _startPosition;
+        }
+        set
+        {
+            _startPosition = value;
+
+            if (IsWindowCreated)
+            {
+                HostWindow.StartPosition = _startPosition;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the top position of the window.
+    /// </summary>
+    public int Top
+    {
+        get => _hostWindow?.Top ?? 0;
+        set
+        {
+            if (IsWindowCreated)
+            {
+                HostWindow.Top = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the window is topmost.
+    /// </summary>
+    public bool TopMost
+    {
+        get
+        {
+            if (IsWindowCreated)
+            {
+                return HostWindow.TopMost;
+            }
+            return _topMost;
+        }
+        set
+        {
+            _topMost = value;
+
+            if (IsWindowCreated)
+            {
+                HostWindow.TopMost = _topMost;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the window is visible.
+    /// </summary>
+    public bool Visible
+    {
+        get
+        {
+            if (IsWindowCreated)
+            {
+                return HostWindow.Visible;
+            }
+            return _visible;
+        }
+        set
+        {
+            _visible = value;
+
+            if (IsWindowCreated)
+            {
+                HostWindow.Visible = _visible;
+            }
+        }
+    }
+    /// <summary>
+    /// Gets or sets the width of the window.
+    /// </summary>
+    public int Width
+    {
+        get => _hostWindow?.Width ?? 0;
+        set
+        {
+            if (IsWindowCreated)
+            {
+                HostWindow.Width = value;
+            }
+        }
+    }
+    /// <summary>
+    /// Gets or sets the window state (normal, minimized, maximized).
+    /// </summary>
+    public FormWindowState WindowState
+    {
+        get
+        {
+            if (IsWindowCreated)
+            {
+                return HostWindow.WindowState;
+            }
+
+            return _windowState;
+        }
+        set
+        {
+            if (Fullscreen) return;
+
+            if (IsWindowCreated)
+            {
+                HostWindow.WindowState = value;
+            }
+            else
+            {
+                _windowState = value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the window caption (title).
+    /// </summary>
+    public string WindowTitle
+    {
+        get => _windowCaption;
+        set
+        {
+            _windowCaption = value;
+            UpdateWindowCaption();
+        }
+    }
     /// <summary>
     /// Activates the window and sets focus to the WebView if initialized.
     /// </summary>
@@ -233,7 +522,12 @@ public partial class Formedge : IWin32Window
     /// Shows the window with the specified owner.
     /// </summary>
     /// <param name="owner">The owner window.</param>
-    public void Show(IWin32Window? owner) => HostWindow.Show(owner);
+    public void Show(IWin32Window owner)
+    {
+        AssignOwnerFromHandle(HostWindow, owner);
+
+        HostWindow.Show(owner);
+    }
 
     /// <summary>
     /// Shows the window.
@@ -245,7 +539,12 @@ public partial class Formedge : IWin32Window
     /// </summary>
     /// <param name="owner">The owner window.</param>
     /// <returns>A DialogResult value.</returns>
-    public DialogResult ShowDialog(IWin32Window? owner) => HostWindow.ShowDialog(owner);
+    public DialogResult ShowDialog(IWin32Window owner)
+    {
+        AssignOwnerFromHandle(HostWindow, owner);
+
+        return HostWindow.ShowDialog(owner);
+    }
 
     /// <summary>
     /// Shows the window as a modal dialog.
@@ -254,17 +553,34 @@ public partial class Formedge : IWin32Window
     public DialogResult ShowDialog() => HostWindow.ShowDialog();
 
     /// <summary>
+    /// Toggles the fullscreen state of the window.
+    /// </summary>
+    public void ToggleFullscreen()
+    {
+        Fullscreen = !Fullscreen;
+    }
+    /// <summary>
+    /// Provides the default window procedure for processing Windows messages.
+    /// </summary>
+    /// <param name="m">The Windows message.</param>
+    /// <returns>True if the message was handled; otherwise, false.</returns>
+    protected virtual bool DefWndProc(ref Message m)
+    {
+        return false;
+    }
+
+    /// <summary>
     /// Updates the window caption based on the current settings.
     /// </summary>
     protected virtual void UpdateWindowCaption()
     {
         if (ShowDocumentTitle && !string.IsNullOrWhiteSpace(DocumentTitle))
         {
-            HostWindow.Text = $"{DocumentTitle} - {WindowCaption}";
+            HostWindow.Text = $"{DocumentTitle} - {WindowTitle}";
         }
         else
         {
-            HostWindow.Text = WindowCaption;
+            HostWindow.Text = WindowTitle;
         }
     }
 
@@ -279,15 +595,23 @@ public partial class Formedge : IWin32Window
     }
 
     /// <summary>
-    /// Provides the default window procedure for processing Windows messages.
+    /// Assigns the owner of the child form based on the provided handle.
     /// </summary>
-    /// <param name="m">The Windows message.</param>
-    /// <returns>True if the message was handled; otherwise, false.</returns>
-    protected virtual bool DefWndProc(ref Message m)
+    /// <param name="child">
+    /// The child form to assign the owner to.
+    /// </param>
+    /// <param name="owner">
+    /// The owner window handle to assign as the owner of the child form.
+    /// </param>
+    private void AssignOwnerFromHandle(Form child, IWin32Window owner)
     {
-        return false;
+        if (owner is not null)
+        {
+            var forms = Application.OpenForms.Cast<Form>();
+
+            var ownerForm = forms.SingleOrDefault(x => x.Handle == owner.Handle);
+
+            child.Owner = ownerForm;
+        }
     }
-
-    private string _windowCaption = "WinFormedge";
 }
-

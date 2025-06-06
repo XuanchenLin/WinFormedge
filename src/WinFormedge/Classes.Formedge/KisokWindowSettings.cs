@@ -3,6 +3,8 @@
 // This project is licensed under the MIT License.
 // See the LICENSE file in the project root for more information.
 
+using System.Runtime;
+
 namespace WinFormedge;
 /// <summary>
 /// Provides window settings for a kiosk-style window, which is typically fullscreen and borderless.
@@ -76,30 +78,35 @@ public class KisokWindowSettings : WindowSettings
         /// </summary>
         public KisokWindowSettings Settings { get; }
 
-        /// <summary>
-        /// Processes Windows messages before they are dispatched.
-        /// </summary>
-        /// <param name="m">The Windows message to process.</param>
+        /// <inheritdoc/>
         protected override void WndProc(ref Message m)
         {
-            if (Settings.WndProc?.Invoke(ref m) ?? false)
+            var wndProcs = Settings.WndProc?.GetInvocationList() ?? [];
+
+            var result = false;
+
+            foreach (WindowProc wndProc in wndProcs)
             {
-                return;
+                result |= wndProc.Invoke(ref m);
             }
+
+            if (result) return;
 
             base.WndProc(ref m);
         }
 
-        /// <summary>
-        /// Processes Windows messages that are not handled by <see cref="WndProc"/>.
-        /// </summary>
-        /// <param name="m">The Windows message to process.</param>
+        /// <inheritdoc/>
         protected override void DefWndProc(ref Message m)
         {
-            if (Settings.DefWndProc?.Invoke(ref m) ?? false)
+            var wndProcs = Settings.DefWndProc?.GetInvocationList() ?? [];
+
+            var result = false;
+            foreach (WindowProc wndProc in wndProcs)
             {
-                return;
+                result |= wndProc.Invoke(ref m);
             }
+
+            if (result) return;
 
             base.DefWndProc(ref m);
         }
