@@ -42,6 +42,42 @@ public abstract partial class Formedge
         public string ChromiumVersion => _formedge.WebView.Browser?.Environment.BrowserVersionString ?? string.Empty;
 
         /// <summary>
+        /// Gets or sets the left position of the window in pixels.
+        /// </summary>
+        public int Left
+        {
+            get => _formedge.Left;
+            set => _formedge.Left = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the top position of the window in pixels.
+        /// </summary>
+        public int Top
+        {
+            get => _formedge.Top;
+            set => _formedge.Top = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the width of the window in pixels.
+        /// </summary>
+        public int Width
+        {
+            get => _formedge.Width;
+            set => _formedge.Width = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the height of the window in pixels.
+        /// </summary>
+        public int Height
+        {
+            get => _formedge.Height;
+            set => _formedge.Height = value;
+        }
+
+        /// <summary>
         /// Minimizes the window.
         /// </summary>
         public void Minimize()

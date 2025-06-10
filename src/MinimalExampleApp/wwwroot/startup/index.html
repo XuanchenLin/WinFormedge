@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Welcome to WinFormedge</title>
+        <style type="text/css">
+            body,
+            html {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                cursor: default;
+                user-select: none;
+            }
+
+            body {
+                font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+                color: #fff;
+                font-size: 20px;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotateZ(0);
+                }
+
+                100% {
+                    transform: rotateZ(360deg);
+                }
+            }
+
+            @keyframes spin-pulse {
+                0% {
+                    transform: scale(1) rotateZ(0);
+                }
+
+                50% {
+                    transform: scale(0.9) rotateZ(180deg);
+                }
+
+                100% {
+                    transform: scale(1) rotateZ(360deg);
+                }
+            }
+
+            .container {
+                width: 630px;
+                height: 630px;
+                position: relative;
+            }
+
+            section {
+                display: block;
+                position: absolute;
+                top: calc(50% - 10em);
+                left: calc(50% - 10em);
+                width: 20em;
+                height: 20em;
+            }
+
+            section.spin {
+                animation: spin 20s linear infinite;
+            }
+
+            section.spin-reverse {
+                animation: spin 10s linear infinite;
+            }
+
+            section.pulse {
+                animation: spin-pulse 20s linear infinite;
+            }
+
+            .circle {
+                border-radius: 50%;
+                left: calc(50% - 6.25em);
+                top: calc(50% - 12.5em);
+                transform-origin: 50% 12.5em;
+            }
+
+            .squircle {
+                border-radius: 25%;
+            }
+
+            .circle,
+            .squircle {
+                width: 12.5em;
+                height: 12.5em;
+                position: absolute;
+            }
+
+            .large.circle {
+                box-shadow: 0 1em 2em rgba(0, 0, 0, 0.8);
+            }
+
+            .small {
+                width: 4em;
+                height: 4em;
+                left: calc(50% - 2em);
+                top: calc(50% - 15em);
+                transform-origin: 50% 15em;
+                box-shadow: 0 0.25em 0.5em rgba(0, 0, 0, 0.2);
+            }
+
+            .one {
+                background: rgba(16, 63, 236, 0.75);
+                transform: rotateZ(225deg);
+            }
+
+            .two {
+                background: rgba(37, 172, 162, 0.75);
+                transform: rotateZ(180deg);
+            }
+
+            .three {
+                background: rgba(233, 124, 32, 0.75);
+                transform: rotateZ(135deg);
+            }
+
+            .four {
+                background: rgba(235, 67, 35, 0.75);
+                transform: rotateZ(90deg);
+            }
+
+            .five {
+                background: rgba(190, 28, 65, 0.75);
+                transform: rotateZ(45deg);
+            }
+
+            .six {
+                background: rgba(208, 57, 159, 0.75);
+                transform: rotateZ(0);
+            }
+
+            .seven {
+                background: rgba(150, 32, 198, 0.75);
+                transform: rotateZ(-45deg);
+            }
+
+            .eight {
+                background: rgba(95, 33, 203, 0.75);
+                transform: rotateZ(-90deg);
+            }
+
+            .small.squircle {
+                background: none;
+                box-shadow: none;
+            }
+
+            .small.squircle::after {
+                content: "";
+                border-radius: 25%;
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                background: red;
+                transform: rotateZ(-45deg);
+                box-shadow: -0.25em 0.25em 0.5em rgba(0, 0, 0, 0.2);
+            }
+
+            .small.squircle.two::after {
+                background: rgba(37, 172, 162, 0.75);
+            }
+
+            .small.squircle.four::after {
+                background: rgba(235, 67, 35, 0.75);
+            }
+
+            .small.squircle.six::after {
+                background: rgba(208, 57, 159, 0.75);
+            }
+
+            .small.squircle.eight::after {
+                background: rgba(95, 33, 203, 0.75);
+            }
+
+            .large.squircle {
+                position: absolute;
+                background: rgba(30, 7, 66, 0.65);
+                border: none;
+                left: calc(50% - 7.5em);
+                top: calc(50% - 7.5em);
+                width: 15em;
+                height: 15em;
+                transform: none;
+            }
+
+            .large.squircle.one {
+                transform: rotateZ(45deg);
+                background: rgba(30, 7, 66, 0.5);
+            }
+
+            .large.squircle.two {
+                transform: rotateZ(90deg);
+                background: rgba(30, 7, 66, 0.3);
+            }
+
+            .large.squircle.main {
+                app-region: drag;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .content {
+                text-align: center;
+            }
+
+            .content .logo {
+                width: 4em;
+                height: 4em;
+                margin: 0 auto;
+                background: url("./WinFormedgeLogo.png") no-repeat center center;
+                background-size: contain;
+            }
+
+            .content h1 {
+                font-weight: normal;
+                font-size: 1.25em;
+                margin: 0 auto;
+                max-width: 6em;
+            }
+
+            .content p {
+                font-weight: 200;
+                font-size: 0.8em;
+                margin: 0 auto 1em;
+            }
+
+            .content p.link a {
+                app-region: no-drag;
+                font-weight: 600;
+                font-size: 0.6em;
+                color: #fff;
+                text-decoration: none;
+                border: 0.1em solid #fff;
+                padding: 0.5em 1em;
+                border-radius: 0.25em;
+                transition: all 0.3s ease-in-out;
+            }
+
+            .content p.link a:hover {
+                background: #fff;
+                color: #000;
+            }
+
+            .content p.link a:active {
+                transform: scale(0.95);
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <section class="spin">
+                <!-- Large Circles -->
+                <div class="large circle one"></div>
+                <div class="large circle two"></div>
+                <div class="large circle three"></div>
+                <div class="large circle four"></div>
+                <div class="large circle five"></div>
+                <div class="large circle six"></div>
+                <div class="large circle seven"></div>
+                <div class="large circle eight"></div>
+            </section>
+            <section class="pulse">
+                <!-- Small Shapes -->
+                <div class="small circle one"></div>
+                <div class="small squircle two"></div>
+                <div class="small circle three"></div>
+                <div class="small squircle four"></div>
+                <div class="small circle five"></div>
+                <div class="small squircle six"></div>
+                <div class="small circle seven"></div>
+                <div class="small squircle eight"></div>
+            </section>
+            <!-- Squircles -->
+            <section class="spin-reverse">
+                <div class="large squircle one"></div>
+                <div class="large squircle two"></div>
+            </section>
+            <div class="large squircle main">
+                <div class="content">
+                    <div class="logo"></div>
+                    <h1>WinFormedge</h1>
+                    <p>用 HTML/CSS/JavaScript 创建<br />现代 .NET 应用</p>
+                    <p class="link" app-command="close">
+                        <a href="#">即刻体验</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <audio src="./spring-wind.mp3" preload="auto" autoplay style="position: absolute; top: 0; left: 0"></audio>
+    </body>
+</html>

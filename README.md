@@ -19,7 +19,7 @@
 
 The inspiration behind WinFormedge comes from another project I maintain: **[NanUI](https://github.com/xuanchenlin/NanUI)**. Like WinFormedge, NanUI lets developers build WinForms applications using web technologies. But unlike WinFormedge, it relies on the **Chromium Embedded Framework (CEF)**.
 
-![PREVIEW](./docs/preview1.png)
+![PREVIEW](./screenshots/2025-06-11_014008.png)
 
 ## 🖥️ Requirements
 

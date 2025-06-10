@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+        <style>
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .canvas-outer {
+                background: linear-gradient(to bottom, #a7f1ff, #f1feff 50%);
+                border-radius: 298px;
+                width: 564px;
+                height: 564px;
+                position: relative;
+            }
+            #canvas {
+                border-radius: 500px;
+                position: absolute;
+            }
+
+            #canvas2 {
+                position: absolute;
+                top: 100px;
+                left: 100px;
+                top: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="canvas-outer" style="width: 451px; height: 451px" app-command="close" title="Click to close">
+            <canvas id="canvas2" width="300" height="564" style="width: 240px; height: 451.2px"></canvas>
+            <canvas id="canvas" width="564" height="564" style="width: 451.2px; height: 451.2px"></canvas>
+        </div>
+        <script src="shaped.js"></script>
+    </body>
+</html>

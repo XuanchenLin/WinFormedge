@@ -10,7 +10,7 @@ namespace WinFormedge;
 /// Provides the core implementation for the Formedge window, including window creation, event handling, 
 /// and integration with WebView2 for browser-based UI.
 /// </summary>
-public abstract partial class Formedge
+public abstract partial class Formedge : IDisposable
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Formedge"/> class, sets up the host window, 
@@ -264,6 +264,8 @@ public abstract partial class Formedge
     protected virtual void OnFormClosed(object? sender, FormClosedEventArgs e)
     {
         FormClosed?.Invoke(this, e);
+
+        _isDisposed = true;
     }
 
     /// <summary>
@@ -825,5 +827,10 @@ public abstract partial class Formedge
     /// <param name="e">The event arguments.</param>
     private void OnStatusBarTextChangedCore(object? sender, object e)
     {
+    }
+
+    public void Dispose()
+    {
+        HostWindow.Dispose();
     }
 }

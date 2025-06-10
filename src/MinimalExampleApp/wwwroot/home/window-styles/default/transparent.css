@@ -1,0 +1,211 @@
+html,
+body {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: HelveticaNeue, "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
+    user-select: none;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.expander {
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+    padding: 15px 20px 25px 20px;
+}
+
+.window--maximized .expander {
+    padding: 0px;
+}
+
+.window {
+    animation: fadeIn 0.1s ease-out forwards;
+    background: linear-gradient(#f5f5f5, #e1dfe1);
+    width: 100%;
+    height: 100%;
+    border: 1px solid #acacac;
+    border-radius: 6px;
+    box-shadow: 0px 5px 20px #33333360;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.window--deactivated .window {
+    box-shadow: 0px 5px 20px #33333330;
+}
+
+.window--maximized .window {
+    border: 0;
+    border-radius: 0;
+}
+
+.titlebar {
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ebebeb, color-stop(1, #d5d5d5)));
+    background: -webkit-linear-gradient(top, #ebebeb, #d5d5d5);
+    background: linear-gradient(top, #ebebeb, #d5d5d5);
+    color: #4c4b4c;
+    font-size: 14px;
+    width: 100%;
+    height: 30px;
+    border-top: 1px solid #f3f1f3;
+    border-bottom: 1px solid #b1aeb1;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    cursor: default;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-app-region: drag;
+}
+
+.window--deactivated .titlebar > span {
+    color: #888788;
+}
+
+.window--deactivated .buttons > div {
+    background-color: #c0bfc0;
+    border-color: #c0bfc0;
+}
+
+.window--deactivated .buttons:hover span {
+    visibility: hidden !important;
+}
+
+.buttons {
+    padding-left: 8px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    -webkit-app-region: no-drag;
+}
+
+.buttons > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 11px;
+    height: 11px;
+    font-size: 9pt;
+    border-radius: 50%;
+}
+
+.buttons:hover span {
+    visibility: visible;
+}
+
+.close {
+    background: #ff5c5c;
+    border: 1px solid #e33e41;
+}
+
+.close:active {
+    background: #c14645;
+    border: 1px solid #b03537;
+}
+
+.close:active .closebutton {
+    color: #4e0002;
+}
+
+.closebutton {
+    color: #820005;
+    visibility: hidden;
+}
+
+.minimize {
+    background: #ffbd4c;
+    border: 1px solid #e09e3e;
+}
+
+.minimize:active {
+    background: #c08e38;
+    border: 1px solid #af7c33;
+}
+
+.minimize:active .minimizebutton {
+    color: #5a2607;
+}
+
+.minimizebutton {
+    color: #9a5518;
+    visibility: hidden;
+}
+
+.zoom {
+    background: #00ca56;
+    border: 1px solid #14ae46;
+}
+
+.zoom:active {
+    background: #029740;
+    border: 1px solid #128435;
+}
+
+.zoom:active .zoombutton {
+    color: #003107;
+}
+
+.zoombutton {
+    color: #006519;
+    visibility: hidden;
+    cursor: default;
+}
+
+.content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.content .logo {
+    width: 222px;
+    height: 222px;
+    background-image: url("./images/chrome-metal.png");
+    background-size: cover;
+    background-position: center;
+    margin: 30px 0 20px 0;
+}
+
+.content h1 {
+    margin: 8px 0;
+    font-weight: 400;
+    font-size: 36px;
+    color: #4c4b4c;
+}
+
+.content p {
+    font-size: 14px;
+    font-weight: 300;
+    color: #495949;
+    margin: 4px 0;
+}
+.content .dismiss {
+    margin-top: 30px;
+    padding: 8px 16px;
+    color: #4c4b4c;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.content .dismiss > svg {
+    margin: 10px 0;
+}

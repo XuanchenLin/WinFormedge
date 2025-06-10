@@ -154,6 +154,8 @@ internal partial class WebViewCore
     {
         var opts = WebViewEnvironment.CreateCoreWebView2ControllerOptions();
 
+        Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--autoplay-policy=no-user-gesture-required");
+
         opts.ScriptLocale = WinFormedgeApp.Current.CultureName;
         opts.ProfileName = Application.ProductName;
 
@@ -188,6 +190,7 @@ internal partial class WebViewCore
         webview.Settings.IsNonClientRegionSupportEnabled = true;
 
         ConfigureSettings?.Invoke(webview.Settings);
+
 
         webview.Profile.PreferredColorScheme = WinFormedgeApp.Current.SystemColorMode switch
         {

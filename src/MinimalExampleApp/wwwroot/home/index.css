@@ -1,0 +1,350 @@
+@import url("./fonts.css");
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+  cursor: default;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+html {
+  transition: filter 0.3s ease-in;
+}
+html.window--deactivated {
+  filter: grayscale(0.6);
+}
+
+body {
+  font-size: 24px;
+  animation: theme 21s linear infinite;
+}
+body:after, body:before {
+  content: "";
+  display: block;
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  width: 100vw;
+  height: 100vmax;
+  background: rgba(0, 0, 0, 0.8);
+  animation: backgrounds 60s linear infinite;
+}
+body:after {
+  left: 15vw;
+}
+body:before {
+  right: 15vw;
+  animation-delay: -30s;
+  animation-direction: reverse;
+}
+
+@keyframes theme {
+  0% {
+    background-color: #1da462;
+  }
+  25% {
+    background-color: #dd5144;
+  }
+  50% {
+    background-color: #ffcd46;
+  }
+  75% {
+    background-color: #4c8bf5;
+  }
+  100% {
+    background-color: #1da462;
+  }
+}
+@keyframes backgrounds {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0.2;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.4;
+  }
+}
+@keyframes windowFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.window-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 70% -10%, rgb(255, 255, 255) 40%, rgba(255, 255, 255, 0.6) 70%, rgba(255, 255, 255, 0) 100%);
+  z-index: 1;
+}
+.window-container .window-blur-behind {
+  width: 100%;
+  display: grid;
+  height: 100%;
+  grid: "header header" 4em "content view" auto/1fr 1fr;
+  animation: windowFadeIn 0.2s ease-out;
+}
+.window-container .window-blur-behind > .header {
+  -webkit-app-region: drag;
+  grid-area: header;
+  padding: 1em 0 0 2em;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+.window-container .window-blur-behind > .header .logo {
+  font-weight: 700;
+  font-size: 1.2em;
+  color: #192938;
+  margin: 0;
+  align-self: center;
+  text-shadow: 0 0 15px #ffffff;
+}
+.window-container .window-blur-behind > .header .logo > span {
+  font-weight: 400;
+  display: block;
+  font-size: 0.5em;
+  color: #5f6368;
+  line-height: 1em;
+}
+.window-container .window-blur-behind > .header nav {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.5em;
+  margin: 0 0 0 4em;
+  align-self: center;
+}
+.window-container .window-blur-behind > .header nav a {
+  -webkit-app-region: no-drag;
+  color: #555555;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.8em;
+  transition: all 0.1s ease-out;
+  padding: 0 0 0.3em;
+  background: no-repeat linear-gradient(90deg, #0e3b8a, #0e3b8a) bottom/0 0.2em;
+}
+.window-container .window-blur-behind > .header nav a:hover {
+  color: #003b70;
+  background-size: 100% 0.2em;
+}
+.window-container .window-blur-behind > .header div.window-controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  -webkit-app-region: no-drag;
+}
+.window--deactivated .window-container .window-blur-behind > .header div.window-controls > button {
+  transform: translateY(-100%);
+}
+
+.window-container .window-blur-behind > .header div.window-controls > button {
+  width: 3em;
+  height: 3em;
+  border: none;
+  background-color: transparent;
+  transition: all 0.5s ease;
+  font-family: "fonticon" !important;
+  color: #babcbe;
+  outline: none;
+}
+.window-container .window-blur-behind > .header div.window-controls > button.group {
+  margin-left: 1em;
+}
+.window-container .window-blur-behind > .header div.window-controls > button:hover {
+  color: #5f6368;
+  background-color: rgba(51, 51, 51, 0.062745098);
+}
+.window-container .window-blur-behind > .header div.window-controls > button:active {
+  background-color: rgba(51, 51, 51, 0.1254901961);
+}
+.window-container .window-blur-behind > .header div.window-controls > button.close:after {
+  content: "\e903";
+}
+.window-container .window-blur-behind > .header div.window-controls > button.close:hover {
+  color: #fff;
+  background-color: #e51e17;
+}
+.window-container .window-blur-behind > .header div.window-controls > button.close:active {
+  background-color: #cc0002;
+}
+.window-container .window-blur-behind > .header div.window-controls > button.language:after {
+  content: "\e905";
+}
+.window-container .window-blur-behind > .header div.window-controls > button.fullscreen:after {
+  content: "\e904";
+}
+.window--fullscreen .window-container .window-blur-behind > .header div.window-controls > button.fullscreen:after {
+  content: "\e906";
+}
+
+.window--fullscreen .window-container .window-blur-behind > .header div.window-controls > button.minimize {
+  display: none;
+}
+
+.window-container .window-blur-behind > .header div.window-controls > button.minimize:after {
+  content: "\e901";
+}
+.window--fullscreen .window-container .window-blur-behind > .header div.window-controls > button.maximize {
+  display: none;
+}
+
+.window-container .window-blur-behind > .header div.window-controls > button.maximize:after {
+  content: "\e902";
+}
+.window--maximized .window-container .window-blur-behind > .header div.window-controls > button.maximize:after {
+  content: "\e900";
+}
+
+.window-container .window-blur-behind > .content {
+  grid-area: content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 2em;
+  max-width: 45vw;
+  overflow: hidden;
+}
+.window-container .window-blur-behind > .content .intro {
+  margin: 3em 0;
+}
+.window-container .window-blur-behind > .content .intro > h2 {
+  color: #3c4179;
+  font-size: 2vw;
+}
+.window-container .window-blur-behind > .content .intro > p {
+  color: #535353;
+  font-size: 1.3333333333vw;
+}
+.window-container .window-blur-behind > .content .intro .links {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1em;
+  margin-top: 6vw;
+}
+.window-container .window-blur-behind > .content .intro .links a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1vw;
+  transition: box-shadow 0.3s ease;
+  background: #202124;
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.window-container .window-blur-behind > .content .intro .links a svg {
+  width: 1.5em;
+  height: 1.5em;
+  margin-right: 0.5em;
+}
+.window-container .window-blur-behind > .content .intro .links a:hover {
+  box-shadow: 0.1em 0.5em 1em rgba(28, 32, 51, 0.5647058824);
+}
+.window-container .window-blur-behind > .view {
+  grid-area: view;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 2em 2em 2em;
+  overflow: hidden;
+}
+.window-container .window-blur-behind > .view .demo-window {
+  height: 33.75vw;
+  width: 100%;
+  background: linear-gradient(180deg, rgba(54, 149, 231, 0.2509803922) 0%, rgba(255, 255, 255, 0.062745098) 100%);
+  border-radius: 0.5em;
+  box-shadow: 0.1em 0.3em 1.5em rgba(33, 33, 33, 0.5);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  border: solid 2px #babcbe;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.window-container .window-blur-behind > .view .demo-window > .window-header {
+  height: 3em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 0 1em;
+}
+.window-container .window-blur-behind > .view .demo-window > .window-header .fack-title {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.window-container .window-blur-behind > .view .demo-window > .window-header .fack-title > .caption {
+  height: 1em;
+  background: rgba(95, 99, 104, 0.1882352941);
+  width: 60%;
+}
+.window-container .window-blur-behind > .view .demo-window > .window-header .fack-controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  margin-right: 1em;
+}
+.window-container .window-blur-behind > .view .demo-window > .window-header .fack-controls > div {
+  width: 1em;
+  height: 1em;
+  background: #5f6368;
+}
+.window-container .window-blur-behind > .view .demo-window > .window-header .fack-controls > div:last-child {
+  background: #cc0002;
+}
+.window-container .window-blur-behind > .view .demo-window .window-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.window-container .window-blur-behind > .view .demo-window .window-content svg {
+  width: 5em;
+  height: 5em;
+  transition: all 0.3s ease;
+}
+.window-container .window-blur-behind > .view .demo-window .window-content h1 {
+  font-weight: 100;
+  font-size: 0.8em;
+  color: #2b425a;
+  padding: 0;
+  margin: 1em 0;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.window-container .window-blur-behind > .view .demo-window .window-content:hover svg {
+  transform: scale(1.2) translateY(-1em);
+  filter: drop-shadow(0 0 8px rgba(54, 149, 231, 0.2509803922));
+}
+.window-container .window-blur-behind > .view .demo-window .window-content:hover h1 {
+  text-shadow: 0 0 8px rgba(54, 149, 231, 0.9333333333);
+  transform: scale(1.3);
+}

@@ -1,0 +1,492 @@
+@import url("./fonts.css");
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+  cursor: default;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+html {
+  transition: filter 0.3s ease-in;
+}
+html.window--deactivated {
+  filter: grayscale(0.6);
+}
+
+body {
+  font-size: 24px;
+}
+body.purple-theme {
+  background-color: #7451b9;
+}
+body.pink-theme {
+  background-color: #f78da7;
+}
+body.green-theme {
+  background-color: #1da462;
+}
+body.red-theme {
+  background-color: #dd5144;
+}
+body.yellow-theme {
+  background-color: #ffcd46;
+}
+body.blue-theme {
+  background-color: #4c8bf5;
+}
+body:after, body:before {
+  content: "";
+  display: block;
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  width: 100vw;
+  height: 100vmax;
+  background: rgba(0, 0, 0, 0.8);
+  animation: backgrounds 60s linear infinite;
+}
+body:after {
+  left: 15vw;
+}
+body:before {
+  right: 15vw;
+  animation-delay: -30s;
+  animation-direction: reverse;
+}
+
+@keyframes backgrounds {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0.2;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.4;
+  }
+}
+@keyframes windowFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(10%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.button {
+  display: inline-block;
+  font-weight: 400;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  padding: 0.5em 1.5em;
+  font-size: 1em;
+  line-height: 1.5;
+  border-radius: 0.25em;
+  transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+.button:hover {
+  background-color: #f8f9fa;
+  border-color: #bfc4c9;
+  color: #222;
+}
+.button:active {
+  background-color: #e2e6ea;
+  border-color: #adb5bd;
+  color: #222;
+}
+.button.btn-primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+.button.btn-primary:hover {
+  background-color: #0056d2;
+  border-color: #0056d2;
+  color: #fff;
+}
+.button.btn-primary:active {
+  background-color: #0041a8;
+  border-color: #0041a8;
+  color: #fff;
+}
+.button:disabled, .button.disabled {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.window-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 70% -10%, rgb(255, 255, 255) 40%, rgba(255, 255, 255, 0.6) 70%, rgba(255, 255, 255, 0) 100%);
+  z-index: 1;
+  overflow: hidden;
+}
+.window-container .body-behind {
+  width: 100%;
+  height: 100%;
+  animation: windowFadeIn 0.2s ease-in;
+  display: grid;
+  grid: "header" 4em "content" auto;
+}
+.window-container .body-behind > .header {
+  -webkit-app-region: drag;
+  grid-area: header;
+  padding: 1em 0 0 2em;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+.window-container .body-behind > .header .nav-back {
+  -webkit-app-region: no-drag;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  margin-right: 1.5em;
+  justify-content: center;
+}
+.window-container .body-behind > .header .nav-back > a {
+  border: #5f6368 0.1em solid;
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+.window-container .body-behind > .header .nav-back > a svg {
+  width: 1.5em;
+  height: 1.5em;
+  transition: all 0.3s ease;
+  fill: #5f6368;
+}
+.window-container .body-behind > .header .nav-back > a:hover {
+  border-color: #3c4043;
+}
+.window-container .body-behind > .header .nav-back > a:hover svg {
+  fill: #3c4043;
+}
+.window-container .body-behind > .header .nav-back > a:active {
+  border-color: #192938;
+}
+.window-container .body-behind > .header .nav-back > a:active svg {
+  fill: #192938;
+}
+.window-container .body-behind > .header .logo {
+  font-weight: 700;
+  font-size: 1.2em;
+  color: #192938;
+  margin: 0;
+  align-self: center;
+  text-shadow: 0 0 15px #ffffff;
+}
+.window-container .body-behind > .header .logo > span {
+  font-weight: 400;
+  display: block;
+  font-size: 0.5em;
+  color: #5f6368;
+  line-height: 1em;
+}
+.window-container .body-behind > .header div.window-controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  -webkit-app-region: no-drag;
+}
+.window--deactivated .window-container .body-behind > .header div.window-controls > button {
+  transform: translateY(-100%);
+}
+
+.window-container .body-behind > .header div.window-controls > button {
+  width: 3em;
+  height: 3em;
+  border: none;
+  background-color: transparent;
+  transition: all 0.5s ease;
+  font-family: "fonticon" !important;
+  color: #babcbe;
+  outline: none;
+}
+.window-container .body-behind > .header div.window-controls > button.group {
+  margin-left: 1em;
+}
+.window-container .body-behind > .header div.window-controls > button:hover {
+  color: #5f6368;
+  background-color: rgba(51, 51, 51, 0.062745098);
+}
+.window-container .body-behind > .header div.window-controls > button:active {
+  background-color: rgba(51, 51, 51, 0.1254901961);
+}
+.window-container .body-behind > .header div.window-controls > button.close:after {
+  content: "\e903";
+}
+.window-container .body-behind > .header div.window-controls > button.close:hover {
+  color: #fff;
+  background-color: #e51e17;
+}
+.window-container .body-behind > .header div.window-controls > button.close:active {
+  background-color: #cc0002;
+}
+.window-container .body-behind > .header div.window-controls > button.language:after {
+  content: "\e905";
+}
+.window-container .body-behind > .header div.window-controls > button.fullscreen:after {
+  content: "\e904";
+}
+.window--fullscreen .window-container .body-behind > .header div.window-controls > button.fullscreen:after {
+  content: "\e906";
+}
+
+.window--fullscreen .window-container .body-behind > .header div.window-controls > button.minimize {
+  display: none;
+}
+
+.window-container .body-behind > .header div.window-controls > button.minimize:after {
+  content: "\e901";
+}
+.window--fullscreen .window-container .body-behind > .header div.window-controls > button.maximize {
+  display: none;
+}
+
+.window-container .body-behind > .header div.window-controls > button.maximize:after {
+  content: "\e902";
+}
+.window--maximized .window-container .body-behind > .header div.window-controls > button.maximize:after {
+  content: "\e900";
+}
+
+.window-container .body-behind > .content {
+  grid-area: content;
+  padding: 0.5em 1em 1em 1em;
+}
+.window-container .body-behind > .content > .container {
+  width: 100%;
+  height: 100%;
+  font-size: 24px;
+}
+.window-container .body-behind > .content > .container > .tabs {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio] {
+  display: none;
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(1):checked ~ .label > .tab:nth-child(1) {
+  opacity: 1 !important;
+  background-color: #ffffff;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.1254901961);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(1):checked ~ .content-box > div:nth-child(1) {
+  opacity: 1;
+  z-index: 1;
+  transform: translateX(0);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(2):checked ~ .label > .tab:nth-child(2) {
+  opacity: 1 !important;
+  background-color: #ffffff;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.1254901961);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(2):checked ~ .content-box > div:nth-child(2) {
+  opacity: 1;
+  z-index: 1;
+  transform: translateX(0);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(3):checked ~ .label > .tab:nth-child(3) {
+  opacity: 1 !important;
+  background-color: #ffffff;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.1254901961);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(3):checked ~ .content-box > div:nth-child(3) {
+  opacity: 1;
+  z-index: 1;
+  transform: translateX(0);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(4):checked ~ .label > .tab:nth-child(4) {
+  opacity: 1 !important;
+  background-color: #ffffff;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.1254901961);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(4):checked ~ .content-box > div:nth-child(4) {
+  opacity: 1;
+  z-index: 1;
+  transform: translateX(0);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(5):checked ~ .label > .tab:nth-child(5) {
+  opacity: 1 !important;
+  background-color: #ffffff;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.1254901961);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(5):checked ~ .content-box > div:nth-child(5) {
+  opacity: 1;
+  z-index: 1;
+  transform: translateX(0);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(6):checked ~ .label > .tab:nth-child(6) {
+  opacity: 1 !important;
+  background-color: #ffffff;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.1254901961);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(6):checked ~ .content-box > div:nth-child(6) {
+  opacity: 1;
+  z-index: 1;
+  transform: translateX(0);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(7):checked ~ .label > .tab:nth-child(7) {
+  opacity: 1 !important;
+  background-color: #ffffff;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.1254901961);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(7):checked ~ .content-box > div:nth-child(7) {
+  opacity: 1;
+  z-index: 1;
+  transform: translateX(0);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(8):checked ~ .label > .tab:nth-child(8) {
+  opacity: 1 !important;
+  background-color: #ffffff;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.1254901961);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(8):checked ~ .content-box > div:nth-child(8) {
+  opacity: 1;
+  z-index: 1;
+  transform: translateX(0);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(9):checked ~ .label > .tab:nth-child(9) {
+  opacity: 1 !important;
+  background-color: #ffffff;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.1254901961);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(9):checked ~ .content-box > div:nth-child(9) {
+  opacity: 1;
+  z-index: 1;
+  transform: translateX(0);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(10):checked ~ .label > .tab:nth-child(10) {
+  opacity: 1 !important;
+  background-color: #ffffff;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.1254901961);
+}
+.window-container .body-behind > .content > .container > .tabs > input[type=radio]:nth-child(10):checked ~ .content-box > div:nth-child(10) {
+  opacity: 1;
+  z-index: 1;
+  transform: translateX(0);
+}
+.window-container .body-behind > .content > .container > .tabs > .label {
+  position: absolute;
+  top: 0;
+  left: 1em;
+  z-index: 100;
+  display: flex;
+  overflow: hidden;
+  height: 1.5em;
+  padding: 0.2em 0.5em 0 0.5em;
+  box-sizing: border-box;
+}
+.window-container .body-behind > .content > .container > .tabs > .label > .tab {
+  font-size: 0.6em;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  padding: 0.2em 0.8em;
+  opacity: 0.3;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s ease-in-out;
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
+  color: #535353;
+}
+.window-container .body-behind > .content > .container > .tabs > .label > .tab:hover {
+  opacity: 1;
+}
+.window-container .body-behind > .content > .container > .tabs .label-container {
+  height: 1.5em;
+  margin: 0 1em;
+}
+.window-container .body-behind > .content > .container > .tabs > .content-box {
+  flex: 1;
+  display: flex;
+  position: relative;
+  background: linear-gradient(#ffffff, rgba(255, 255, 255, 0.3137254902));
+  -webkit-backdrop-filter: blur(20px);
+          backdrop-filter: blur(20px);
+  border-radius: 0.5em;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.1254901961);
+  overflow: hidden;
+}
+.window-container .body-behind > .content > .container > .tabs > .content-box > div {
+  padding: 1em;
+  overflow-y: auto;
+  transform: translateX(-100%);
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  color: #535353;
+  position: absolute;
+  font-size: 0.6em;
+  opacity: 0;
+  z-index: 0;
+  transition: transform 0.15s ease-out, opacity 0.3s ease-in;
+}
+.window-container .body-behind > .content > .container > .tabs > .content-box > div::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.window-container .body-behind > .content > .container > .tabs > .content-box > div::-webkit-scrollbar-thumb {
+  background-color: rgba(186, 185, 186, 0.6274509804);
+  border-radius: 4px;
+  -webkit-transition: all ease 200ms;
+  transition: all ease 200ms;
+}
+.window-container .body-behind > .content > .container > .tabs > .content-box > div::-webkit-scrollbar-thumb:active, .window-container .body-behind > .content > .container > .tabs > .content-box > div::-webkit-scrollbar-thumb:hover {
+  height: 50px;
+  background-color: rgba(175, 174, 175, 0.7529411765);
+}
+.window-container .body-behind > .content > .container > .tabs > .content-box > div h1,
+.window-container .body-behind > .content > .container > .tabs > .content-box > div h2,
+.window-container .body-behind > .content > .container > .tabs > .content-box > div h3,
+.window-container .body-behind > .content > .container > .tabs > .content-box > div h4,
+.window-container .body-behind > .content > .container > .tabs > .content-box > div h5,
+.window-container .body-behind > .content > .container > .tabs > .content-box > div h6 {
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+  color: #192938;
+}
+.window-container .body-behind > .content > .container > .tabs > .content-box > div pre {
+  border: solid 1px #b0b0b0;
+  display: block;
+  -webkit-user-select: all;
+     -moz-user-select: all;
+          user-select: all;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  cursor: text;
+}
+.window-container .body-behind > .content > .container > .tabs > .content-box > div strong {
+  font-weight: 600;
+  color: #e73129;
+}

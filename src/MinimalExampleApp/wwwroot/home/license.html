@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="base.css" />
+        <script src="page.js"></script>
+    </head>
+    <body class="red-theme">
+        <div class="window-container">
+            <div class="body-behind">
+                <header class="header">
+                    <div class="nav-back">
+                        <a href="index.html" class="back-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                            </svg>
+                        </a>
+                    </div>
+                    <h1 class="logo">
+                        许可证
+                        <span>许可证及第三方开源组件</span>
+                    </h1>
+                    <div class="window-controls">
+                        <button class="minimize group" app-command="minimize" title="最小化"></button>
+                        <button class="maximize" app-command="maximize" title="最大化"></button>
+                        <button class="close" app-command="close" title="关闭"></button>
+                    </div>
+                </header>
+                <main class="content">
+                    <div class="container">
+                        <div class="tabs">
+                            <input type="radio" name="category" id="about" checked />
+                            <input type="radio" name="category" id="license" />
+                            <input type="radio" name="category" id="thirdparty" />
+                            <div class="label">
+                                <label for="about" class="tab">关于</label>
+                                <label for="license" class="tab">许可证</label>
+                                <label for="thirdparty" class="tab">第三方开源组件</label>
+                            </div>
+                            <div class="label-container"></div>
+                            <div class="content-box">
+                                <div>
+                                    <h2>项目说明</h2>
+                                    <p>MinimalExampleApp 是一个基于 WinFormedge 框架的 .NET 9 桌面应用示例项目，演示了如何在 Windows 平台下通过 HTML/CSS/JavaScript 构建现代化、可自定义的浏览器窗体界面。该项目集成了前端与后端的交互，支持多种窗口样式和系统特性，适合用作 WinFormedge 的入门参考或二次开发模板。</p>
+                                    <h3>主要功能</h3>
+                                    <ul>
+                                        <li>多窗口样式演示</li>
+                                        <span>支持通过 JavaScrispant 动态创建不同风格的演示窗口（如无边框、透明、带自定义标题栏等），并可指定窗口的背景、页面内容等参数。</span>
+                                        <li>自定义窗口行为</li>
+                                        <span>支持窗口最大化、最小化、全屏、关闭等操作，窗口样式和行为可通过参数灵活配置。</span>
+                                        <li>现代 UI 支持</li>
+                                        <span>前端页面采用 HTML5、CSS3 技术，支持响应式布局和自定义主题，部分页面模拟 macOS 风格的窗口外观。</span>
+                                    </ul>
+                                    <h3>适用场景</h3>
+                                    <ul>
+                                        <li>需要自定义浏览器窗口的 .NET 桌面应用开发</li>
+                                        <li>前后端混合开发、桌面与 Web 技术融合的项目原型</li>
+                                        <li>WinFormedge 新手快速上手和功能演示</li>
+                                    </ul>
+                                    <h3>运行环境</h3>
+                                    <ul>
+                                        <li>.NET 8/9</li>
+                                        <li>Windows 10/11</li>
+                                        <li>Visual Studio 2022 及以上版本</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h2>许可证</h2>
+                                    <p>本应用程序的代码遵循 MIT 许可证。您可以自由使用、修改和分发本代码，但需遵守 MIT 许可证的相关条款。</p>
+                                    <h3>MIT 许可证正文</h3>
+                                    <p>MIT License</p>
+                                    <p>Copyright (c) 2025 Xuanchen Lin.</p>
+                                    <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+                                    <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+                                    <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+                                </div>
+                                <div>
+                                    <h2>第三方开源组件</h2>
+                                    <p>本应用程序使用了以下第三方开源组件：</p>
+                                    <ul>
+                                        <li><a href="https://github.com/ccampbell/rainbow" target="_blank">Rainbow.js</a> - Apache 2.0 许可证。</li>
+                                    </ul>
+                                    <p>以及以下第三方组件：</p>
+                                    <ul>
+                                        <li><a href="https://learn.microsoft.com/en-us/microsoft-edge/webview2/" target="_blank">Microsoft WebView2</a></li>
+                                    </ul>
+                                    <p>每个组件的具体许可证信息请参阅其官方网站或文档。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </body>
+</html>

@@ -28,6 +28,8 @@ public partial class Formedge : IWin32Window
     private bool _visible = true;
     private string _windowCaption = "WinFormedge";
     private FormWindowState _windowState = FormWindowState.Normal;
+    private bool _isDisposed;
+
     /// <summary>
     /// Occurs when the window is activated.
     /// </summary>
@@ -497,7 +499,12 @@ public partial class Formedge : IWin32Window
         set
         {
             _windowCaption = value;
-            UpdateWindowCaption();
+
+            if (IsWindowCreated)
+            {
+                UpdateWindowCaption();
+            }
+
         }
     }
     /// <summary>
@@ -614,4 +621,7 @@ public partial class Formedge : IWin32Window
             child.Owner = ownerForm;
         }
     }
+
+    public bool IsDisposed => _hostWindow?.IsDisposed ?? false || _isDisposed;
+
 }
