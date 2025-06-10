@@ -15,7 +15,7 @@
     }
 
     function raiseHostWindowEvent(eventName, detail) {
-        window.dispatchEvent(new Event(eventName, {
+        window.dispatchEvent(new CustomEvent(eventName, {
             detail: detail,
         }));
     }
@@ -206,7 +206,7 @@
     function hostWindowMinimize() {
         const win = getHostWindow();
         if (!win) return;
-        
+
         win.Minimize();
     }
 
@@ -264,6 +264,9 @@
 
 
     class HostWindow {
+
+
+
         get activated() {
             return getHostWindowActivated();
         }
@@ -275,6 +278,64 @@
         get windowState() {
             return getHostWindowState();
         }
+
+        get left() {
+            const win = getHostWindow();
+            if (!win) return 0;
+            return win.Left;
+        }
+
+        set left(value) {
+            const win = getHostWindow();
+            if (!win) return;
+            win.Left = value;
+        }
+
+        get top() {
+            const win = getHostWindow();
+            if (!win) return 0;
+            return win.Top;
+
+        }
+
+        set top(value) {
+            const win = getHostWindow();
+            if (!win) return;
+            win.Top = value;
+
+        }
+
+        get width() {
+            const win = getHostWindow();
+            if (!win) return 0;
+            return win.Width;
+
+        }
+
+        set width(value) {
+            const win = getHostWindow();
+            if (!win) return;
+            win.Width = value;
+
+        }
+
+        get height() {
+            const win = getHostWindow();
+            if (!win) return 0;
+            return win.Height;
+
+        }
+
+        set height(value) {
+            const win = getHostWindow();
+            if (!win) return;
+            win.Height = value;
+
+        }
+
+
+
+
 
         activate() {
             hostWindowActivate();

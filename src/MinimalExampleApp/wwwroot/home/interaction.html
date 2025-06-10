@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="base.css" />
+        <link rel="stylesheet" href="css/tricolore.css" />
+        <script src="page.js"></script>
+    </head>
+    <body class="purple-theme">
+        <div class="window-container">
+            <div class="body-behind">
+                <header class="header">
+                    <div class="nav-back">
+                        <a href="index.html" class="back-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                            </svg>
+                        </a>
+                    </div>
+                    <h1 class="logo">
+                        界面交互
+                        <span>窗体及浏览器核心交互接口</span>
+                    </h1>
+                    <div class="window-controls">
+                        <button class="minimize group" app-command="minimize" title="最小化"></button>
+                        <button class="maximize" app-command="maximize" title="最大化"></button>
+                        <button class="close" app-command="close" title="关闭"></button>
+                    </div>
+                </header>
+                <main class="content">
+                    <div class="container">
+                        <div class="tabs">
+                            <input type="radio" name="category" id="commands" checked />
+                            <input type="radio" name="category" id="moveable" />
+                            <input type="radio" name="category" id="csses" />
+                            <input type="radio" name="category" id="jsevents" />
+                            <input type="radio" name="category" id="jsobject" />
+
+                            <div class="label">
+                                <label for="commands" class="tab">窗体命令</label>
+                                <label for="moveable" class="tab">移动窗体</label>
+                                <label for="csses" class="tab">帮助样式</label>
+                                <label for="jsevents" class="tab">前端事件</label>
+                                <label for="jsobject" class="tab">前端对象</label>
+                            </div>
+                            <div class="label-container"></div>
+
+                            <div class="content-box">
+                                <div>
+                                    <h2>窗体命令</h2>
+                                    <p>窗体命令是指通过按钮或其他交互元素触发的操作。目前 WinFormedge 内置了 4 个以 HTML 属性为基础的窗体命令：</p>
+                                    <ul>
+                                        <li><strong>app-command="minimize"</strong> - 最小化窗体</li>
+                                        <li><strong>app-command="maximize"</strong> - 切换最大化/还原窗体</li>
+                                        <li><strong>app-command="close"</strong> - 关闭窗体</li>
+                                        <li><strong>app-command="fullscreen"</strong> - 全屏化窗体（需要指定 AllowFullscreen 属性）</li>
+                                    </ul>
+                                    <p>开发者可以在 HTML 元素上添加这些属性来实现对应的窗体操作。例如：</p>
+                                    <p>
+                                        <button class="button" app-command="minimize" title="最小化窗体">app-command="minimize"</button>
+                                        <button class="button" app-command="maximize" title="切换窗体最大化状态">app-command="maximize"</button>
+                                        <button class="button" app-command="fullscreen" title="切换窗体全屏状态">app-command="fullscreen"</button>
+                                        <button class="button" app-command="close" title="关闭窗体">app-command="close"</button>
+                                    </p>
+                                    <pre><code data-language="html">&lt;div&gt;
+    &lt;button class="fullscreen" app-command="fullscreen" title="全屏"&gt;&lt;/button&gt;
+    &lt;button class="minimize" app-command="minimize" title="最小化"&gt;&lt;/button&gt;
+    &lt;button class="maximize" app-command="maximize" title="最大化"&gt;&lt;/button&gt;
+    &lt;button class="close" app-command="close" title="关闭"&gt;&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+                                </div>
+                                <div>
+                                    <h2>移动无标题栏窗口</h2>
+                                    <p>对于无标题栏的窗口，可以通过为任何元素添加 CSS 属性 <strong>app-region: drag | no-drag</strong> 来实现对窗体的拖动移动。</p>
+                                    <p>其中 <strong>drag</strong> 表示该元素可以拖动移动窗体，而 <strong>no-drag</strong> 则表示该元素不允许拖动移动窗体。</p>
+                                    <p>
+                                        <style>
+                                            .moveable-container {
+                                                border:solid 1px #505050;
+                                                padding: 5px;
+                                                display:  flex;
+                                                border-radius: 5px;;
+                                            }
+                                        
+                                            .no-moveable {
+                                                flex: 1;
+                                                -webkit-app-region: no-drag;
+                                                background-color: yellow;
+                                                padding: 5px;
+
+                                            }
+
+                                            .moveable {
+                                                flex: 1;
+                                                -webkit-app-region: drag;
+                                                background-color: green;
+                                                color: white;
+                                                padding: 5px;
+                                            }
+                                        </style>
+                                        
+                                        <div class="moveable-container">
+                                            <div class="moveable">此区域设置了 app-region: drag 可以拖动；</div>
+                                            <div class="no-moveable">此区域设置了 app-region: no-drag 无法拖动。</div>
+                                        </div>
+
+
+                                        
+                                    </p>
+                                    <pre><code data-language="html">&lt;style&gt;
+.container {
+    display: flex;
+}
+
+.moveable {
+    app-region: drag;
+    margin: 0 20px;
+}
+
+.no-moveable {
+    app-region: no-drag;
+}
+&lt;/style&gt;
+
+&lt;div class="container"&gt;
+    &lt;div class="moveable"&gt;此区域设置了 app-region: drag 可以拖动；&lt;/div&gt;
+    &lt;div class="no-moveable"&gt;此区域设置了 app-region: no-drag 无法拖动。&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                                </div>
+                                <div>
+                                    <h2>帮助样式</h2>
+                                    <p>WinFormedge 为了给前端人员以方便设计窗体不同状态下的样式，将窗体当前的状态以 CSS 类名的方式附加在了 HTML 元素的类名列表中。目前设置了以下类名：</p>
+                                    <ul>
+                                        <li><strong>window--activated</strong> - 窗体激活</li>
+                                        <li><strong>window--deactivated</strong> - 窗体未激活</li>
+                                        <li><strong>window--fullscreen</strong> - 窗体全屏化</li>
+                                        <li><strong>window--maximized</strong> - 窗体最大化</li>
+                                        <li><strong>window--minimized</strong> - 窗体最小化</li>
+                                        <li><strong>window__titlbar--shown</strong> - 当前窗体具有可见的标题栏</li>
+                                        <li><strong>window__titlbar--hidden</strong> - 当前窗体没有可见的标题栏</li>
+                                    </ul>
+                                    <p>设计人员可以根据窗体的状态来设计不同的样式效果。例如，为窗体激活和未激活时设置不同的字体颜色：</p>
+                                    <p class="csses-demo">
+                                        <style>
+                                            .csses-demo span
+                                            {
+                                                padding: 5px;;
+                                                color:#fff;
+                                                border-radius: 5px;
+                                            }
+                                            .window--activated .csses-demo span {
+                                                background-color: green;
+                                            }
+
+                                            .window--activated .csses-demo span::after{
+                                                content: "窗体已激活";
+                                            }
+
+                                            .window--deactivated .csses-demo span {
+                                                background-color: gray;
+                                            }
+                                            .window--deactivated .csses-demo span::after{
+                                                content: "窗体未激活";
+                                            }
+                                        </style>
+                                        <span></span>
+                                    </p>
+                                    <pre><code data-language="html">&lt;style&gt;
+    span
+    {
+        padding: 5px;;
+        color:#fff;
+        border-radius: 5px;
+    }
+    .window--activated span {
+        background-color: green;
+    }
+
+    .window--activated span::after{
+        content: "窗体已激活";
+    }
+
+    .window--deactivated span {
+        background-color: gray;
+    }
+    .window--deactivated span::after{
+        content: "窗体未激活";
+    }
+&lt;/style&gt;
+
+&lt;span&gt;&lt;/span&gt;</code></pre>
+                                </div>
+                                <div>
+                                    <h2>前端事件</h2>
+                                    <p>WinFormedge 提供了一些前端事件，允许开发者在窗体状态变化时执行 JavaScript 代码。开发者通过使用 <strong>window.addEventListener</strong> 方法来绑定这些事件。目前提供对以下事件的监听：</p>
+                                    <ul>
+                                        <li><strong>windowactivated</strong> - 窗体已激活</li>
+                                        <li><strong>windowdeactivated</strong> - 窗体未激活</li>
+                                        <li><strong>windowstatechange</strong> - 窗体状态改变，参数：<strong>state:string = "[normal|maximized|minimized|fullscreen]"</strong> </li>
+                                        <li><strong>windowresize</strong> - 窗体尺寸改变，参数：<strong>x:int, y:int, width:int, height: int</strong></li>
+                                        <li><strong>windowmove</strong> - 窗体位置改变，参数：<strong>x:int, y:int, screenX:int, screenY: int</strong></li>
+                                    </ul>
+                                    <p>下面的代码演示了如何监听这些事件：</p>
+                                    <p>
+                                        窗体位置：<strong><span id="jsevents_demo_location">N/A</span></strong> 窗体尺寸：<strong><span id="jsevents_demo_size">N/A</span></strong>
+                                    </p>
+                                    <script>
+                                        (()=>{
+                                            document.getElementById("jsevents_demo_size").innerText = `${hostWindow?.width??0}x${hostWindow?.height??0}`;
+                                            document.getElementById("jsevents_demo_location").innerText = `X:${hostWindow?.left??0} Y:${hostWindow?.top??0}`;
+
+                                            window.addEventListener("windowresize",(e)=>{
+                                                const {width, height} = e.detail;
+                                                document.getElementById("jsevents_demo_size").innerText = `${width}x${height}`;
+                                            });
+                                            window.addEventListener("windowmove",(e)=>{
+                                                const {x, y} = e.detail;
+                                                document.getElementById("jsevents_demo_location").innerText = `X:${x} Y:${y}`;
+                                            });
+                                        })();
+                                    </script>
+                                    <pre><code data-language="javascript">window.addEventListener("windowresize",(e)=>{
+    const {width, height} = e.detail;
+    document.getElementById("jsevents_demo_size").innerText = `${width}x${height}`;
+});
+window.addEventListener("windowmove",(e)=>{
+    const {x, y} = e.detail;
+    document.getElementById("jsevents_demo_location").innerText = `X:${x} Y:${y}`;
+});</code></pre>
+                                </div>
+                                <div>
+                                    <h2>前端对象</h2>
+                                    <p>WinFormedge 提供了一个全局的 <strong>window.hostWindow</strong> 对象，允许开发者访问窗体的相关信息和操作。该对象包含以下属性和方法：</p>
+                                    <ul>
+                                        <li><strong>hostWindow.activated</strong> - 获取窗体激活状态</li>
+                                        <li><strong>hostWindow.hasTitleBar</strong> - 获取窗体是否具有标题栏</li>
+                                        <li><strong>hostWindow.windowState</strong> - 获取窗体当前的状态</li>
+                                        <li><strong>hostWindow.left</strong> - 设置或获取窗体左边距</li>
+                                        <li><strong>hostWindow.top</strong> - 设置或获取窗体上边距</li>
+                                        <li><strong>hostWindow.width</strong> - 设置或获取窗体宽度</li>
+                                        <li><strong>hostWindow.height</strong> - 设置或获取窗体高度</li>
+                                        <!-- <li><strong>hostWindow.bottom</strong> - 设置或获取窗体下边距</li>
+                                        <li><strong>hostWindow.right</strong> - 设置或获取窗体右边距</li> -->
+                                        <li><strong>hostWindow.activate()</strong> - 激活当前窗体</li>
+                                        <li><strong>hostWindow.minimize()</strong> - 最小化当前窗体</li>
+                                        <li><strong>hostWindow.maximize()</strong> - 切换最大化/还原当前窗体</li>
+                                        <li><strong>hostWindow.restore()</strong> - 还原当前窗体</li>
+                                        <li><strong>hostWindow.fullscreen()</strong> - 切换全屏化当前窗体（需要指定 AllowFullscreen 属性）</li>
+                                        <li><strong>hostWindow.toggleFullscreen()</strong> - 切换当前窗体的全屏状态</li>
+                                        <li><strong>hostWindow.close()</strong> - 关闭当前窗体</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+        <script src="rainbow.min.js"></script>
+        <script src="language/generic.js"></script>
+        <script src="language/csharp.js"></script>
+        <script src="language/html.js"></script>
+    </body>
+</html>

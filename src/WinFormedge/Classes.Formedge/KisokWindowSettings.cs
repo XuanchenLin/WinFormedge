@@ -123,7 +123,7 @@ public static class KisokWindowSettingsExtension
     /// </summary>
     /// <param name="builder">The <see cref="HostWindowBuilder"/> instance.</param>
     /// <returns>A new <see cref="KisokWindowSettings"/> instance for further configuration.</returns>
-    public static KisokWindowSettings KisokWindow(this HostWindowBuilder builder)
+    public static KisokWindowSettings UseKisokWindow(this HostWindowBuilder builder)
     {
         return new KisokWindowSettings();
     }

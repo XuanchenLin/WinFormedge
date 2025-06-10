@@ -23,7 +23,5 @@ internal static class Program
             .Build();
 
         app.Run();
-            
-
     }
 }

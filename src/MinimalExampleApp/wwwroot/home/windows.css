@@ -1,0 +1,204 @@
+main.content {
+  padding: 1em 2em;
+}
+main.content > .container-windows {
+  width: 100%;
+  height: 100%;
+}
+main.content > .container-windows > .tabs {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+main.content > .container-windows > .tabs > .indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5em;
+  height: 5em;
+  z-index: -1;
+  background: linear-gradient(to top, rgba(173, 250, 255, 0.2509803922), rgba(128, 168, 255, 0.5647058824));
+  border-radius: 0.5em;
+  border: 1px solid rgba(94, 157, 241, 0.5647058824);
+  transition: all 0.3s ease-in-out;
+}
+main.content > .container-windows > .tabs > input[type=radio] {
+  display: none;
+}
+main.content > .container-windows > .tabs > input[type=radio]:nth-child(1):checked ~ .indicator {
+  left: 0em;
+}
+main.content > .container-windows > .tabs > input[type=radio]:nth-child(1):checked ~ .label > .label__item:nth-child(1) {
+  opacity: 1 !important;
+}
+main.content > .container-windows > .tabs > input[type=radio]:nth-child(1):checked ~ .content-box > div:nth-child(1) {
+  opacity: 1;
+  z-index: 1;
+}
+main.content > .container-windows > .tabs > input[type=radio]:nth-child(2):checked ~ .indicator {
+  left: 5em;
+}
+main.content > .container-windows > .tabs > input[type=radio]:nth-child(2):checked ~ .label > .label__item:nth-child(2) {
+  opacity: 1 !important;
+}
+main.content > .container-windows > .tabs > input[type=radio]:nth-child(2):checked ~ .content-box > div:nth-child(2) {
+  opacity: 1;
+  z-index: 1;
+}
+main.content > .container-windows > .tabs > input[type=radio]:nth-child(3):checked ~ .indicator {
+  left: 10em;
+}
+main.content > .container-windows > .tabs > input[type=radio]:nth-child(3):checked ~ .label > .label__item:nth-child(3) {
+  opacity: 1 !important;
+}
+main.content > .container-windows > .tabs > input[type=radio]:nth-child(3):checked ~ .content-box > div:nth-child(3) {
+  opacity: 1;
+  z-index: 1;
+}
+main.content > .container-windows > .tabs > .label {
+  display: flex;
+}
+main.content > .container-windows > .tabs > .label > .label__item {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  opacity: 0.3;
+  width: 5em;
+  height: 5em;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease-in-out;
+}
+main.content > .container-windows > .tabs > .label > .label__item:hover {
+  opacity: 1;
+}
+main.content > .container-windows > .tabs > .label > .label__item > .icon {
+  width: 2.5em;
+  height: 2.5em;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  margin-bottom: 0.5em;
+}
+main.content > .container-windows > .tabs > .label > .label__item > .icon.default {
+  background-image: url("images/windows/ws-default.png");
+}
+main.content > .container-windows > .tabs > .label > .label__item > .icon.layered {
+  background-image: url("images/windows/ws-layered.png");
+}
+main.content > .container-windows > .tabs > .label > .label__item > .icon.kiosk {
+  background-image: url("images/windows/ws-kiosk.png");
+}
+main.content > .container-windows > .tabs > .label > .label__item > span {
+  font-size: 0.6em;
+  color: #333;
+  text-align: center;
+  display: block;
+}
+main.content > .container-windows > .tabs > .content-box {
+  flex: 1;
+  position: relative;
+  font-size: 14px;
+}
+main.content > .container-windows > .tabs > .content-box > div {
+  position: absolute;
+  opacity: 0;
+  z-index: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.default-style-conf {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 2em;
+}
+.default-style-conf .conf__options {
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  border: 1px solid #666;
+  border-radius: 1em;
+  background-color: rgba(255, 255, 255, 0.3);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  box-shadow: 3px 5px 15px rgba(0, 0, 0, 0.3);
+}
+.default-style-conf .conf__options > span {
+  font-weight: 600;
+  text-align: center;
+  margin: 1em 0;
+}
+.default-style-conf .conf__options > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.default-style-conf .conf__options > div > hr {
+  display: block;
+  width: 100%;
+  border: 1px solid rgba(83, 83, 83, 0.1882352941);
+  margin: 1em 0;
+}
+.default-style-conf .conf__options > ul {
+  margin: 0;
+  padding: 0;
+}
+.default-style-conf .conf__options > ul > li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.default-style-conf .conf__options > ul > li > label {
+  display: block;
+  padding: 0.5em;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+  border-radius: 0.5em;
+}
+.default-style-conf .conf__options > ul > li > label.gadget::after {
+  float: right;
+  background-color: #1d72a3;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  font-weight: 600;
+  font-size: 10px;
+  border-radius: 0.5em;
+  padding: 0.5em 1em;
+  zoom: 0.8;
+}
+.default-style-conf .conf__options > ul > li > label.gadget.win8::after {
+  content: "Win8+";
+}
+.default-style-conf .conf__options > ul > li > label.gadget.win10::after {
+  content: "Win10+";
+}
+.default-style-conf .conf__options > ul > li > label.gadget.win11::after {
+  content: "Win11";
+}
+.default-style-conf .conf__options > ul > li > label:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.062745098);
+  border: 1px solid #79706e;
+}
+.default-style-conf .conf__options > ul > li > input {
+  display: none;
+}
+.default-style-conf .conf__options > ul > li > input:checked + label {
+  background-color: rgba(156, 195, 227, 0.2509803922);
+  border-radius: 0.5em;
+  border: 1px solid rgba(94, 157, 241, 0.9333333333);
+  cursor: default;
+}
+.default-style-conf .conf__options > ul > li > input:disabled + label {
+  color: #999;
+  cursor: not-allowed;
+}
+.default-style-conf .conf__options > ul > li > input:disabled + label:hover {
+  background-color: transparent;
+  border: 1px solid transparent;
+}

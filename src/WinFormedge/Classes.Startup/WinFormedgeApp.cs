@@ -210,11 +210,11 @@ public class WinFormedgeApp
 
             if (value != null)
             {
-                browserArgsArray.Add($"{key}={value}");
+                browserArgsArray.Add($"--{key}={value}");
             }
             else
             {
-                browserArgsArray.Add($"{key}");
+                browserArgsArray.Add($"--{key}");
             }
         }
 
@@ -247,6 +247,8 @@ public class WinFormedgeApp
             ChannelSearchKind = CoreWebView2ChannelSearchKind.MostStable,
             AllowSingleSignOnUsingOSPrimaryAccount = false,
         };
+
+        
 
         BuildAdditionalBrowserArguments(opts);
 

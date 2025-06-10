@@ -19,7 +19,7 @@ For the `English` language repo, please click [[HERE](https://github.com/Xuanche
 
 WinFormedge 的灵感来源于我维护的另一个项目：**[WinFormium](https://github.com/xuanchenlin/NanUI)**（也称为 **NanUI**）。与 WinFormedge 类似，WinFormium 允许开发者使用 Web 技术构建 WinForms 应用程序，但不同于 WinFormedge，它依赖于 **Chromium Embedded Framework (CEF)**。
 
-![预览](./docs/preview1.png)
+![预览](./screenshots/2025-06-11_014008.png)
 
 ## 🖥️ 系统要求
 

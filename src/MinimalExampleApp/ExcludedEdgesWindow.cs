@@ -20,7 +20,7 @@ internal class ExcludedEdgesWindow : Formedge
             Scheme = "https",
             HostName = "embedded.appresource.local",
             ResourceAssembly = Assembly.GetExecutingAssembly(),
-            DefaultFolderName = "Resources\\wwwroot"
+            DefaultFolderName = "wwwroot"
         });
 
         Url = "https://embedded.appresource.local/excluded_border_test.html";

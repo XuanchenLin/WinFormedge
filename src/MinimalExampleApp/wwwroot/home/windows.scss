@@ -1,0 +1,221 @@
+main.content {
+    padding: 1em 2em;
+
+    > .container-windows {
+        width: 100%;
+        height: 100%;
+        > .tabs {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            > .indicator {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 5em;
+                height: 5em;
+                z-index: -1;
+                background: linear-gradient(to top, #adfaff40, #80a8ff90);
+                border-radius: 0.5em;
+                border: 1px solid #5e9df190;
+                transition: all 0.3s ease-in-out;
+            }
+
+            > input[type="radio"] {
+                display: none;
+
+                @for $i from 1 through 3 {
+                    &:nth-child(#{$i}):checked ~ .indicator {
+                        left: calc(5em * ($i - 1));
+                    }
+                    &:nth-child(#{$i}):checked ~ .label > .label__item:nth-child(#{$i}) {
+                        opacity: 1 !important;
+                    }
+                    &:nth-child(#{$i}):checked ~ .content-box > div:nth-child(#{$i}) {
+                        opacity: 1;
+                        z-index: 1;
+                    }
+                }
+            }
+
+            > .label {
+                display: flex;
+
+                > .label__item {
+                    cursor: pointer;
+                    display: flex;
+                    flex-direction: column;
+                    padding: 0;
+                    opacity: 0.3;
+
+                    width: 5em;
+                    height: 5em;
+                    align-items: center;
+                    justify-content: center;
+                    transition: opacity 0.5s ease-in-out;
+
+                    &:hover {
+                        opacity: 1;
+                    }
+
+                    > .icon {
+                        width: 2.5em;
+                        height: 2.5em;
+                        background-size: contain;
+                        background-repeat: no-repeat;
+                        background-position: center center;
+                        margin-bottom: 0.5em;
+
+                        &.default {
+                            background-image: url("images/windows/ws-default.png");
+                        }
+                        &.layered {
+                            background-image: url("images/windows/ws-layered.png");
+                        }
+                        &.kiosk {
+                            background-image: url("images/windows/ws-kiosk.png");
+                        }
+                    }
+
+                    > span {
+                        font-size: 0.6em;
+                        color: #333;
+                        text-align: center;
+                        display: block;
+                    }
+                }
+            }
+            > .content-box {
+                flex: 1;
+                position: relative;
+                font-size: 14px;
+
+                > div {
+                    // padding: 1em 0;
+                    position: absolute;
+                    opacity: 0;
+                    z-index: 0;
+                    transition: opacity 0.5s ease-in-out;
+                }
+            }
+        }
+    }
+}
+
+.default-style-conf {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 2em;
+
+    .conf__options {
+        display: flex;
+        flex-direction: column;
+        padding: 1em;
+        border: 1px solid #666;
+        border-radius: 1em;
+        background-color: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+        box-shadow: 3px 5px 15px rgba(0, 0, 0, 0.3);
+
+        > span {
+            font-weight: 600;
+            text-align: center;
+            margin: 1em 0;
+        }
+
+        > div {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+
+            > hr {
+                display: block;
+                width: 100%;
+                border: 1px solid #53535330;
+                margin: 1em 0;
+            }
+        }
+
+        > ul {
+            margin: 0;
+            padding: 0;
+
+            > li {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+
+                > label {
+                    display: block;
+                    padding: 0.5em;
+                    border: 1px solid transparent;
+                    transition: all 0.3s ease;
+                    border-radius: 0.5em;
+
+                    &.gadget {
+                        &::after {
+                            float: right;
+                            background-color: #1d72a3;
+                            color: #fff;
+                            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+                            font-weight: 600;
+                            font-size: 10px;
+                            border-radius: 0.5em;
+                            padding: 0.5em 1em;
+                            zoom: 0.8;
+                        }
+
+                        &.win8 {
+                            &::after {
+                                content: "Win8+";
+                            }
+                        }
+
+                        &.win10 {
+                            &::after {
+                                content: "Win10+";
+                            }
+                        }
+
+                        &.win11 {
+                            &::after {
+                                content: "Win11";
+                            }
+                        }
+                    }
+
+                    &:hover {
+                        cursor: pointer;
+                        background-color: #00000010;
+                        border: 1px solid #79706e;
+                    }
+                }
+
+                > input {
+                    display: none;
+
+                    &:checked + label {
+                        background-color: #9cc3e340;
+                        border-radius: 0.5em;
+                        border: 1px solid #5e9df1ee;
+                        cursor: default;
+                    }
+
+                    &:disabled + label {
+                        color: #999;
+                        cursor: not-allowed;
+
+                        &:hover {
+                            background-color: transparent;
+                            border: 1px solid transparent;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

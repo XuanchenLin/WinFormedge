@@ -1,0 +1,240 @@
+﻿@font-face {
+    font-family: "fonticon";
+    src: url("../../fonts/fonticon.eot?si6tlf");
+    src: url("../../fonts/fonticon.eot?si6tlf#iefix") format("embedded-opentype"), url("../../fonts/fonticon.ttf?si6tlf") format("truetype"), url("../../fonts/fonticon.woff?si6tlf") format("woff"), url("../../fonts/fonticon.svg?si6tlf#fonticon") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+    cursor: default;
+    user-select: none;
+    font-size: 24px;
+}
+
+.anime {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    //width: calc(100vw - 20em);
+
+    z-index: 0;
+    background-image: url(./images/dva-anime-1.png);
+    background-repeat: no-repeat;
+    background-size: max(40vw, 45vh);
+    background-position: right bottom;
+    transition: background-image ease 200ms;
+
+    @at-root .window--deactivated & {
+        background-image: url(./images/dva-anime-2.png);
+    }
+}
+
+div.window-controls {
+    @at-root .window__titlbar--shown & {
+        display: none;
+    }
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+
+    -webkit-app-region: no-drag;
+
+    > button {
+        width: 3em;
+        height: 3em;
+        border: none;
+        background-color: transparent;
+        transition: all 0.5s ease;
+        font-family: "fonticon" !important;
+        color: #ffffffaa;
+        outline: none;
+
+        &.group {
+            margin-left: 1em;
+        }
+
+        &:hover {
+            color: #fff;
+            background-color: #33333330;
+        }
+
+        &:active {
+            background-color: #33333350;
+        }
+
+        &.close {
+            &:after {
+                content: "\e903";
+            }
+            &:hover {
+                color: #fff;
+                background-color: #e51e17;
+            }
+            &:active {
+                background-color: #cc0002;
+            }
+        }
+
+        &.language {
+            &:after {
+                content: "\e905";
+            }
+        }
+
+        &.fullscreen {
+            &:after {
+                content: "\e904";
+            }
+
+            @at-root .window--fullscreen &:after {
+                content: "\e906";
+            }
+        }
+
+        &.minimize {
+            @at-root .window--fullscreen & {
+                display: none;
+            }
+
+            &:after {
+                content: "\e901";
+            }
+        }
+
+        &.maximize {
+            @at-root .window--fullscreen & {
+                display: none;
+            }
+
+            &:after {
+                content: "\e902";
+            }
+
+            @at-root .window--maximized &:after {
+                content: "\e900";
+            }
+        }
+    }
+}
+
+body {
+    > header {
+        height: 35vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: -1;
+        -webkit-app-region: drag;
+        background-color: #ff3db160;
+        font-weight: 600;
+        color: #fff;
+        padding: 0em 1em;
+        transition: background-color ease 200ms;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        @at-root .window--deactivated & {
+            background-color: #afafaf90;
+        }
+
+        .dva-logo {
+            width: 200px;
+            height: 200px;
+            background-image: url(./images/dva-logo.png);
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+            transition: all ease 200ms;
+
+            @at-root .window--deactivated & {
+                filter: grayscale(1);
+            }
+        }
+
+        .dva-intro {
+            > h1 {
+                background-image: linear-gradient(#fff 40%, #f00090);
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin: 0;
+                font-weight: 600;
+            }
+
+            > h2 {
+                color: #ffffffee;
+                font-weight: 300;
+                margin: 0;
+                font-size: 1.2em;
+            }
+        }
+    }
+
+    > main {
+        position: absolute;
+        background-color: #fff;
+        top: 35vh;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url(./images/dva-anime-1.png);
+        background-repeat: no-repeat;
+        background-size: max(40vw, 45vh);
+        background-position: right bottom;
+        overflow-y: auto;
+        padding: 0.5em min(55vw, 60vh) 0.5em 1em;
+        box-sizing: border-box;
+        transition: background-image ease 200ms;
+
+        @at-root .window--deactivated & {
+            background-image: url(./images/dva-anime-2.png);
+        }
+
+        > section {
+            h3 {
+                font-weight: 600;
+                color: #db3599;
+                margin: 0.5em 0;
+                font-size: 1.2em;
+            }
+
+            p {
+                color: #444;
+                margin: 0.5em 0;
+                font-size: 0.8em;
+            }
+        }
+
+        &::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: #999;
+            border-radius: 4px;
+            transition: background-color ease 200ms;
+        }
+
+        &::-webkit-scrollbar-thumb:active,
+        &::-webkit-scrollbar-thumb:hover {
+            height: 50px;
+            background-color: #aaa;
+        }
+    }
+}

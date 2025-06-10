@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="base.css" />
+        <link rel="stylesheet" href="windows.css" />
+        <script src="page.js"></script>
+    </head>
+    <body class="blue-theme">
+        <div class="window-container">
+            <div class="body-behind">
+                <header class="header">
+                    <div class="nav-back">
+                        <a href="index.html" class="back-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                            </svg>
+                        </a>
+                    </div>
+                    <h1 class="logo">
+                        窗体样式
+                        <span>承载窗体设置及样式</span>
+                    </h1>
+                    <div class="window-controls">
+                        <button class="minimize group" app-command="minimize" title="最小化"></button>
+                        <button class="maximize" app-command="maximize" title="最大化"></button>
+                        <button class="close" app-command="close" title="关闭"></button>
+                    </div>
+                </header>
+                <main class="content">
+                    <div class="container-windows">
+                        <div class="tabs">
+                            <input type="radio" name="style" id="standard" checked />
+                            <input type="radio" name="style" id="kisok" />
+                            <div class="indicator"></div>
+                            <div class="label">
+                                <label for="standard" class="label__item">
+                                    <div class="icon default"></div>
+                                    <span>默认窗体</span>
+                                </label>
+                                <label for="kisok" class="label__item">
+                                    <div class="icon kiosk"></div>
+                                    <span>KIOSK</span>
+                                </label>
+                            </div>
+                            <div class="content-box">
+                                <div>
+                                    <p>默认窗体适用于大多数应用场景，开发者可以选择使用<strong>原生样式</strong>窗体，或者移除标题栏实现<strong>无标题</strong>窗体，进一步移除所有边框（及系统 DWM 投影效果）后将可以创建一个<strong>无边框</strong>窗体。另外配合设置<strong>窗体背景类型</strong>以实现各种特效组合。</p>
+                                    <p>从下面的窗体配置器选择不同选项以体验各类窗体样式及背景类型组合。</p>
+                                    <div class="default-style-conf">
+                                        <div class="conf__options">
+                                            <span>选择窗体类型</span>
+                                            <ul>
+                                                <li>
+                                                    <input type="radio" name="type" id="defaultWindow" checked value="Default" />
+                                                    <label for="defaultWindow">原生样式</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" name="type" id="noTitleWindow" value="ExtendsContentIntoTitlebar" />
+                                                    <label for="noTitleWindow">无标题栏窗体</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" name="type" id="noBorderWindow" value="NonDecorated" />
+                                                    <label for="noBorderWindow">无边框窗体</label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="conf__options">
+                                            <span>选择背景类型</span>
+                                            <ul>
+                                                <li>
+                                                    <input type="radio" name="backdrop" id="backdropAuto" value="Auto" checked />
+                                                    <label for="backdropAuto">默认背景</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" name="backdrop" id="backdropNone" value="None" />
+                                                    <label for="backdropNone" class="gadget win8">透明背景</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" name="backdrop" id="backdropBlurBehind" value="BlurBehind" />
+                                                    <label for="backdropBlurBehind" class="gadget win8">模糊背景</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" name="backdrop" id="backdropAcrylic" value="Acrylic" />
+                                                    <label for="backdropAcrylic" class="gadget win10">亚克力背景</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" name="backdrop" id="backdropMica" value="Mica" />
+                                                    <label for="backdropMica" class="gadget win11">Mica材质背景</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" name="backdrop" id="backdropMicaAlt" value="MicaAlt" />
+                                                    <label for="backdropMicaAlt" class="gadget win11">MicaAlt材质背景</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" name="backdrop" id="backdropTransient" value="Transient" />
+                                                    <label for="backdropTransient" class="gadget win11">磨砂材质背景</label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="conf__options">
+                                            <span>选择示例页面</span>
+                                            <ul>
+                                                <li>
+                                                    <input type="radio" name="page" id="pageBing" value="BingHomePage" checked />
+                                                    <label for="pageBing">微软必应首页</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" name="page" id="pageNoTitleBar" value="BorderlessPage" />
+                                                    <label for="pageNoTitleBar">无标题窗体类型栏测试页面</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" name="page" id="pageTransparent" value="TransparentPage" />
+                                                    <label for="pageTransparent">无边框透明背景测试页面</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" name="page" id="pageShaped" value="ShapedTransparentPage" />
+                                                    <label for="pageShaped">无边框透明背景异形窗体测试页面</label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="conf__options">
+                                            <span>创建示例窗体</span>
+                                            <div>
+                                                <p>点击以下按钮按配置创建示例窗体。</p>
+                                                <section>
+                                                    <button id="createDemoWindow" class="button">创建示例窗体</button>
+                                                </section>
+                                                <hr />
+                                                <section>
+                                                    <button id="closeAllDemoWindows" class="button">关闭全部窗体</button>
+                                                </section>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p>Kiosk 模式窗体是一种专为自助服务终端设计的全屏交互界面，广泛应用于公共场所的信息查询、自助服务、数字标牌等场景。通过锁定系统功能，限制用户操作权限，Kiosk 模式确保设备仅运行指定应用，有效防止误操作或恶意破坏，提升系统安全性与稳定性。</p>
+                                    <p>Kiosk 模式用于全屏应用，用户无法关闭或最小化窗体。</p>
+                                    <p>点击以下按钮创建示例 Kiosk 窗体。</p>
+                                    <p>
+                                        <button id="createKioskWindow" class="button btn-primary">创建 Kiosk 窗体</button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // 获取窗体类型单选框
+                const typeRadios = [document.getElementById("defaultWindow"), document.getElementById("noTitleWindow"), document.getElementById("noBorderWindow")];
+                // 获取背景类型单选框
+                const backdropRadios = [document.getElementById("backdropAuto"), document.getElementById("backdropNone"), document.getElementById("backdropBlurBehind"), document.getElementById("backdropAcrylic"), document.getElementById("backdropMica"), document.getElementById("backdropMicaAlt"), document.getElementById("backdropTransient")];
+                // 获取示例页面单选框
+                const pageRadios = [document.getElementById("pageBing"), document.getElementById("pageNoTitleBar"), document.getElementById("pageTransparent"), document.getElementById("pageShaped")];
+
+                function updateOptions() {
+                    if (typeRadios[0].checked) {
+                        // 仅第1项可选
+                        pageRadios.forEach((r, i) => {
+                            r.disabled = !(i === 0 || i === 1);
+                            if (i === 0) r.checked = true;
+                        });
+                        // 背景类型全部可选
+                        backdropRadios.forEach((r) => (r.disabled = false));
+                    } else if (typeRadios[1].checked) {
+                        // 仅第2项可选
+                        pageRadios.forEach((r, i) => {
+                            r.disabled = i !== 1;
+                            if (i === 1) r.checked = true;
+                        });
+                        // 背景类型全部可选
+                        backdropRadios.forEach((r) => (r.disabled = false));
+                    } else if (typeRadios[2].checked) {
+                        // 仅第3、4项可选
+                        pageRadios.forEach((r, i) => {
+                            r.disabled = !(i === 2 || i === 3);
+                            if (i === 2) r.checked = true;
+                        });
+                        // 背景类型仅第2项可选
+                        backdropRadios.forEach((r, i) => {
+                            r.disabled = i !== 1;
+                            if (i === 1) r.checked = true;
+                        });
+                    }
+                }
+
+                typeRadios.forEach((radio) => {
+                    radio.addEventListener("change", updateOptions);
+                });
+
+                // 页面加载时初始化
+                updateOptions();
+
+                function getMainWindow() {
+                    if (chrome.webview?.hostObjects?.sync?.mainWindow) {
+                        return chrome.webview?.hostObjects?.sync?.mainWindow;
+                    } else {
+                        console.warn("Formium is not available. Please ensure the Formium library is loaded.");
+                        return null;
+                    }
+                }
+
+                document.getElementById("createDemoWindow").addEventListener("click", function () {
+                    const selectedOptions = {
+                        style: typeRadios.find((radio) => radio.checked)?.value,
+                        backdrop: backdropRadios.find((radio) => radio.checked)?.value,
+                        page: pageRadios.find((radio) => radio.checked)?.value,
+                    };
+                    const mainWindow = getMainWindow();
+                    mainWindow?.CreateDemoWindow(selectedOptions.style, selectedOptions.backdrop, selectedOptions.page);
+                });
+
+                document.getElementById("closeAllDemoWindows").addEventListener("click", function () {
+                    const mainWindow = getMainWindow();
+                    mainWindow?.CloseAllDemoWindows();
+                });
+
+                document.getElementById("createKioskWindow").addEventListener("click", function () {
+                    const mainWindow = getMainWindow();
+                    mainWindow?.CreateKioskWindow();
+                });
+            });
+        </script>
+    </body>
+</html>
