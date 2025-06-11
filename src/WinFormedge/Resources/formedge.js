@@ -66,13 +66,17 @@
 
         if (state) {
             raiseHostWindowEvent("windowactivated", {});
+            htmlEl?.classList.add("window--activated");
+            htmlEl?.classList.remove("window--deactivated");
         }
         else {
             raiseHostWindowEvent("windowdeactivate", {});
+            htmlEl?.classList.remove("window--activated");
+            htmlEl?.classList.add("window--deactivated");
         }
 
-        htmlEl?.classList.toggle("window--activated", state);
-        htmlEl?.classList.toggle("window--deactivated", !state);
+
+
     }
 
     function onFormedgeNotifyWindowStateChange(data) {
@@ -82,9 +86,20 @@
         raiseHostWindowEvent("windowstatechange", { state });
 
         const htmlEl = document.querySelector("html");
-        htmlEl?.classList.toggle("window--maximized", state === "maximized");
-        htmlEl?.classList.toggle("window--minimized", state === "minimized");
-        htmlEl?.classList.toggle("window--fullscreen", state === "fullscreen");
+
+        htmlEl?.classList.remove("window--maximized", "window--minimized", "window--fullscreen");
+
+        switch (state) {
+            case "maximized":
+                htmlEl?.classList.add("window--maximized");
+                break;
+            case "minimized":
+                htmlEl?.classList.add("window--minimized");
+                break;
+            case "fullscreen":
+                htmlEl?.classList.add("window--fullscreen");
+                break;
+        }
     }
 
     function onFormedgeNotifyWindowResize(data) {
@@ -97,8 +112,7 @@
         raiseHostWindowEvent("windowmove", { x, y, screenX, screenY });
     }
 
-    window.addEventListener("load", () => {
-
+    function onLoad() {
         const htmlEl = document.querySelector("html");
 
         window.addEventListener("click", (e) => {
@@ -188,13 +202,27 @@
             state: true
         });
 
+        if (HAS_TITLE_BAR) {
+            htmlEl?.classList.add("window__titlbar--shown");
+            htmlEl?.classList.remove("window__titlbar--hidden");
+
+        }
+        else {
+            htmlEl?.classList.add("window__titlbar--hidden");
+            htmlEl?.classList.remove("window__titlbar--shown");
+        }
+    }
 
 
-        htmlEl?.classList.toggle("window__titlbar--shown", HAS_TITLE_BAR);
-        htmlEl?.classList.toggle("window__titlbar--hidden", !HAS_TITLE_BAR);
+    if (document.readyState === "loading") {
+        window.addEventListener("load", () => {
+            onLoad();
+        });
+    }
+    else {
+        onLoad();
+    }
 
-
-    });
 
 
 
@@ -265,7 +293,25 @@
 
     class HostWindow {
 
+        constructor() {
+            setInterval(() => {
+                const state = getHostWindow()?.activated;
 
+                if (state === null || state === undefined) return;
+
+                const htmlEl = document.querySelector("html");
+
+                if (state) {
+                    htmlEl?.classList.add("window--activated");
+                    htmlEl?.classList.remove("window--deactivated");
+                }
+                else {
+                    htmlEl?.classList.remove("window--activated");
+                    htmlEl?.classList.add("window--deactivated");
+                }
+
+            }, 200);
+        }
 
         get activated() {
             return getHostWindowActivated();

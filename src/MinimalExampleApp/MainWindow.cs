@@ -22,13 +22,7 @@ public class MainWindow : Formedge
 
     public MainWindow()
     {
-        SetVirtualHostNameToEmbeddedResourcesMapping(new WinFormedge.WebResource.EmbeddedFileResourceOptions
-        {
-            Scheme = "https",
-            HostName = "localresources.app",
-            ResourceAssembly = typeof(StartupWindow).Assembly,
-            DefaultFolderName = "wwwroot"
-        });
+
 
         Url = $"{DEMO_HOST_ADDR}/home/";
         StartPosition = FormStartPosition.CenterScreen;
@@ -42,6 +36,14 @@ public class MainWindow : Formedge
             if(CoreWebView2 is not null)
             {
                 CoreWebView2.AddHostObjectToScript("mainWindow", new MainWindowJsObject(this));
+
+                SetVirtualHostNameToEmbeddedResourcesMapping(new WinFormedge.WebResource.EmbeddedFileResourceOptions
+                {
+                    Scheme = "https",
+                    HostName = "localresources.app",
+                    ResourceAssembly = typeof(StartupWindow).Assembly,
+                    DefaultFolderName = "wwwroot"
+                });
             }
         };
     }

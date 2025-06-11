@@ -610,6 +610,9 @@ public abstract partial class Formedge : IDisposable
     //    }
     //}
 
+    private bool _isWindowActivated;
+
+
     /// <summary>
     /// Core window procedure handler for custom message processing.
     /// </summary>
@@ -617,6 +620,16 @@ public abstract partial class Formedge : IDisposable
     /// <returns>True if the message was handled; otherwise, false.</returns>
     private bool WndProcCore(ref Message m)
     {
+        if ((uint)m.Msg == WM_ACTIVATE)
+        {
+            _isWindowActivated = m.WParam != 0;
+
+            if (_formedgeHostObject is not null)
+            {
+                _formedgeHostObject.Activated = _isWindowActivated;
+            }
+        }
+
         return WndProc(ref m);
     }
 

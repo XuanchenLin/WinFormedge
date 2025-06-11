@@ -1,5 +1,17 @@
 ﻿## Change Logs
 
+### 2026/6/11
+
+- 修复了若干 Bugs，并且完善了 JavaScript 前端代码。
+- 增加了完整的示例项目 `MinimalExampleApp`，展示了如何使用 Formedge 创建一个完整的桌面应用程序。
+
+**开屏 Splash **
+![Preview 1](./screenshots/2025-06-11_013226.png)
+
+**演示界面**
+![Preview 1](./screenshots/2025-06-11_014008.png)
+
+
 ### 2025/5/11
 
 添加了一个新的示例项目 `FantasticCalculatorDemo`，展示了半透明混合效果。
