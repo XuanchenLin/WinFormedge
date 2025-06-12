@@ -1,0 +1,68 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+    <PropertyGroup>
+        <TargetFrameworks>net8.0-windows;net9.0-windows</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\WinFormedge\WinFormedge.csproj" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3240.44" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows' ">
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView" Version="8.0.*" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0-windows' ">
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView" Version="9.0.*" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <Version>0.1.3240.$([System.DateTime]::Now.Date.Subtract($([System.DateTime]::Parse($([System.String]::Format("{0}-5-9",2025))))).TotalDays)</Version>
+        <Title>Blazor Hybrid Plugin for WinFormedge</Title>
+        <Description>The Blazor Hybrid Plugin for WinFormedge enables seamless integration of Blazor components into WinFormedge-based Windows Forms applications.</Description>
+        <PackageTags>WebView2 WinForms WinFormedge Hybrid-App</PackageTags>
+        <PackageIcon>WinFormedgeLogo.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryType>git</RepositoryType>
+        <PackageProjectUrl>https://github.com/XuanchenLin/WinFormedge</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/XuanchenLin/WinFormedge.git</RepositoryUrl>
+        <PackageOutputPath>$(BinDir)</PackageOutputPath>
+        <DelaySign>False</DelaySign>
+        <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <SignAssembly>False</SignAssembly>
+        <DebugType>portable</DebugType>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <Version>0.1.3240.1</Version>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Using Include="System.Web"/>
+        <Using Include="Microsoft.AspNetCore.Components"/>
+        <Using Include="Microsoft.AspNetCore.Components.Web"/>
+        <Using Include="Microsoft.AspNetCore.Components.WebView"/>
+        <Using Include="Microsoft.Extensions.DependencyInjection"/>
+        <Using Include="Microsoft.Extensions.FileProviders"/>
+        <Using Include="Microsoft.Web.WebView2.Core"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\artworks\WinFormedgeLogo.png">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Include=".\README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+    </ItemGroup>
+
+</Project>
