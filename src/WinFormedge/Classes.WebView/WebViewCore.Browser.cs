@@ -38,10 +38,11 @@ internal partial class WebViewCore
     /// <summary>
     /// Unregisters a previously registered web resource handler.
     /// </summary>
-    /// <param name="resourceHandler">The web resource handler to unregister.</param>
-    public void UnregisterWebResourceHander(WebResourceHandler resourceHandler)
+    /// <param name="scheme">The scheme of the web resource handler to unregister.</param>
+    /// <param name="hostName">The host name of the web resource handler to unregister.</param>
+    public void UnregisterWebResourceHander(string scheme, string hostName)
     {
-        WebResourceManager.UnregisterWebResourceHander(resourceHandler);
+        WebResourceManager.UnregisterWebResourceHander(scheme,hostName);
     }
 
     /// <summary>

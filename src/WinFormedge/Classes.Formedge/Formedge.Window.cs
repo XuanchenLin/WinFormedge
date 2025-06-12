@@ -176,6 +176,128 @@ public partial class Formedge : IWin32Window
     /// </summary>
     public bool InvokeRequired => _hostWindow?.InvokeRequired ?? false;
 
+    /// <summary>
+    /// Invokes the specified action on the UI thread.
+    /// </summary>
+    /// <param name="action">The action to invoke.</param>
+    public void Invoke(Action action) => HostWindow.Invoke(action);
+
+    /// <summary>
+    /// Invokes the specified delegate on the UI thread.
+    /// </summary>
+    /// <param name="action">The delegate to invoke.</param>
+    /// <returns>The result of the delegate.</returns>
+    public object Invoke(Delegate action) => HostWindow.Invoke(action);
+
+    /// <summary>
+    /// Invokes the specified delegate with arguments on the UI thread.
+    /// </summary>
+    /// <param name="method">The delegate to invoke.</param>
+    /// <param name="args">The arguments for the delegate.</param>
+    /// <returns>The result of the delegate.</returns>
+    public object Invoke(Delegate method, params object[]? args) => HostWindow.Invoke(method, args);
+
+    /// <summary>
+    /// Invokes the specified function on the UI thread and returns the result.
+    /// </summary>
+    /// <typeparam name="T">The return type.</typeparam>
+    /// <param name="func">The function to invoke.</param>
+    /// <returns>The result of the function.</returns>
+    public T? Invoke<T>(Func<T> func) => HostWindow.Invoke(func);
+
+    /// <summary>
+    /// Invokes the specified action on the UI thread if required.
+    /// </summary>
+    /// <param name="action">The action to invoke.</param>
+    public void InvokeIfRequired(Action action)
+    {
+        if (IsDisposed) return;
+
+        if (HostWindow.InvokeRequired)
+        {
+            try
+            {
+                HostWindow.Invoke(action);
+            }
+            catch (ObjectDisposedException) { }
+            catch (ThreadAbortException) { }
+        }
+        else
+        {
+            action();
+        }
+    }
+
+    /// <summary>
+    /// Invokes the specified delegate with arguments on the UI thread if required.
+    /// </summary>
+    /// <param name="method">The delegate to invoke.</param>
+    /// <param name="args">The arguments for the delegate.</param>
+    /// <returns>The result of the delegate.</returns>
+    public object? InvokeIfRequired(Delegate method, params object[] args)
+    {
+        if (HostWindow.IsDisposed) return default;
+
+
+        if (HostWindow.InvokeRequired)
+            try
+            {
+                return HostWindow.Invoke(method, args);
+            }
+            catch (ObjectDisposedException) { }
+            catch (ThreadAbortException) { }
+        else
+            return method.DynamicInvoke(args);
+
+        return default;
+    }
+
+    /// <summary>
+    /// Invokes the specified delegate with arguments on the UI thread if required and returns the result.
+    /// </summary>
+    /// <typeparam name="T">The return type.</typeparam>
+    /// <param name="method">The delegate to invoke.</param>
+    /// <param name="args">The arguments for the delegate.</param>
+    /// <returns>The result of the delegate.</returns>
+    public T? InvokeIfRequired<T>(Delegate method, params object[] args)
+    {
+        if (HostWindow.IsDisposed) return default;
+
+        if (HostWindow.InvokeRequired)
+            try
+            {
+                return (T?)HostWindow.Invoke(method, args);
+            }
+            catch (ObjectDisposedException) { }
+            catch (ThreadAbortException) { }
+        else
+            return (T?)method.DynamicInvoke(args);
+        return default;
+
+    }
+
+    /// <summary>
+    /// Invokes the specified function on the UI thread if required and returns the result.
+    /// </summary>
+    /// <typeparam name="T">The return type.</typeparam>
+    /// <param name="func">The function to invoke.</param>
+    /// <returns>The result of the function.</returns>
+    public T? InvokeIfRequired<T>(Func<T> func)
+    {
+        if (HostWindow.IsDisposed) return default;
+
+        if (HostWindow.InvokeRequired)
+            try
+            {
+                return HostWindow.Invoke(func);
+            }
+            catch (ObjectDisposedException) { }
+            catch (ThreadAbortException) { }
+        else
+            return func();
+        return default;
+    }
+
 
     /// <summary>
     /// Gets or sets the left position of the window.

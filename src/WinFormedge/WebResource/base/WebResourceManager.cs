@@ -126,6 +126,7 @@ internal sealed class WebResourceManager
     {
         var scheme = handler.Scheme.ToLower();
         var hostName = handler.HostName.ToLower();
+
         var context = handler.WebResourceContext;
 
         if (Handlers.Contains(handler))
@@ -144,14 +145,13 @@ internal sealed class WebResourceManager
     /// <summary>
     /// Unregisters a web resource handler and removes its filter if already initialized.
     /// </summary>
-    /// <param name="handler">The web resource handler to unregister.</param>
-    public void UnregisterWebResourceHander(WebResourceHandler handler)
+    /// <param name="scheme">The URI scheme of the handler to unregister.</param>
+    /// <param name="hostName">The host name of the handler to unregister.</param>
+    public void UnregisterWebResourceHander(string scheme, string hostName)
     {
-        var scheme = handler.Scheme.ToLower();
-        var hostName = handler.HostName.ToLower();
-        var context = handler.WebResourceContext;
+        var handler = Handlers.Find(x=>x.Scheme == scheme && x.HostName == hostName);
 
-        if (Handlers.Contains(handler))
+        if (handler != null)
         {
             Handlers.Remove(handler);
         }
@@ -159,7 +159,7 @@ internal sealed class WebResourceManager
         if (_initialized)
         {
             var url = GetFilterUrl(scheme, hostName);
-            _webView2!.RemoveWebResourceRequestedFilter(url + "*", handler.WebResourceContext);
+            _webView2!.RemoveWebResourceRequestedFilter(url + "*", CoreWebView2WebResourceContext.All);
         }
     }
 }

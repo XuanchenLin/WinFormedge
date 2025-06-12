@@ -46,7 +46,7 @@ public abstract partial class Formedge : IDisposable
     /// <param name="options">The embedded file resource options to clear.</param>
     public void ClearVirtualHostNameToEmbeddedResourcesMapping(EmbeddedFileResourceOptions options)
     {
-        UnregisterWebResourceHandler(new EmbeddedFileResourceHandler(options));
+        UnregisterWebResourceHandler(options.Scheme, options.HostName);
     }
 
     /// <summary>
@@ -100,10 +100,11 @@ public abstract partial class Formedge : IDisposable
     /// <summary>
     /// Unregisters a previously registered web resource handler.
     /// </summary>
-    /// <param name="resourceHandler">The web resource handler to unregister.</param>
-    public void UnregisterWebResourceHandler(WebResourceHandler resourceHandler)
+    /// <param name="scheme">The URI scheme of the handler to unregister.</param>
+    /// <param name="hostName">The host name of the handler to unregister.</param>
+    public void UnregisterWebResourceHandler(string scheme, string hostName)
     {
-        WebView.UnregisterWebResourceHander(resourceHandler);
+        WebView.UnregisterWebResourceHander(scheme,hostName);
     }
 
     private Form? _hostWindow;
