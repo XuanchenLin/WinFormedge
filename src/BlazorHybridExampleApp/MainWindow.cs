@@ -17,14 +17,21 @@ internal class MainWindow : Formedge
 {
     public MainWindow()
     {
-        this.SetVirtualHostNameToBlazorHybrid(new BlazorWebViewOptions
+
+
+        Url = "https://blazorapp.local/";
+
+        Load += MainWindow_Load;
+    }
+
+    private void MainWindow_Load(object? sender, EventArgs e)
+    {
+        this.SetVirtualHostNameToBlazorHybrid(new BlazorHybridOptions
         {
             Scheme = "https",
             HostName = "blazorapp.local",
             RootComponent = typeof(Counter),
             HostPath = "wwwroot/index.html"
         });
-
-        Url = "https://blazorapp.local/";
     }
 }
