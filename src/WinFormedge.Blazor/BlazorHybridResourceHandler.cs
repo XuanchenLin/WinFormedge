@@ -39,6 +39,20 @@ class BlazorHybridResourceHandler : WebResourceHandler
     {
         var url = request.RequestUrl;
 
+        string RemovePossibleQueryString(string? url)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                return string.Empty;
+            }
+            var indexOfQueryString = url.IndexOf('?', StringComparison.Ordinal);
+            return (indexOfQueryString == -1)
+                ? url
+                : url.Substring(0, indexOfQueryString);
+        }
+
+        url = RemovePossibleQueryString(url);
+
         var uri = new Uri(url);
 
         if (uri.PathAndQuery == "/")
@@ -52,7 +66,7 @@ class BlazorHybridResourceHandler : WebResourceHandler
             {
                 HttpStatus = statusCode,
 
-                ContentBody = content,
+                ContentBody = new AutoCloseStream(content),
                 ContentType = headers.TryGetValue("Content-Type", out var contentType) ? contentType : "application/octet-stream"
             };
 

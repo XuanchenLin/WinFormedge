@@ -18,35 +18,28 @@ class FormedgeWebViewManager : WebViewManager
             await AddRootComponentAsync(rootComponent, selector, parameterView is null ? ParameterView.Empty : ParameterView.FromDictionary(parameterView));
         });
 
-        Formedge.Load += Formedge_Load;
+        if(Formedge.CoreWebView2 is null)
+        {
+            Formedge.Load += (_, _) =>
+            {
+                InitScript(Formedge.CoreWebView2!);
+            };
+        }
+        else
+        {
+            InitScript(Formedge.CoreWebView2);
+        }
+
+
 
 
         Navigate("/");
 
     }
 
-    private void Formedge_Load(object? sender, EventArgs e)
+    private void InitScript(CoreWebView2 webview)
     {
-        if (Formedge.CoreWebView2 is not null)
-        {
-            var webview = Formedge.CoreWebView2;
-
-            webview.AddScriptToExecuteOnDocumentCreatedAsync(""""
-/*window.__receiveMessageCallbacks = [];
-
-window.__dispatchMessageCallback = function(message) {
-	window.__receiveMessageCallbacks.forEach(function(callback) { callback(message); });
-};
-
-window.external = {
-	sendMessage: function(message) {
-		window.chrome.webview.postMessage(message);
-	},
-	receiveMessage: function(callback) {
-		window.__receiveMessageCallbacks.push(callback);
-	}
-};*/
-
+        webview.AddScriptToExecuteOnDocumentCreatedAsync(""""
 window.external = {
 	sendMessage: message => {
 		window.chrome.webview.postMessage(message);
@@ -57,19 +50,15 @@ window.external = {
             if (typeof data === 'string') {
                 callback(data);
             }
-            else{
-                console.log(data);
-            }
         });
 	}
 };
 """").ConfigureAwait(continueOnCapturedContext: true);
 
-            webview.WebMessageReceived += (s, args) =>
-            {
-                MessageReceived(new Uri(args.Source), args.TryGetWebMessageAsString());
-            };
-        }
+        webview.WebMessageReceived += (s, args) =>
+        {
+            MessageReceived(new Uri(args.Source), args.TryGetWebMessageAsString());
+        };
     }
 
     public Formedge Formedge { get; }
