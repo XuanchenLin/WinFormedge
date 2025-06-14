@@ -8,23 +8,19 @@ namespace WinFormedge.Blazor;
 
 class BlazorHybridResourceHandler : WebResourceHandler
 {
-    public override string Scheme { get; }
-    public override string HostName { get; }
-    public override CoreWebView2WebResourceContext WebResourceContext { get; }
-    public ServiceProvider Services { get; }
-    public FormedgeWebViewManager FormedgeWebViewManager { get; }
-    public BlazorHybridOptions Options { get; }
-
     private IFileProvider _fileProvider;
-
+    public FormedgeWebViewManager FormedgeWebViewManager { get; }
+    public override string HostName { get; }
+    public BlazorHybridOptions Options { get; }
+    public string RelativePath { get; }
+    public string RootFolderPath { get; }
+    public override string Scheme { get; }
+    public ServiceProvider Services { get; }
+    public override CoreWebView2WebResourceContext WebResourceContext { get; }
     private bool _isEmbdeedeStaticResources =>
         Options.StaticResources is not null;
 
     private string? DefaultNamespace => Options.StaticResourcesNamespace ?? Options?.StaticResources?.EntryPoint?.DeclaringType?.Namespace ?? Options?.StaticResources?.GetName().Name!;
-
-    public string RelativePath { get; }
-    public string RootFolderPath { get; }
-
     public BlazorHybridResourceHandler(BlazorHybridOptions options, Formedge formedge)
     {
         Options = options;
@@ -85,46 +81,6 @@ class BlazorHybridResourceHandler : WebResourceHandler
         FormedgeWebViewManager = new FormedgeWebViewManager( formedge, Services, new Uri($"{Scheme}://{HostName}"), _fileProvider, contentRootRelativePath, hostPageRelativePath, options);
     }
 
-    private string GetResourceName(string relativePath, string? rootPath = null)
-    {
-        var filePath = relativePath;
-        if (!string.IsNullOrEmpty(rootPath))
-        {
-            filePath = $"{rootPath?.Trim('/', '\\')}/{filePath.Trim('/', '\\')}";
-        }
-
-        filePath = filePath.Replace('\\', '/');
-
-        var endTrimIndex = filePath.LastIndexOf('/');
-
-        if (endTrimIndex > -1)
-        {
-            // https://stackoverflow.com/questions/5769705/retrieving-embedded-resources-with-special-characters
-
-            var path = filePath.Substring(0, endTrimIndex);
-            path = path.Replace("/", ".");
-            if (Regex.IsMatch(path, "\\.(\\d+)"))
-            {
-                path = Regex.Replace(path, "\\.(\\d+)", "._$1");
-            }
-
-            const string replacePartterns = "`~!@$%^&(),-=";
-
-            foreach (var parttern in replacePartterns)
-            {
-                path = path.Replace(parttern, '_');
-            }
-
-            filePath = $"{path}{filePath.Substring(endTrimIndex)}".Trim('/');
-        }
-
-        var resourceName = $"{DefaultNamespace}.{filePath.Replace('/', '.')}";
-
-        return resourceName;
-
-    }
-
-
     protected override WebResourceResponse GetResourceResponse(WebResourceRequest request)
     {
         var url = request.RequestUrl;
@@ -136,7 +92,7 @@ class BlazorHybridResourceHandler : WebResourceHandler
             var resourceName = GetResourceName(request.RelativePath, RootFolderPath);
 
 
-            
+
 
             var fileInfo = _fileProvider.GetFileInfo(resourceName);
 
@@ -167,7 +123,7 @@ class BlazorHybridResourceHandler : WebResourceHandler
                 fileInfo = _fileProvider.GetFileInfo(resourceName);
             }
 
-            if (fileInfo.Exists) 
+            if (fileInfo.Exists)
             {
                 return new WebResourceResponse
                 {
@@ -253,5 +209,44 @@ class BlazorHybridResourceHandler : WebResourceHandler
                 HttpStatus = statusCode,
             };
         }
+    }
+
+    private string GetResourceName(string relativePath, string? rootPath = null)
+    {
+        var filePath = relativePath;
+        if (!string.IsNullOrEmpty(rootPath))
+        {
+            filePath = $"{rootPath?.Trim('/', '\\')}/{filePath.Trim('/', '\\')}";
+        }
+
+        filePath = filePath.Replace('\\', '/');
+
+        var endTrimIndex = filePath.LastIndexOf('/');
+
+        if (endTrimIndex > -1)
+        {
+            // https://stackoverflow.com/questions/5769705/retrieving-embedded-resources-with-special-characters
+
+            var path = filePath.Substring(0, endTrimIndex);
+            path = path.Replace("/", ".");
+            if (Regex.IsMatch(path, "\\.(\\d+)"))
+            {
+                path = Regex.Replace(path, "\\.(\\d+)", "._$1");
+            }
+
+            const string replacePartterns = "`~!@$%^&(),-=";
+
+            foreach (var parttern in replacePartterns)
+            {
+                path = path.Replace(parttern, '_');
+            }
+
+            filePath = $"{path}{filePath.Substring(endTrimIndex)}".Trim('/');
+        }
+
+        var resourceName = $"{DefaultNamespace}.{filePath.Replace('/', '.')}";
+
+        return resourceName;
+
     }
 }

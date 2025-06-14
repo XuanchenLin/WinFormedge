@@ -9,6 +9,38 @@ namespace WinFormedge;
 /// </summary>
 public partial class Formedge
 {
+    private Color _defaultBackgroundColor = WinFormedgeApp.Current.IsDarkMode ? Color.DimGray : Color.White;
+
+    /// <summary>
+    /// Occurs when content is loading in the browser.
+    /// </summary>
+    public event EventHandler<CoreWebView2ContentLoadingEventArgs>? ContentLoading;
+
+    /// <summary>
+    /// Occurs when the DOM content is loaded in the browser.
+    /// </summary>
+    public event EventHandler<CoreWebView2DOMContentLoadedEventArgs>? DOMContentLoaded;
+
+    /// <summary>
+    /// Occurs when a navigation is completed in the browser.
+    /// </summary>
+    public event EventHandler<CoreWebView2NavigationCompletedEventArgs>? NavigationCompleted;
+
+    /// <summary>
+    /// Occurs when a navigation is starting in the browser.
+    /// </summary>
+    public event EventHandler<CoreWebView2NavigationStartingEventArgs>? NavigationStarting;
+
+    /// <summary>
+    /// Occurs when a web message is received from the browser.
+    /// </summary>
+    public event EventHandler<CoreWebView2WebMessageReceivedEventArgs>? WebMessageReceived;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether developer tools are allowed.
+    /// </summary>
+    public bool AllowDeveloperTools { get; set; } = true;
+
     /// <summary>
     /// Gets or sets a value indicating whether external drag-and-drop is allowed in the browser.
     /// </summary>
@@ -34,11 +66,6 @@ public partial class Formedge
     public string DocumentTitle => WebView.Browser?.DocumentTitle ?? string.Empty;
 
     /// <summary>
-    /// Gets the underlying CoreWebView2 instance, if available.
-    /// </summary>
-    internal protected CoreWebView2? CoreWebView2 => WebView.Browser;
-
-    /// <summary>
     /// Gets or sets the current URL of the browser.
     /// </summary>
     public string Url
@@ -48,11 +75,9 @@ public partial class Formedge
     }
 
     /// <summary>
-    /// Gets or sets a value indicating whether developer tools are allowed.
+    /// Gets the background color with full opacity (alpha = 255).
     /// </summary>
-    public bool AllowDeveloperTools { get; set; } = true;
-
-    private Color _defaultBackgroundColor = WinFormedgeApp.Current.IsDarkMode ? Color.DimGray : Color.White;
+    internal Color SolidBackColor => Color.FromArgb(255, BackColor.R, BackColor.G, BackColor.B);
 
     /// <summary>
     /// Gets or sets the background color of the browser.
@@ -77,10 +102,9 @@ public partial class Formedge
     }
 
     /// <summary>
-    /// Gets the background color with full opacity (alpha = 255).
+    /// Gets the underlying CoreWebView2 instance, if available.
     /// </summary>
-    internal Color SolidBackColor => Color.FromArgb(255, BackColor.R, BackColor.G, BackColor.B);
-
+    internal protected CoreWebView2? CoreWebView2 => WebView.Browser;
     /// <summary>
     /// Gets or sets the zoom factor of the browser.
     /// </summary>
@@ -161,26 +185,6 @@ public partial class Formedge
     }
 
     /// <summary>
-    /// Raises the <see cref="NavigationStarting"/> event.
-    /// </summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="e">The event data.</param>
-    protected virtual void OnNavigationStarting(object? sender, CoreWebView2NavigationStartingEventArgs e)
-    {
-        NavigationStarting?.Invoke(this, e);
-    }
-
-    /// <summary>
-    /// Raises the <see cref="NavigationCompleted"/> event.
-    /// </summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="e">The event data.</param>
-    protected virtual void OnNavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
-    {
-        NavigationCompleted?.Invoke(this, e);
-    }
-
-    /// <summary>
     /// Raises the <see cref="DOMContentLoaded"/> event.
     /// </summary>
     /// <param name="sender">The event sender.</param>
@@ -188,16 +192,6 @@ public partial class Formedge
     protected virtual void OnDOMContentLoaded(object? sender, CoreWebView2DOMContentLoadedEventArgs e)
     {
         DOMContentLoaded?.Invoke(this, e);
-    }
-
-    /// <summary>
-    /// Raises the <see cref="WebMessageReceived"/> event.
-    /// </summary>
-    /// <param name="sender">The event sender.</param>
-    /// <param name="e">The event data.</param>
-    protected virtual void OnWebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
-    {
-        WebMessageReceived?.Invoke(this, e);
     }
 
     /// <summary>
@@ -221,30 +215,31 @@ public partial class Formedge
     }
 
     /// <summary>
-    /// Occurs when a navigation is starting in the browser.
+    /// Raises the <see cref="NavigationCompleted"/> event.
     /// </summary>
-    public event EventHandler<CoreWebView2NavigationStartingEventArgs>? NavigationStarting;
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event data.</param>
+    protected virtual void OnNavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)
+    {
+        NavigationCompleted?.Invoke(this, e);
+    }
 
     /// <summary>
-    /// Occurs when a navigation is completed in the browser.
+    /// Raises the <see cref="NavigationStarting"/> event.
     /// </summary>
-    public event EventHandler<CoreWebView2NavigationCompletedEventArgs>? NavigationCompleted;
-
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event data.</param>
+    protected virtual void OnNavigationStarting(object? sender, CoreWebView2NavigationStartingEventArgs e)
+    {
+        NavigationStarting?.Invoke(this, e);
+    }
     /// <summary>
-    /// Occurs when content is loading in the browser.
+    /// Raises the <see cref="WebMessageReceived"/> event.
     /// </summary>
-    public event EventHandler<CoreWebView2ContentLoadingEventArgs>? ContentLoading;
-
-    /// <summary>
-    /// Occurs when the DOM content is loaded in the browser.
-    /// </summary>
-    public event EventHandler<CoreWebView2DOMContentLoadedEventArgs>? DOMContentLoaded;
-
-    /// <summary>
-    /// Occurs when a web message is received from the browser.
-    /// </summary>
-    public event EventHandler<CoreWebView2WebMessageReceivedEventArgs>? WebMessageReceived;
-
-
-
+    /// <param name="sender">The event sender.</param>
+    /// <param name="e">The event data.</param>
+    protected virtual void OnWebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
+    {
+        WebMessageReceived?.Invoke(this, e);
+    }
 }

@@ -7,9 +7,9 @@ namespace WinFormedge.Blazor;
 
 class FormedgeWebViewManager : WebViewManager
 {
-    private readonly Formedge _formedge;
     private readonly Uri _appBaseUri;
     private readonly string _contentRootRelativePath;
+    private readonly Formedge _formedge;
     private readonly BlazorHybridOptions _options;
 
     public FormedgeWebViewManager(Formedge formedge, IServiceProvider services,  Uri appBaseUri, IFileProvider fileProvider, string contentRootRelativePath, string hostPagePathWithinFileProvider, BlazorHybridOptions options) : base(services, Dispatcher.CreateDefault(), appBaseUri, fileProvider, new JSComponentConfigurationStore(), hostPagePathWithinFileProvider)
@@ -43,6 +43,30 @@ class FormedgeWebViewManager : WebViewManager
 
     }
 
+    public bool TryGetResponseContent(string uri, out int statusCode, out string statusMessage, out Stream content, out IDictionary<string, string> headers)
+    {
+        return TryGetResponseContent(uri, false, out statusCode, out statusMessage, out content, out headers);
+    }
+
+    protected override void NavigateCore(Uri absoluteUri)
+    {
+        _formedge.CoreWebView2?.Navigate(absoluteUri.ToString());
+    }
+
+    protected override void SendMessage(string message)
+    {
+        _formedge.InvokeIfRequired(() =>
+        {
+            if (_formedge.CoreWebView2 is not null)
+            {
+                _formedge.CoreWebView2.PostWebMessageAsString(message);
+            }
+        });
+
+
+
+    }
+
     private void InitScript(CoreWebView2 webview)
     {
         webview.AddScriptToExecuteOnDocumentCreatedAsync(""""
@@ -65,32 +89,6 @@ window.external = {
         {
             MessageReceived(new Uri(args.Source), args.TryGetWebMessageAsString());
         };
-
-
-    }
-
-
-
-    public bool TryGetResponseContent(string uri, out int statusCode, out string statusMessage, out Stream content, out IDictionary<string, string> headers)
-    {
-        return TryGetResponseContent(uri, false, out statusCode, out statusMessage, out content, out headers);
-    }
-
-    protected override void NavigateCore(Uri absoluteUri)
-    {
-        _formedge.CoreWebView2?.Navigate(absoluteUri.ToString());
-    }
-
-    protected override void SendMessage(string message)
-    {
-        _formedge.InvokeIfRequired(() =>
-        {
-            if (_formedge.CoreWebView2 is not null)
-            {
-                _formedge.CoreWebView2.PostWebMessageAsString(message);
-            }
-        });
-
 
 
     }

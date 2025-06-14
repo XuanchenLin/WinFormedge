@@ -43,7 +43,7 @@
         <Version>0.1.3296.$([System.DateTime]::Now.Date.Subtract($([System.DateTime]::Parse($([System.String]::Format("{0}-5-9",2025))))).TotalDays)</Version>
         <Title>WinFormedge for Windows Form Applications</Title>
         <Description>An open source library based on Microsoft WebView2 that can buid powerful WinForm applications with HTML, CSS and JavaScript easily.</Description>
-        <PackageTags>WebView2 WinForms WinFormedge Formedge Chromium Hybrid-App</PackageTags>
+        <PackageTags>WebView2 WinForm WinForms WinFormedge Formedge Chromium Hybrid-App</PackageTags>
         <PackageIcon>WinFormedgeLogo.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryType>git</RepositoryType>
