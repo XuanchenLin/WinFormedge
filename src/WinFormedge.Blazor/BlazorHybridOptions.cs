@@ -43,6 +43,13 @@ public sealed class BlazorHybridOptions : WebResourceOptions
     /// </summary>
     public ConfigureServices? ConfigureServices { get; init; } = null;
 
+    /// <summary>
+    /// Gets or sets the assembly containing static resources for the Blazor application.
+    /// </summary>
     public Assembly? StaticResources { get; init; }
+
+    /// <summary>
+    /// Gets or sets the namespace for static resources in the Blazor application.
+    /// </summary>
     public string? StaticResourcesNamespace { get; set; }
 }

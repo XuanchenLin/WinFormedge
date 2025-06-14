@@ -922,7 +922,7 @@ public abstract class WebResourceHandler
     /// </summary>
     /// <param name="fileName">The file name.</param>
     /// <returns>The MIME type if found; otherwise, the default MIME type.</returns>
-    protected static string GetMimeType(string fileName)
+    public static string GetMimeType(string fileName)
     {
         var ext = Path.GetExtension(fileName)?.Trim('.') ?? string.Empty;
 
