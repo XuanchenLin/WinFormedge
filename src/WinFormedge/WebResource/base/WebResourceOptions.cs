@@ -16,6 +16,7 @@ public delegate string WebResourceFallbackDelegate(string requestUrl);
 /// </summary>
 public abstract class WebResourceOptions
 {
+
     /// <summary>
     /// Gets the URI scheme (e.g., "http" or "https") used for web resource requests.
     /// </summary>

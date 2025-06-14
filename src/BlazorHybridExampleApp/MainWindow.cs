@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.FileProviders;
+
 using WinFormedge;
 using WinFormedge.Blazor;
 
@@ -17,7 +19,7 @@ internal class MainWindow : Formedge
 {
     public MainWindow()
     {
-
+        Icon = new Icon(new MemoryStream(Properties.Resources.WinFormiumBlazor));
 
         Url = "https://blazorapp.local/";
 
@@ -31,7 +33,8 @@ internal class MainWindow : Formedge
             Scheme = "https",
             HostName = "blazorapp.local",
             RootComponent = typeof(Counter),
-            HostPath = "wwwroot/index.html"
+            HostPage = "wwwroot/index.html",
+            StaticResources = typeof(MainWindow).Assembly,
         });
     }
 }

@@ -295,7 +295,9 @@
 
         constructor() {
             setInterval(() => {
-                const state = getHostWindow()?.activated;
+
+
+                const state = hostWindow?.activated;
 
                 if (state === null || state === undefined) return;
 
@@ -310,7 +312,7 @@
                     htmlEl?.classList.add("window--deactivated");
                 }
 
-            }, 200);
+            }, 300);
         }
 
         get activated() {

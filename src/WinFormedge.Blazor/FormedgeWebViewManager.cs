@@ -7,33 +7,39 @@ namespace WinFormedge.Blazor;
 
 class FormedgeWebViewManager : WebViewManager
 {
-    public FormedgeWebViewManager(IServiceProvider serviceProvider, Formedge formedge, Uri appBaseUri, /*string contentRoot,*/ Assembly assembly, string relativePath, Type rootComponent, string selector = "#app", IDictionary<string, object?>? parameterView = null) : base(serviceProvider, Dispatcher.CreateDefault(), appBaseUri, new EmbeddedFileProvider(assembly), new JSComponentConfigurationStore(), relativePath)
+    private readonly Formedge _formedge;
+    private readonly Uri _appBaseUri;
+    private readonly string _contentRootRelativePath;
+    private readonly BlazorHybridOptions _options;
+
+    public FormedgeWebViewManager(Formedge formedge, IServiceProvider services,  Uri appBaseUri, IFileProvider fileProvider, string contentRootRelativePath, string hostPagePathWithinFileProvider, BlazorHybridOptions options) : base(services, Dispatcher.CreateDefault(), appBaseUri, fileProvider, new JSComponentConfigurationStore(), hostPagePathWithinFileProvider)
     {
-        Formedge = formedge;
-        AppBaseUri = appBaseUri;
-        //ContentRoot = contentRoot;
-        RelativePath = relativePath;
+        _formedge = formedge;
+        _appBaseUri = appBaseUri;
+        _contentRootRelativePath = contentRootRelativePath;
+        _options = options;
+
         Dispatcher.InvokeAsync(async () =>
         {
-            await AddRootComponentAsync(rootComponent, selector, parameterView is null ? ParameterView.Empty : ParameterView.FromDictionary(parameterView));
+            await AddRootComponentAsync(options.RootComponent, options.Selector, options.Parameters is null ? ParameterView.Empty : ParameterView.FromDictionary(options.Parameters));
         });
 
-        if(Formedge.CoreWebView2 is null)
+        if (_formedge.CoreWebView2 is null)
         {
-            Formedge.Load += (_, _) =>
+            _formedge.Load += (_, _) =>
             {
-                InitScript(Formedge.CoreWebView2!);
+                InitScript(_formedge.CoreWebView2!);
             };
         }
         else
         {
-            InitScript(Formedge.CoreWebView2);
+            InitScript(_formedge.CoreWebView2);
         }
 
 
 
 
-        Navigate("/");
+        //Navigate("/");
 
     }
 
@@ -59,12 +65,11 @@ window.external = {
         {
             MessageReceived(new Uri(args.Source), args.TryGetWebMessageAsString());
         };
+
+
     }
 
-    public Formedge Formedge { get; }
-    public Uri AppBaseUri { get; }
-    //public string ContentRoot { get; }
-    public string RelativePath { get; }
+
 
     public bool TryGetResponseContent(string uri, out int statusCode, out string statusMessage, out Stream content, out IDictionary<string, string> headers)
     {
@@ -73,19 +78,16 @@ window.external = {
 
     protected override void NavigateCore(Uri absoluteUri)
     {
-        Formedge.CoreWebView2?.Navigate(absoluteUri.ToString());
+        _formedge.CoreWebView2?.Navigate(absoluteUri.ToString());
     }
 
     protected override void SendMessage(string message)
     {
-        Formedge.InvokeIfRequired(() =>
+        _formedge.InvokeIfRequired(() =>
         {
-            if (Formedge.CoreWebView2 is not null)
+            if (_formedge.CoreWebView2 is not null)
             {
-                //var script = $"__dispatchMessageCallback(\"{HttpUtility.JavaScriptStringEncode(message)}\")";
-                //Formedge.CoreWebView2.ExecuteScriptAsync(script);
-
-                Formedge.CoreWebView2.PostWebMessageAsString(message);
+                _formedge.CoreWebView2.PostWebMessageAsString(message);
             }
         });
 
