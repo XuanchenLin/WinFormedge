@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormedge.Blazor", "src\W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorHybridExampleApp", "src\BlazorHybridExampleApp\BlazorHybridExampleApp.csproj", "{92419513-7A8F-4DF6-9403-C11AD7481AF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentUIBlazorExampleApp", "src\FluentUIBlazorExampleApp\FluentUIBlazorExampleApp.csproj", "{E4AAD825-F7FB-4245-87AF-ED039E815899}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{92419513-7A8F-4DF6-9403-C11AD7481AF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92419513-7A8F-4DF6-9403-C11AD7481AF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92419513-7A8F-4DF6-9403-C11AD7481AF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4AAD825-F7FB-4245-87AF-ED039E815899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4AAD825-F7FB-4245-87AF-ED039E815899}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4AAD825-F7FB-4245-87AF-ED039E815899}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4AAD825-F7FB-4245-87AF-ED039E815899}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,6 +69,7 @@ Global
 		{8B3495CE-30DD-44D2-94CA-1C666F2C707A} = {2E7F71A7-0692-44DF-BDA6-63BEDF760E57}
 		{8DEC5E7A-4B48-4050-838E-6DEFE4518EA8} = {1EA22351-F858-40DE-9489-19FC97D11C0F}
 		{92419513-7A8F-4DF6-9403-C11AD7481AF8} = {2E7F71A7-0692-44DF-BDA6-63BEDF760E57}
+		{E4AAD825-F7FB-4245-87AF-ED039E815899} = {2E7F71A7-0692-44DF-BDA6-63BEDF760E57}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {765BC30C-1BF9-49AA-AA95-05F5CCE8170F}

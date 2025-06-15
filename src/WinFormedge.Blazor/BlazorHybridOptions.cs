@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.ObjectModel;
+using System.Reflection;
 
 using WinFormedge.WebResource;
 
@@ -21,17 +22,14 @@ public sealed class BlazorHybridOptions : WebResourceOptions
     /// <summary>
     /// Gets the root component type for the Blazor application.
     /// </summary>
-    public required Type RootComponent { get; init; }
+    public RootComponentsCollection RootComponents { get; } = new();
 
     /// <summary>
     /// Gets the host path to the main HTML file (typically "wwwroot/index.html").
     /// </summary>
     public string HostPage { get; init; } = Path.Combine("wwwroot", "index.html");
 
-    /// <summary>
-    /// Gets the CSS selector used to mount the Blazor root component.
-    /// </summary>
-    public string Selector { get; init; } = "#app";
+
 
     /// <summary>
     /// Gets the parameters to pass to the root component.

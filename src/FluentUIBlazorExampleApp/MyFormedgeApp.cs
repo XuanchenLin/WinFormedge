@@ -3,9 +3,15 @@
 // This project is licensed under the MIT License.
 // See the LICENSE file in the project root for more information.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 using WinFormedge;
 
-namespace BlazorHybridExampleApp;
+namespace FluentUIBlazorExampleApp;
 internal class MyFormedgeApp : AppStartup
 {
     protected override AppCreationAction? OnApplicationStartup(StartupSettings options)

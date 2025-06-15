@@ -2,6 +2,9 @@
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
+using Microsoft.AspNetCore.Components.WebView;
+using Microsoft.Extensions.Logging;
+
 using WinFormedge.WebResource;
 
 namespace WinFormedge.Blazor;
@@ -19,6 +22,8 @@ class BlazorHybridResourceHandler : WebResourceHandler
     public override CoreWebView2WebResourceContext WebResourceContext { get; }
     private bool _isEmbdeedeStaticResources =>
         Options.StaticResources is not null;
+
+    private RootComponentsCollection RootComponents => Options.RootComponents;
 
     private string? DefaultNamespace => Options.StaticResourcesNamespace ?? Options?.StaticResources?.EntryPoint?.DeclaringType?.Namespace ?? Options?.StaticResources?.GetName().Name!;
     public BlazorHybridResourceHandler(BlazorHybridOptions options, Formedge formedge)
@@ -65,20 +70,37 @@ class BlazorHybridResourceHandler : WebResourceHandler
         RootFolderPath = contentRootRelativePath;
 
 
+        List<IFileProvider> providers = new List<IFileProvider>();
+        
+
         if (options.StaticResources is not null)
         {
-            _fileProvider = new EmbeddedFileProvider(options.StaticResources, options.StaticResourcesNamespace);
+            providers.Add(new EmbeddedFileProvider(options.StaticResources, options.StaticResourcesNamespace));
         }
-        else if (Directory.Exists(contentRootDirFullPath))
+        
+        if (Directory.Exists(contentRootDirFullPath))
         {
-            _fileProvider = new PhysicalFileProvider(contentRootDirFullPath);
+            providers.Add(new PhysicalFileProvider(contentRootDirFullPath));
         }
-        else
+
+
+        if(providers.Count == 0)
         {
             throw new InvalidOperationException($"The content root directory '{contentRootDirFullPath}' does not exist.");
         }
 
-        FormedgeWebViewManager = new FormedgeWebViewManager( formedge, Services, new Uri($"{Scheme}://{HostName}"), _fileProvider, contentRootRelativePath, hostPageRelativePath, options);
+        _fileProvider = new CompositeFileProvider(providers);
+
+
+        FormedgeWebViewManager = new FormedgeWebViewManager( formedge, Services, new Uri($"{Scheme}://{HostName}"), _fileProvider, RootComponents.JSComponents, contentRootRelativePath, hostPageRelativePath, options);
+
+        foreach (var rootComponent in RootComponents)
+        {
+
+            // Since the page isn't loaded yet, this will always complete synchronously
+            _ = rootComponent.AddToWebViewManagerAsync(FormedgeWebViewManager);
+        }
+
     }
 
     protected override WebResourceResponse GetResourceResponse(WebResourceRequest request)

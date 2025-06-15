@@ -1,0 +1,49 @@
+﻿@page "/weather"
+@using Microsoft.AspNetCore.Components.Rendering
+@attribute [StreamRendering]
+
+<PageTitle>天气</PageTitle>
+
+<h1>天气</h1>
+
+<p>该组件演示显示数据，非真实数据。</p>
+
+<!-- This page is rendered in SSR mode, so the FluentDataGrid component does not offer any interactivity (like sorting). -->
+<FluentDataGrid Id="weathergrid" Items="@forecasts" GridTemplateColumns="1fr 1fr 1fr 2fr" Loading="@(forecasts == null)" Style="height:204px;" TGridItem="WeatherForecast" LoadingContent="LoadingFragment">
+    <PropertyColumn Title="日期" Property="@(c => c!.Date)" Align="Align.Start"/>
+    <PropertyColumn Title="温度 (℃)" Property="@(c => c!.TemperatureC)" Align="Align.Center"/>
+    <PropertyColumn Title="温度 (℉)" Property="@(c => c!.TemperatureF)" Align="Align.Center"/>
+    <PropertyColumn Title="总结" Property="@(c => c!.Summary)" Align="Align.End"/>
+</FluentDataGrid>
+
+@code {
+    public RenderFragment LoadingFragment = (RenderTreeBuilder __builder) =>
+        {
+            <span>正在加载...</span>
+        };
+
+    private IQueryable<WeatherForecast>? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate asynchronous loading to demonstrate streaming rendering
+        await Task.Delay(500);
+
+        var startDate = DateOnly.FromDateTime(DateTime.Now);
+        var summaries = new[] { "冷", "清爽", "寒冷", "凉爽", "温和", "暖和", "温暖", "炎热", "闷热", "灼热" };
+        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        {
+            Date = startDate.AddDays(index),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = summaries[Random.Shared.Next(summaries.Length)]
+        }).AsQueryable();
+    }
+
+    private class WeatherForecast
+    {
+        public DateOnly Date { get; set; }
+        public int TemperatureC { get; set; }
+        public string? Summary { get; set; }
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+}

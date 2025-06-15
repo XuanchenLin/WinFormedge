@@ -1,10 +1,16 @@
 ﻿## Change Logs
 
+### 2025/6/16
+
+- 添加了基于 Microsoft FluentUI Blazor 的示例。
+
+![Preview](./screenshots/2025-06-16_011000.png)
+
+
 ### 2026/6/14
 
 - 添加了对 BlazorHybrid 的支持，现在可以使用 Blazor 创建桌面应用程序了。`WinFormedge.Blazor` 即为 BlazorHybrid 的实现，提供了一个简单的 Blazor 框架集成示例。
 
-![Preview](./screenshots/2025-06-14_202500.png)
 
 使用 NuGet 安装 WinFormedge.Blazor 以体验该项目。
 
