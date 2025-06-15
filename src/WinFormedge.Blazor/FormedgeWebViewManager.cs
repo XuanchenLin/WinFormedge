@@ -12,17 +12,17 @@ class FormedgeWebViewManager : WebViewManager
     private readonly Formedge _formedge;
     private readonly BlazorHybridOptions _options;
 
-    public FormedgeWebViewManager(Formedge formedge, IServiceProvider services,  Uri appBaseUri, IFileProvider fileProvider, string contentRootRelativePath, string hostPagePathWithinFileProvider, BlazorHybridOptions options) : base(services, Dispatcher.CreateDefault(), appBaseUri, fileProvider, new JSComponentConfigurationStore(), hostPagePathWithinFileProvider)
+    public FormedgeWebViewManager(Formedge formedge, IServiceProvider services,  Uri appBaseUri, IFileProvider fileProvider, JSComponentConfigurationStore jSComponent, string contentRootRelativePath, string hostPagePathWithinFileProvider, BlazorHybridOptions options) : base(services, Dispatcher.CreateDefault(), appBaseUri, fileProvider, jSComponent, hostPagePathWithinFileProvider)
     {
         _formedge = formedge;
         _appBaseUri = appBaseUri;
         _contentRootRelativePath = contentRootRelativePath;
         _options = options;
 
-        Dispatcher.InvokeAsync(async () =>
-        {
-            await AddRootComponentAsync(options.RootComponent, options.Selector, options.Parameters is null ? ParameterView.Empty : ParameterView.FromDictionary(options.Parameters));
-        });
+        //Dispatcher.InvokeAsync(async () =>
+        //{
+        //    await AddRootComponentAsync(options.RootComponent, options.Selector, options.Parameters is null ? ParameterView.Empty : ParameterView.FromDictionary(options.Parameters));
+        //});
 
         if (_formedge.CoreWebView2 is null)
         {

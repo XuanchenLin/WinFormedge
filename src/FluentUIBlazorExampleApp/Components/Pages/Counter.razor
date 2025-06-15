@@ -1,0 +1,20 @@
+﻿@page "/counter"
+
+<PageTitle>Counter</PageTitle>
+
+<h1>计数器</h1>
+
+<div role="status" style="padding-bottom: 1em;">
+    当前数值： <FluentBadge Appearance="Appearance.Neutral">@currentCount</FluentBadge>
+</div>
+
+<FluentButton Appearance="Appearance.Accent" @onclick="IncrementCount">++</FluentButton>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

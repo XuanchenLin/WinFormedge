@@ -1,0 +1,25 @@
+﻿@inherits LayoutComponentBase
+
+<FluentLayout>
+    <FluentHeader>
+        WinFormedge ❤️ FluentUI Blazor
+        <FluentSpacer />
+
+    </FluentHeader>
+    <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
+        <NavMenu />
+        <FluentBodyContent Class="body-content">
+            <div class="content">
+                @Body
+            </div>
+        </FluentBodyContent>
+    </FluentStack>
+    <FluentFooter>
+        <a href="https://www.fluentui-blazor.net" target="_blank">FluentUI Blazor</a>
+        <FluentSpacer />
+        <a href="https://github.com/XuanchenLin/WinFormedge" target="_blank">关于 WinFormedge</a>
+        <FluentSpacer Width="10" />
+        <a href="https://learn.microsoft.com/en-us/aspnet/core/blazor" target="_blank">关于 Blazor</a>
+    </FluentFooter>
+</FluentLayout>
+
