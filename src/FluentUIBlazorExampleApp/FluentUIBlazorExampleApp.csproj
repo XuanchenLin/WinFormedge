@@ -20,6 +20,10 @@
         <EmbeddedResource Include="wwwroot\**\*" />
     </ItemGroup>
     <ItemGroup>
+      <Content Remove="wwwroot\fonts\fonticon.eot" />
+      <Content Remove="wwwroot\fonts\fonticon.svg" />
+      <Content Remove="wwwroot\fonts\fonticon.ttf" />
+      <Content Remove="wwwroot\fonts\fonticon.woff" />
       <Content Remove="wwwroot\index.html" />
     </ItemGroup>
 

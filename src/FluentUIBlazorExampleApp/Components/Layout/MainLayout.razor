@@ -1,10 +1,109 @@
 ﻿@inherits LayoutComponentBase
 
+<style scoped>
+    .window-header{
+        -webkit-app-region: drag;
+        user-select:none;
+        -webkit-user-drag: none;
+    }
+
+    .navmenu{
+        background-color:#ffffff90;
+        box-shadow: 1px 0 14px #33333330;
+    }
+
+    div.window-controls {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+        -webkit-app-region: no-drag;
+    }
+
+        /* .window--deactivated  div.window-controls > button {
+            transform: translateY(-100%);
+        } */
+
+        div.window-controls > button {
+            width: 2.5em;
+            height: 2.5em;
+            border: none;
+            background-color: transparent;
+            transition: all 0.5s ease;
+            font-family: "fonticon" !important;
+            color: #babcbe;
+            outline: none;
+            font-size: 0.8em;
+        }
+
+            div.window-controls > button.group {
+                margin-left: 0.5em;
+            }
+
+            div.window-controls > button:hover {
+                color: #fff;
+                background-color: rgba(255, 250, 255, 0.3);
+            }
+
+            div.window-controls > button:active {
+                background-color: rgba(255, 250, 255,0.15);
+            }
+
+            div.window-controls > button.close:after {
+                content: "\e903";
+            }
+
+            div.window-controls > button.close:hover {
+                color: #fff;
+                background-color: #e51e17;
+            }
+
+            div.window-controls > button.close:active {
+                background-color: #cc0002;
+            }
+
+            div.window-controls > button.language:after {
+                content: "\e905";
+            }
+
+            div.window-controls > button.fullscreen:after {
+                content: "\e904";
+            }
+
+    .window--fullscreen div.window-controls > button.fullscreen:after {
+        content: "\e906";
+    }
+
+    .window--fullscreen div.window-controls > button.minimize {
+        display: none;
+    }
+
+    div.window-controls > button.minimize:after {
+        content: "\e901";
+    }
+
+    .window--fullscreen div.window-controls > button.maximize {
+        display: none;
+    }
+
+    div.window-controls > button.maximize:after {
+        content: "\e902";
+    }
+
+    .window--maximized div.window-controls > button.maximize:after {
+        content: "\e900";
+    }
+</style>
+
 <FluentLayout>
-    <FluentHeader>
+    <FluentHeader Class="window-header">
         WinFormedge ❤️ FluentUI Blazor
         <FluentSpacer />
-
+        <div class="window-controls">
+            <button class="minimize group" app-command="minimize" title="最小化"></button>
+            <button class="maximize" app-command="maximize" title="最大化"></button>
+            <button class="close" app-command="close" title="关闭"></button>
+        </div>
     </FluentHeader>
     <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
         <NavMenu />

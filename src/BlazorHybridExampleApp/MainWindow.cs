@@ -25,10 +25,12 @@ internal class MainWindow : Formedge
             Scheme = "https",
             HostName = "blazorapp.local",
             HostPage = "wwwroot/index.html",
-            StaticResources = typeof(MainWindow).Assembly,
         };
-
+        
         opts.RootComponents.Add<Counter>("#app");
+
+        opts.StaticResources.Add(new BlazorHybridAssemblyResources(typeof(MainWindow).Assembly));
+
         this.SetVirtualHostNameToBlazorHybrid(opts);
     }
 }
