@@ -50,17 +50,21 @@ public sealed class WebResourceRequest
     /// <summary>
     /// Gets the file extension from the file name of the requested resource, excluding the leading dot.
     /// </summary>
-    public string FileExtension => Path.GetExtension(FileName).TrimStart('.');
+    public string FileExtension => Path.GetExtension(FileName)?.TrimStart('.')??string.Empty;
 
     /// <summary>
     /// Gets a value indicating whether the requested resource has a file name.
     /// </summary>
-    public bool HasFileName => !string.IsNullOrEmpty(FileName);
+    public bool HasFileName => !string.IsNullOrEmpty(FileExtension);
 
     /// <summary>
     /// Gets the underlying <see cref="CoreWebView2WebResourceRequest"/> instance.
     /// </summary>
     public CoreWebView2WebResourceRequest Request { get; }
+    /// <summary>
+    /// Gets the source kinds of the web resource request.
+    /// </summary>
+    public CoreWebView2WebResourceContext WebResourceContext { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WebResourceRequest"/> class.
@@ -71,6 +75,7 @@ public sealed class WebResourceRequest
     internal WebResourceRequest(CoreWebView2WebResourceRequest request, CoreWebView2WebResourceRequestSourceKinds requestSourceKinds, CoreWebView2WebResourceContext webResourceContext)
     {
         Request = request;
+        WebResourceContext = webResourceContext;
         Uri = new Uri(request.Uri);
         Headers = request.Headers;
     }

@@ -1,4 +1,12 @@
-@import '_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css';
+﻿@import '_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css';
+
+@font-face {
+    font-family: "fonticon";
+    src: url("fonts/fonticon.eot?si6tlf");
+    src: url("fonts/fonticon.eot?si6tlf#iefix") format("embedded-opentype"), url("fonts/fonticon.ttf?si6tlf") format("truetype"), url("fonts/fonticon.woff?si6tlf") format("woff"), url("fonts/fonticon.svg?si6tlf#fonticon") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
 
 body {
     --body-font: "Segoe UI Variable", "Segoe UI", sans-serif;
@@ -6,6 +14,7 @@ body {
     font-size: var(--type-ramp-base-font-size);
     line-height: var(--type-ramp-base-line-height);
     margin: 0;
+    background-color:transparent !important;
 }
 
 .navmenu-icon {
@@ -71,7 +80,6 @@ footer {
     position: fixed;
     width: 100%;
     z-index: 1000;
-    margin: 20px 0;
 }
 
     #blazor-error-ui .dismiss {

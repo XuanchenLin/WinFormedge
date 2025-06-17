@@ -56,6 +56,8 @@ internal sealed class WebResourceManager
 
         //CoreWebView2WebResourceResponse GetNotFoundResponse() => webview.Environment.CreateWebResourceResponse(null, StatusCodes.Status404NotFound, "Not Found", "");
 
+        
+
         if (webview == null)
         {
             return;

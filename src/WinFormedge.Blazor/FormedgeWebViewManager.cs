@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 
 using WinFormedge.WebResource;
@@ -9,6 +10,7 @@ class FormedgeWebViewManager : WebViewManager
 {
     private readonly Uri _appBaseUri;
     private readonly string _contentRootRelativePath;
+    private readonly string _hostPagePathWithinFileProvider;
     private readonly Formedge _formedge;
     private readonly BlazorHybridOptions _options;
 
@@ -17,6 +19,7 @@ class FormedgeWebViewManager : WebViewManager
         _formedge = formedge;
         _appBaseUri = appBaseUri;
         _contentRootRelativePath = contentRootRelativePath;
+        _hostPagePathWithinFileProvider = hostPagePathWithinFileProvider;
         _options = options;
 
         //Dispatcher.InvokeAsync(async () =>
@@ -39,13 +42,46 @@ class FormedgeWebViewManager : WebViewManager
 
 
 
-        //Navigate("/");
+        Navigate("/");
 
     }
 
-    public bool TryGetResponseContent(string uri, out int statusCode, out string statusMessage, out Stream content, out IDictionary<string, string> headers)
+    public bool TryGetResponseContent(WebResourceRequest reqeust, out int statusCode, out string statusMessage, out Stream content, out IDictionary<string, string> headers)
     {
-        return TryGetResponseContent(uri, false, out statusCode, out statusMessage, out content, out headers);
+        var url = reqeust.Uri.ToString();
+        var allowFallbackOnHostPage =
+                reqeust.WebResourceContext == CoreWebView2WebResourceContext.Document ||
+                reqeust.WebResourceContext == CoreWebView2WebResourceContext.Other || !reqeust.HasFileName;
+
+
+        string RemovePossibleQueryString(string? url)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                return string.Empty;
+            }
+            var indexOfQueryString = url.IndexOf('?', StringComparison.Ordinal);
+            return (indexOfQueryString == -1)
+                ? url
+                : url.Substring(0, indexOfQueryString);
+        }
+
+        url = RemovePossibleQueryString(url);
+
+
+        var uri = new Uri(url);
+
+        if (uri.PathAndQuery == "/")
+        {
+            url += _hostPagePathWithinFileProvider;
+        }
+
+
+
+
+
+
+        return TryGetResponseContent(url, allowFallbackOnHostPage, out statusCode, out statusMessage, out content, out headers);
     }
 
     protected override void NavigateCore(Uri absoluteUri)

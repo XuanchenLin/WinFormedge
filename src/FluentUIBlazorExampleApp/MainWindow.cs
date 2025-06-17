@@ -29,10 +29,26 @@ internal class MainWindow : Formedge
 
         Load += MainWindow_Load;
 
-        WindowTitle = "🌈 FluentUI Blazor";
+        BackColor = System.Drawing.Color.Transparent;
+
+        WindowTitle = "FluentUI Blazor";
     }
 
-    
+    protected override WindowSettings ConfigureWindowSettings(HostWindowBuilder opts)
+    {
+        var settings = opts.UseDefaultWindow();
+        settings.ExtendsContentIntoTitleBar = true;
+
+        // Windows 11 or later
+        if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000))
+        {
+            settings.SystemBackdropType = SystemBackdropType.Transient;
+        }
+
+        return settings;
+    }
+
+
 
     private void MainWindow_Load(object? sender, EventArgs e)
     {
@@ -41,21 +57,23 @@ internal class MainWindow : Formedge
             Scheme = "https",
             HostName = "blazorapp.local",
             HostPage = "wwwroot/index.html",
-            StaticResources = typeof(MainWindow).Assembly,
             ConfigureServices = ConfigureServices
         };
 
         opts.RootComponents.Add<App>("#app");
         opts.RootComponents.Add<HeadOutlet>("head::after");
 
+        opts.StaticResources.Add(new BlazorHybridAssemblyResources(typeof(MainWindow).Assembly));
+
         this.SetVirtualHostNameToBlazorHybrid(opts);
     }
 
     private void ConfigureServices(IServiceCollection services)
     {
-        services.AddFluentUIComponents(options => {
+        services.AddFluentUIComponents(options =>
+        {
             options.ValidateClassNames = false;
-            
+
         });
 
         services.AddHttpClient();

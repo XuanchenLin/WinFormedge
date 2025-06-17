@@ -31,7 +31,7 @@
 
         var startDate = DateOnly.FromDateTime(DateTime.Now);
         var summaries = new[] { "冷", "清爽", "寒冷", "凉爽", "温和", "暖和", "温暖", "炎热", "闷热", "灼热" };
-        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        forecasts = Enumerable.Range(1, 10).Select(index => new WeatherForecast
         {
             Date = startDate.AddDays(index),
             TemperatureC = Random.Shared.Next(-20, 55),

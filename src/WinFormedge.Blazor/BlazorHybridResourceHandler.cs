@@ -25,7 +25,7 @@ class BlazorHybridResourceHandler : WebResourceHandler
 
     private RootComponentsCollection RootComponents => Options.RootComponents;
 
-    private string? DefaultNamespace => Options.StaticResourcesNamespace ?? Options?.StaticResources?.EntryPoint?.DeclaringType?.Namespace ?? Options?.StaticResources?.GetName().Name!;
+
     public BlazorHybridResourceHandler(BlazorHybridOptions options, Formedge formedge)
     {
         Options = options;
@@ -73,9 +73,15 @@ class BlazorHybridResourceHandler : WebResourceHandler
         List<IFileProvider> providers = new List<IFileProvider>();
         
 
-        if (options.StaticResources is not null)
+        if (options.StaticResources is not null && options.StaticResources.Count > 0)
         {
-            providers.Add(new EmbeddedFileProvider(options.StaticResources, options.StaticResourcesNamespace));
+            foreach (var staticResource in options.StaticResources)
+            {
+                if (staticResource.ResourcesAssembly is not null)
+                {
+                    providers.Add(new EmbeddedFileProvider(staticResource.ResourcesAssembly, staticResource.BaseNamespace));
+                }
+            }
         }
         
         if (Directory.Exists(contentRootDirFullPath))
@@ -110,102 +116,52 @@ class BlazorHybridResourceHandler : WebResourceHandler
 
         if (_isEmbdeedeStaticResources)
         {
+            var namespaces = Options.StaticResources.Select(x => x.BaseNamespace);
 
-            var resourceName = GetResourceName(request.RelativePath, RootFolderPath);
-
-
-
-
-            var fileInfo = _fileProvider.GetFileInfo(resourceName);
-
-
-
-            if (!fileInfo.Exists && !request.HasFileName)
+            foreach (var ns in namespaces)
             {
-                foreach (var defaultFileName in DefaultFileName)
+                var resourceName = GetResourceName(ns, request.RelativePath, RootFolderPath);
+
+                var fileInfo = _fileProvider.GetFileInfo(resourceName);
+
+                if (!fileInfo.Exists && !request.HasFileName)
                 {
-
-                    resourceName = string.Join(".", resourceName, defaultFileName);
-
-                    fileInfo = _fileProvider.GetFileInfo(resourceName);
-
-                    if (fileInfo.Exists)
+                    foreach (var defaultFileName in DefaultFileName)
                     {
-                        break;
+
+                        resourceName = string.Join(".", resourceName, defaultFileName);
+
+                        fileInfo = _fileProvider.GetFileInfo(resourceName);
+
+                        if (fileInfo.Exists)
+                        {
+                            break;
+                        }
                     }
                 }
-            }
 
-            if (!fileInfo.Exists && Options.OnFallback is not null)
-            {
-                var fallbackFile = Options.OnFallback.Invoke(url);
-
-                resourceName = GetResourceName(fallbackFile, RootFolderPath);
-
-                fileInfo = _fileProvider.GetFileInfo(resourceName);
-            }
-
-            if (fileInfo.Exists)
-            {
-                return new WebResourceResponse
+                if (!fileInfo.Exists && Options.OnFallback is not null)
                 {
-                    ContentBody = fileInfo.CreateReadStream(),
-                    ContentType = GetMimeType(fileInfo.Name) ?? "application/octet-stream",
-                    HttpStatus = StatusCodes.Status200OK,
-                };
+                    var fallbackFile = Options.OnFallback.Invoke(url);
+
+                    resourceName = GetResourceName(ns, fallbackFile, RootFolderPath);
+
+                    fileInfo = _fileProvider.GetFileInfo(resourceName);
+                }
+
+                if (fileInfo.Exists)
+                {
+                    return new WebResourceResponse
+                    {
+                        ContentBody = fileInfo.CreateReadStream(),
+                        ContentType = GetMimeType(fileInfo.Name) ?? "application/octet-stream",
+                        HttpStatus = StatusCodes.Status200OK,
+                    };
+                }
             }
         }
 
-
-
-
-
-        string RemovePossibleQueryString(string? url)
-        {
-            if (string.IsNullOrEmpty(url))
-            {
-                return string.Empty;
-            }
-            var indexOfQueryString = url.IndexOf('?', StringComparison.Ordinal);
-            return (indexOfQueryString == -1)
-                ? url
-                : url.Substring(0, indexOfQueryString);
-        }
-
-        url = RemovePossibleQueryString(url);
-
-
-
-
-        //if (Options.ResourceAssembly is not null && !string.IsNullOrEmpty(Options.RootFolder))
-        //{
-        //    var baseUri = new Uri(url);
-
-        //    var relativePath = baseUri.AbsolutePath;
-
-        //    if (relativePath.StartsWith('/') && !relativePath.StartsWith($"/{Options.RootFolder}",StringComparison.InvariantCultureIgnoreCase))
-        //    {
-        //        var path = Path.Combine(Options.RootFolder, relativePath.TrimStart('/','\\'));
-        //        url = new Uri(baseUri, $"/{path}/").ToString();
-        //    }
-        //}
-
-        var uri = new Uri(url);
-
-
-        if (uri.PathAndQuery == "/")
-        {
-            url += RelativePath;
-        }
-
-
-
-
-
-
-
-
-        if (FormedgeWebViewManager.TryGetResponseContent(url, out var statusCode, out var statusMessage, out var content, out var headers))
+        if (FormedgeWebViewManager.TryGetResponseContent(request, out var statusCode, out var statusMessage, out var content, out var headers))
         {
             var response = new WebResourceResponse()
             {
@@ -233,7 +189,7 @@ class BlazorHybridResourceHandler : WebResourceHandler
         }
     }
 
-    private string GetResourceName(string relativePath, string? rootPath = null)
+    private string GetResourceName(string baseNamespace, string relativePath, string? rootPath = null)
     {
         var filePath = relativePath;
         if (!string.IsNullOrEmpty(rootPath))
@@ -266,7 +222,7 @@ class BlazorHybridResourceHandler : WebResourceHandler
             filePath = $"{path}{filePath.Substring(endTrimIndex)}".Trim('/');
         }
 
-        var resourceName = $"{DefaultNamespace}.{filePath.Replace('/', '.')}";
+        var resourceName = $"{baseNamespace}.{filePath.Replace('/', '.')}";
 
         return resourceName;
 
