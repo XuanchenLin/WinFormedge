@@ -9,7 +9,20 @@ namespace WinFormedge;
 /// </summary>
 public partial class Formedge
 {
-    private Color _defaultBackgroundColor = WinFormedgeApp.Current.IsDarkMode ? Color.DimGray : Color.White;
+    /// <summary>
+    /// Occurs when an accelerator key is pressed while the WebView2 control has focus.
+    /// </summary>
+    /// <remarks>This event is triggered for key presses that are considered accelerator keys, such as
+    /// function keys or key combinations involving modifiers (e.g., Ctrl, Alt). Use this event to handle custom key
+    /// actions or override default behavior.</remarks>
+    public EventHandler<CoreWebView2AcceleratorKeyPressedEventArgs>? AcceleratorKeyPressed;
+    /// <summary>
+    /// Occurs when the WebView2 control requests to move focus to another element.
+    /// </summary>
+    /// <remarks>This event is triggered when the WebView2 control determines that focus should be moved, 
+    /// such as during keyboard navigation or accessibility interactions.  Use this event to handle focus movement
+    /// within your application.</remarks>
+    public EventHandler<CoreWebView2MoveFocusRequestedEventArgs>? MoveFocusRequested;
 
     /// <summary>
     /// Occurs when content is loading in the browser.
@@ -241,5 +254,29 @@ public partial class Formedge
     protected virtual void OnWebMessageReceived(object? sender, CoreWebView2WebMessageReceivedEventArgs e)
     {
         WebMessageReceived?.Invoke(this, e);
+    }
+
+    /// <summary>
+    /// Moves the focus within the WebView2 control based on the specified reason.
+    /// </summary>
+    /// <remarks>Use this method to programmatically adjust focus within the WebView2 control. The <paramref
+    /// name="reason"/> parameter specifies the focus movement behavior, such as moving focus to the next or previous
+    /// element, or handling focus changes triggered by user interactions.</remarks>
+    /// <param name="reason">The reason for moving focus, represented by a <see
+    /// cref="Microsoft.Web.WebView2.Core.CoreWebView2MoveFocusReason"/> value. This determines the direction or context
+    /// in which the focus should be moved.</param>
+    public void MoveFocus(Microsoft.Web.WebView2.Core.CoreWebView2MoveFocusReason reason)
+    {
+        WebView.Controller.MoveFocus(reason);
+    }
+
+    /// <summary>
+    /// Notifies the parent window that its position has changed.
+    /// </summary>
+    /// <remarks>This method should be called whenever the position of the parent window changes. It ensures
+    /// that the WebView's controller is updated to reflect the new position.</remarks>
+    public void NotifyParentWindowPositionChanged()
+    {
+        WebView.Controller.NotifyParentWindowPositionChanged();
     }
 }
