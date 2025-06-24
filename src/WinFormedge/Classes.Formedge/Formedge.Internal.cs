@@ -69,14 +69,7 @@ public abstract partial class Formedge : IDisposable
 
                 };
 
-                WebView.Controller.AcceleratorKeyPressed += (_, args) =>
-                {
-                    OnAcceleratorKeyPressed(args);
-                };
-                WebView.Controller.MoveFocusRequested += (_, args) =>
-                {
-                    OnMoveFocusRequested(args);
-                };
+
 
                 WebView.WebViewCreated += (_, _) => WebViewCreatedCore();
                 WindowStyleSettings.WndProc += WebView.HostWndProc;
@@ -809,6 +802,15 @@ public abstract partial class Formedge : IDisposable
 
         controller.GotFocus += OnGotFocus;
         controller.LostFocus += OnLostFocus;
+
+        WebView.Controller.AcceleratorKeyPressed += (_, args) =>
+        {
+            OnAcceleratorKeyPressed(args);
+        };
+        WebView.Controller.MoveFocusRequested += (_, args) =>
+        {
+            OnMoveFocusRequested(args);
+        };
 
         webview.ContentLoading += OnContentLoading;
         webview.NavigationStarting += OnNavigationStarting;
