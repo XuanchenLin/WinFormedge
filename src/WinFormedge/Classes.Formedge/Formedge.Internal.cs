@@ -12,6 +12,9 @@ namespace WinFormedge;
 /// </summary>
 public abstract partial class Formedge : IDisposable
 {
+    private Color _defaultBackgroundColor = WinFormedgeApp.Current.IsDarkMode ? Color.DimGray : Color.White;
+
+
     private readonly HostWindowBuilder _hostWindowBuilder;
 
     /// <summary>
@@ -66,6 +69,15 @@ public abstract partial class Formedge : IDisposable
 
                 };
 
+                WebView.Controller.AcceleratorKeyPressed += (_, args) =>
+                {
+                    OnAcceleratorKeyPressed(args);
+                };
+                WebView.Controller.MoveFocusRequested += (_, args) =>
+                {
+                    OnMoveFocusRequested(args);
+                };
+
                 WebView.WebViewCreated += (_, _) => WebViewCreatedCore();
                 WindowStyleSettings.WndProc += WebView.HostWndProc;
             }
@@ -73,7 +85,6 @@ public abstract partial class Formedge : IDisposable
             return _webViewCore;
         }
     }
-
     internal WindowSettings WindowStyleSettings
     {
         get
@@ -199,8 +210,9 @@ public abstract partial class Formedge : IDisposable
     /// <param name="hostName">The host name of the handler to unregister.</param>
     public void UnregisterWebResourceHandler(string scheme, string hostName)
     {
-        WebView.UnregisterWebResourceHander(scheme,hostName);
+        WebView.UnregisterWebResourceHander(scheme, hostName);
     }
+
     /// <summary>
     /// Configures the window settings using the provided <see cref="HostWindowBuilder"/>.
     /// </summary>
@@ -209,6 +221,19 @@ public abstract partial class Formedge : IDisposable
     internal protected virtual WindowSettings ConfigureWindowSettings(HostWindowBuilder opts)
     {
         return opts.UseDefaultWindow();
+    }
+
+    /// <summary>
+    /// Handles the event when an accelerator key is pressed in the WebView2 control.
+    /// </summary>
+    /// <remarks>Override this method to provide custom handling for accelerator key presses.  Ensure that
+    /// <paramref name="args"/> is properly processed to indicate whether  the key press event has been handled to
+    /// prevent further propagation.</remarks>
+    /// <param name="args">The event arguments containing details about the accelerator key press,  including the key code and whether the
+    /// event was handled.</param>
+    protected virtual void OnAcceleratorKeyPressed(CoreWebView2AcceleratorKeyPressedEventArgs args)
+    {
+        AcceleratorKeyPressed?.Invoke(this, args);
     }
 
     /// <summary>
@@ -424,6 +449,7 @@ public abstract partial class Formedge : IDisposable
 
         RegisterHostWindowEvents();
     }
+
     /// <summary>
     /// Default window procedure handler for message processing.
     /// </summary>
@@ -686,6 +712,17 @@ public abstract partial class Formedge : IDisposable
         }));
     }
 
+    /// <summary>
+    /// Handles the event triggered when a focus movement is requested within the WebView2 control.
+    /// </summary>
+    /// <remarks>This method is typically invoked in response to a focus movement request from the WebView2
+    /// control. Use the <paramref name="args"/> parameter to determine the direction of the requested focus movement
+    /// and implement appropriate focus handling logic.</remarks>
+    /// <param name="args">Provides data for the focus movement request, including the direction of focus movement.</param>
+    private void OnMoveFocusRequested(CoreWebView2MoveFocusRequestedEventArgs args)
+    {
+        MoveFocusRequested?.Invoke(this, args);
+    }
     /// <summary>
     /// Handles the Resize event, notifies JavaScript of window state and size changes.
     /// </summary>

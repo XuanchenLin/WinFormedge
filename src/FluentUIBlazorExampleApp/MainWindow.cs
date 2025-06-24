@@ -32,6 +32,7 @@ internal class MainWindow : Formedge
         BackColor = System.Drawing.Color.Transparent;
 
         WindowTitle = "FluentUI Blazor";
+
     }
 
     protected override WindowSettings ConfigureWindowSettings(HostWindowBuilder opts)
@@ -66,6 +67,8 @@ internal class MainWindow : Formedge
         opts.StaticResources.Add(new BlazorHybridAssemblyResources(typeof(MainWindow).Assembly));
 
         this.SetVirtualHostNameToBlazorHybrid(opts);
+
+        
     }
 
     private void ConfigureServices(IServiceCollection services)
