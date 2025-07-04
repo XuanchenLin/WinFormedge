@@ -15,7 +15,7 @@
 
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3296.44" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3124.44" />
         <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.183">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -40,7 +40,7 @@
     </ItemGroup>
 
     <PropertyGroup>
-        <Version>0.1.3296.$([System.DateTime]::Now.Date.Subtract($([System.DateTime]::Parse($([System.String]::Format("{0}-5-9",2025))))).TotalDays)</Version>
+        <Version>0.1.3124.$([System.DateTime]::Now.Date.Subtract($([System.DateTime]::Parse($([System.String]::Format("{0}-5-9",2025))))).TotalDays)</Version>
         <Title>WinFormedge for Windows Form Applications</Title>
         <Description>An open source library based on Microsoft WebView2 that can buid powerful WinForm applications with HTML, CSS and JavaScript easily.</Description>
         <PackageTags>WebView2 WinForm WinForms WinFormedge Formedge Chromium Hybrid-App</PackageTags>
@@ -60,7 +60,7 @@
     </PropertyGroup>
     
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
-        <Version>0.1.3296.4</Version>
+        <Version>1.0.0</Version>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     </PropertyGroup>
     
