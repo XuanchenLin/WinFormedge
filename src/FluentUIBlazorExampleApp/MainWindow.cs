@@ -45,6 +45,10 @@ internal class MainWindow : Formedge
         {
             settings.SystemBackdropType = SystemBackdropType.Transient;
         }
+        else
+        {
+            settings.SystemBackdropType = SystemBackdropType.BlurBehind;
+        }
 
         return settings;
     }
@@ -68,7 +72,7 @@ internal class MainWindow : Formedge
 
         this.SetVirtualHostNameToBlazorHybrid(opts);
 
-        
+
     }
 
     private void ConfigureServices(IServiceCollection services)
