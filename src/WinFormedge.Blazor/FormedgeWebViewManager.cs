@@ -103,9 +103,7 @@ class FormedgeWebViewManager : WebViewManager
 
     }
 
-    private void InitScript(CoreWebView2 webview)
-    {
-        webview.AddScriptToExecuteOnDocumentCreatedAsync(""""
+    internal const string initScript = """"
 window.external = {
 	sendMessage: message => {
 		window.chrome.webview.postMessage(message);
@@ -119,11 +117,18 @@ window.external = {
         });
 	}
 };
-"""").ConfigureAwait(continueOnCapturedContext: true);
+"""";
+
+    private void InitScript(CoreWebView2 webview)
+    {
+        webview.AddScriptToExecuteOnDocumentCreatedAsync(initScript).ConfigureAwait(continueOnCapturedContext: true);
 
         webview.WebMessageReceived += (s, args) =>
         {
-            MessageReceived(new Uri(args.Source), args.TryGetWebMessageAsString());
+
+            string message = args.TryGetWebMessageAsString() ?? string.Empty;
+
+            MessageReceived(new Uri(args.Source), message);
         };
 
 

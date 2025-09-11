@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Components.Web;
 namespace FluentUIBlazorExampleApp;
 internal class MainWindow : Formedge
 {
+
     public MainWindow()
     {
         Icon = new System.Drawing.Icon(new MemoryStream(Properties.Resources.WinFormiumBlazor));

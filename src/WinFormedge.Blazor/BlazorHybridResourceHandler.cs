@@ -116,7 +116,7 @@ class BlazorHybridResourceHandler : WebResourceHandler
 
         if (_isEmbdeedeStaticResources)
         {
-            var namespaces = Options.StaticResources.Select(x => x.BaseNamespace);
+            var namespaces = Options.StaticResources.Where(x => !string.IsNullOrEmpty(x.BaseNamespace)).Select(x => x.BaseNamespace!);
 
             foreach (var ns in namespaces)
             {
