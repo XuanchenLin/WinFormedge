@@ -53,6 +53,8 @@ internal partial class WebViewCore
     /// </summary>
     public event Action<CoreWebView2Settings>? ConfigureSettings;
 
+    //public event Action<CoreWebView2Profile>? ConfigureProfile;
+
     /// <summary>
     /// Occurs when the WebView2 instance has been created and initialized.
     /// </summary>
@@ -211,6 +213,17 @@ internal partial class WebViewCore
     }
 
     /// <summary>
+    /// Gets or sets the name of the user profile for the WebView2 instance.
+    /// </summary>
+    internal required string ProfileName { get; init; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the WebView2 instance should operate in private mode.
+    /// </summary>
+    internal required bool IsInPrivateMode { get; init; }
+
+
+    /// <summary>
     /// Asynchronously creates and initializes the WebView2 controller and browser instance.
     /// Configures settings, event handlers, and resource management.
     /// </summary>
@@ -221,9 +234,11 @@ internal partial class WebViewCore
         Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--autoplay-policy=no-user-gesture-required");
 
         opts.ScriptLocale = WinFormedgeApp.Current.CultureName;
-        opts.ProfileName = Application.ProductName;
+        opts.ProfileName = ProfileName;
+        opts.IsInPrivateModeEnabled = IsInPrivateMode;
 
-        var controller = _controller = await WebViewEnvironment.CreateCoreWebView2ControllerAsync(Container.Handle);
+
+        var controller = _controller = await WebViewEnvironment.CreateCoreWebView2ControllerAsync(Container.Handle,opts);
 
         if (controller == null || controller.CoreWebView2 == null)
         {
@@ -262,6 +277,8 @@ internal partial class WebViewCore
             SystemColorMode.Auto => CoreWebView2PreferredColorScheme.Auto,
             _ => CoreWebView2PreferredColorScheme.Light,
         };
+
+        //ConfigureProfile?.Invoke(webview.Profile);
 
         //Container.VisibleChanged += (_, _) =>
         //{

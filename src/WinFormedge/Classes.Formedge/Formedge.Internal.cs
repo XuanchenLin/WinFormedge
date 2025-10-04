@@ -39,6 +39,16 @@ public abstract partial class Formedge : IDisposable
     private WindowSettings? _windowStyleSettings = null;
 
     /// <summary>
+    /// Gets the profile name used for WebView2 user data storage.
+    /// </summary>
+    protected virtual string ProfileName => Application.ProductName ?? "WinFormedgeApp";
+
+    /// <summary>
+    /// Gets a value indicating whether the WebView2 instance should operate in private mode (incognito).
+    /// </summary>
+    protected virtual bool IsInPrivateMode => false;
+
+    /// <summary>
     /// Gets the host window (WinForms Form) for this Formedge instance.
     /// </summary>
     internal Form HostWindow
@@ -66,7 +76,8 @@ public abstract partial class Formedge : IDisposable
             {
                 _webViewCore = new WebViewCore(HostWindow)
                 {
-
+                    ProfileName = ProfileName,
+                    IsInPrivateMode = IsInPrivateMode,
                 };
 
 
@@ -799,7 +810,7 @@ public abstract partial class Formedge : IDisposable
         controller.DefaultBackgroundColor = BackColor;
 
         WebView.ConfigureSettings += ConfigureWebView2Settings;
-
+        //WebView.ConfigureProfile += ConfigureWebView2Profile;
         controller.GotFocus += OnGotFocus;
         controller.LostFocus += OnLostFocus;
 

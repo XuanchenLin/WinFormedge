@@ -5,6 +5,8 @@
 
 using System.Runtime.InteropServices;
 
+using Microsoft.Web.WebView2.Core;
+
 using WinFormedge;
 
 namespace MinimalExampleApp;
@@ -29,12 +31,14 @@ public class MainWindow : Formedge
         Icon = ExampleIcon;
         AllowFullscreen = true;
         Load += MainWindow_Load;
+        
 
         Load += (_, _) =>
         {
             // Set the JavaScript object for the main window
             if(CoreWebView2 is not null)
             {
+                
                 CoreWebView2.AddHostObjectToScript("mainWindow", new MainWindowJsObject(this));
 
                 SetVirtualHostNameToEmbeddedResourcesMapping(new WinFormedge.WebResource.EmbeddedFileResourceOptions
