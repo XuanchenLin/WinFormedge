@@ -12,13 +12,14 @@ namespace WinFormedge.Blazor;
 class BlazorHybridResourceHandler : WebResourceHandler
 {
     private IFileProvider _fileProvider;
+
     public FormedgeWebViewManager FormedgeWebViewManager { get; }
     public override string HostName { get; }
     public BlazorHybridOptions Options { get; }
     public string RelativePath { get; }
     public string RootFolderPath { get; }
     public override string Scheme { get; }
-    public ServiceProvider Services { get; }
+    public IServiceProvider Services { get; }
     public override CoreWebView2WebResourceContext WebResourceContext { get; }
     private bool _isEmbdeedeStaticResources =>
         Options.StaticResources is not null;
@@ -34,16 +35,27 @@ class BlazorHybridResourceHandler : WebResourceHandler
         HostName = options.HostName;
         WebResourceContext = CoreWebView2WebResourceContext.All;
 
-        var serviceCollection = new ServiceCollection();
+        var services = AppBuilderExtensions.ServiceProvider;
 
-        serviceCollection.AddBlazorWebView();
+        if (services == null)
+        {
+            throw new InvalidOperationException("The service provider has not been initialized. Please ensure that AddBlazorHybridSupport has been called on the AppBuilder.");
+        }
+        else
+        {
+            Services = services;
+        }
+
+        //var serviceCollection = new ServiceCollection();
+
+        //options.ConfigureServices?.Invoke(serviceCollection);
+
+        //Services = serviceCollection
+        //    .BuildServiceProvider();
 
 
 
-        options.ConfigureServices?.Invoke(serviceCollection);
 
-        Services = serviceCollection
-            .BuildServiceProvider();
 
         string appRootDir;
 #pragma warning disable IL3000

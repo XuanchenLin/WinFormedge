@@ -3,7 +3,11 @@
 // This project is licensed under the MIT License.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.FluentUI.AspNetCore.Components;
+
 using WinFormedge;
+using WinFormedge.Blazor;
 
 namespace FluentUIBlazorExampleApp;
 
@@ -24,6 +28,13 @@ internal static class Program
             .UseDevTools()
             .UseModernStyleScrollbar()
             .UseWinFormedgeApp<MyFormedgeApp>()
+            .AddBlazorHybridSupport(services => {
+                services
+                .AddFluentUIComponents(opts => {
+                    opts.ValidateClassNames = false;
+                })
+                .AddHttpClient();
+            })
             .Build();
 
         app.Run();
