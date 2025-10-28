@@ -4,6 +4,7 @@
 // See the LICENSE file in the project root for more information.
 
 using WinFormedge;
+using WinFormedge.Blazor;
 
 namespace BlazorHybridExampleApp;
 
@@ -24,6 +25,7 @@ internal static class Program
             .UseDevTools()
             .UseModernStyleScrollbar()
             .UseWinFormedgeApp<MyFormedgeApp>()
+            .AddBlazorHybridSupport()
             .Build();
 
         app.Run();

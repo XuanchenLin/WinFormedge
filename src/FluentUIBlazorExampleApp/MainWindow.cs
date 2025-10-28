@@ -63,7 +63,7 @@ internal class MainWindow : Formedge
             Scheme = "https",
             HostName = "blazorapp.local",
             HostPage = "wwwroot/index.html",
-            ConfigureServices = ConfigureServices
+            //ConfigureServices = ConfigureServices
         };
 
         opts.RootComponents.Add<App>("#app");
@@ -76,14 +76,14 @@ internal class MainWindow : Formedge
 
     }
 
-    private void ConfigureServices(IServiceCollection services)
-    {
-        services.AddFluentUIComponents(options =>
-        {
-            options.ValidateClassNames = false;
+    //private void ConfigureServices(IServiceCollection services)
+    //{
+    //    services.AddFluentUIComponents(options =>
+    //    {
+    //        options.ValidateClassNames = false;
 
-        });
+    //    });
 
-        services.AddHttpClient();
-    }
+    //    services.AddHttpClient();
+    //}
 }

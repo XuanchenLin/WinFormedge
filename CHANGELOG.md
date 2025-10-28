@@ -1,4 +1,28 @@
-﻿## Change Logs
+﻿
+## Change Logs
+### 2025/10/28
+
+- 修改了 WinFormedge.Blazor 依赖注入的方式
+    
+  现在通过 `AppBuilder` 的扩展方法 `AddBlazorHybridSupport` 来实现 Blazor 的全局依赖注入支持，同时取消了原有窗口级别 Blazor 设置选项里的 `ConfigureServices`。
+
+```C#
+
+var app = WinFormedgeApp.CreateAppBuilder()
+    // ...
+    .AddBlazorHybridSupport(services => {
+        services
+        .AddFluentUIComponents(opts => {
+            opts.ValidateClassNames = false;
+        })
+        .AddHttpClient();
+    })
+    // ...
+    .Build();
+
+```
+  详见 **BlazorHybridExamples** 文件夹中的示例项目。
+
 
 ### 2025/7/4
 

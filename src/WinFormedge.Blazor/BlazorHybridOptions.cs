@@ -36,10 +36,10 @@ public sealed class BlazorHybridOptions : WebResourceOptions
     /// </summary>
     public Dictionary<string, object?>? Parameters { get; init; } = null;
 
-    /// <summary>
-    /// Gets the delegate to configure additional services for the Blazor application.
-    /// </summary>
-    public ConfigureServices? ConfigureServices { get; init; } = null;
+    ///// <summary>
+    ///// Gets the delegate to configure additional services for the Blazor application.
+    ///// </summary>
+    //public ConfigureServices? ConfigureServices { get; init; } = null;
 
     ///// <summary>
     ///// Gets or sets the assembly containing static resources for the Blazor application.
