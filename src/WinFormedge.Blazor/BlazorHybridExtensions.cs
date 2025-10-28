@@ -11,9 +11,15 @@ public static class BlazorHybridExtensions
     /// <param name="options">
     /// The options for the Blazor Hybrid application, including the root component type, host path, and other settings.
     /// </param>
-    public static void SetVirtualHostNameToBlazorHybrid(this Formedge formedge, BlazorHybridOptions options)
+    /// <returns>
+    /// The configured IServiceProvider for the Blazor Hybrid application.
+    /// </returns>
+
+    public static IServiceProvider SetVirtualHostNameToBlazorHybrid(this Formedge formedge, BlazorHybridOptions options)
     {
         formedge.RegisterWebResourceHander(new BlazorHybridResourceHandler(options, formedge));
+
+        return AppBuilderExtensions.ServiceProvider!;
     }
 
     /// <summary>
