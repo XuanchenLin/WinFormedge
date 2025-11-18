@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net9.0-windows</TargetFramework>
+        <TargetFramework>net10.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <UseWindowsForms>true</UseWindowsForms>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -17,9 +17,6 @@
         <Content Include="AppIcon.ico" />
     </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="System.Drawing.Common" Version="9.0.4" />
-    </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\WinFormedge\WinFormedge.csproj" />
     </ItemGroup>
