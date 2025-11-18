@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net9.0-windows</TargetFramework>
+        <TargetFramework>net10.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <UseWindowsForms>true</UseWindowsForms>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -21,19 +21,25 @@
         <EmbeddedResource Include="wwwroot\**\*" />
     </ItemGroup>
     <ItemGroup>
-      <Content Include="WinFormiumBlazor.ico" />
+        <Content Include="WinFormiumBlazor.ico" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Update="Properties\Resources.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Resources.resx</DependentUpon>
-      </Compile>
+        <Compile Update="Properties\Resources.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Resources.resx</DependentUpon>
+        </Compile>
     </ItemGroup>
     <ItemGroup>
-      <EmbeddedResource Update="Properties\Resources.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
+        <EmbeddedResource Update="Properties\Resources.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
     </ItemGroup>
+    <!--<Target Name="RemoveConflictingStaticWebAssets" AfterTargets="ResolveStaticWebAssetsInputs">
+        <ItemGroup>
+            <StaticWebAsset Remove="@(StaticWebAsset)" Condition="$([System.String]::Copy('%(StaticWebAsset.Identity)').Contains('blazor.modules.json'))" />
+            <StaticWebAsset Remove="@(StaticWebAsset)" Condition="$([System.String]::Copy('%(StaticWebAsset.Identity)').Contains('blazor.webview.js'))" />
+        </ItemGroup>
+    </Target>-->
 </Project>

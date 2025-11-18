@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0-windows;net9.0-windows</TargetFrameworks>
+        <TargetFrameworks>net8.0-windows;net9.0-windows;net10.0-windows</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
@@ -10,13 +10,14 @@
         <ProjectReference Include="..\WinFormedge\WinFormedge.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows' ">
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebView" Version="8.0.*" />
-    </ItemGroup>
-
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0-windows' ">
+    <!--<ItemGroup Condition=" '$(TargetFramework)' == 'net9.0-windows' ">
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView" Version="9.0.*" />
     </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0-windows' ">
+    </ItemGroup>-->
+
+
 
     <PropertyGroup>
         <Version>0.1.3296.$([System.DateTime]::Now.Date.Subtract($([System.DateTime]::Parse($([System.String]::Format("{0}-5-9",2025))))).TotalDays)</Version>
@@ -39,18 +40,29 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
-        <Version>1.0.1</Version>
+        <Version>1.1.0</Version>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
-        <Using Include="System.Web" />
         <Using Include="Microsoft.AspNetCore.Components" />
         <Using Include="Microsoft.AspNetCore.Components.Web" />
         <Using Include="Microsoft.AspNetCore.Components.WebView" />
         <Using Include="Microsoft.Extensions.DependencyInjection" />
         <Using Include="Microsoft.Extensions.FileProviders" />
         <Using Include="Microsoft.Web.WebView2.Core" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net8.0-windows' ">
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView" Version="8.0.*" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0-windows' ">
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView" Version="9.0.*" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net10.0-windows' ">
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView" Version="10.0.*" />
     </ItemGroup>
 
     <ItemGroup>
@@ -64,4 +76,10 @@
         </None>
     </ItemGroup>
 
+    <Target Name="RemoveConflictingStaticWebAssets" AfterTargets="ResolveStaticWebAssetsInputs" Condition=" '$(TargetFramework)' == 'net10.0-windows' ">
+        <ItemGroup>
+            <StaticWebAsset Remove="@(StaticWebAsset)" Condition="$([System.String]::Copy('%(StaticWebAsset.Identity)').Contains('blazor.modules.json'))" />
+            <StaticWebAsset Remove="@(StaticWebAsset)" Condition="$([System.String]::Copy('%(StaticWebAsset.Identity)').Contains('blazor.webview.js'))" />
+        </ItemGroup>
+    </Target>
 </Project>

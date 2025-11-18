@@ -482,8 +482,8 @@ internal partial class WebViewCore
         /// Handles the window closing event, restores the WebView controller's parent and bounds
         /// to the original container, and shows the container.
         /// </summary>
-        /// <param name="e">A <see cref="CancelEventArgs"/> that contains the event data.</param>
-        protected override void OnClosing(CancelEventArgs e)
+        /// <param name="e">A <see cref="FormClosingEventArgs"/> that contains the event data.</param>
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
             WebView.Controller.ParentWindow = WebView.Container.Handle;
 
@@ -491,7 +491,7 @@ internal partial class WebViewCore
 
             WebView.Container.Show();
 
-            base.OnClosing(e);
+            base.OnFormClosing(e);
         }
 
         /// <summary>

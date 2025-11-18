@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0-windows;net9.0-windows</TargetFrameworks>
+        <TargetFrameworks>net8.0-windows;net9.0-windows;net10.0-windows</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -16,7 +16,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3124.44" />
-        <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.205">
+        <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.248">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -60,7 +60,7 @@
     </PropertyGroup>
     
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
-        <Version>1.0.1</Version>
+        <Version>1.1.0</Version>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     </PropertyGroup>
     
