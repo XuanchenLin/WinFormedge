@@ -1,5 +1,7 @@
 ﻿using System.Collections.Specialized;
 
+using Microsoft.Web.WebView2.Core;
+
 using WinFormedge;
 
 namespace MinimalExampleApp;
@@ -18,4 +20,6 @@ internal class MyFormedgeApp : AppStartup
         additionalBrowserArgs.Add("autoplay-policy", "no-user-gesture-required");
         base.ConfigureAdditionalBrowserArgs(additionalBrowserArgs);
     }
+
+
 }

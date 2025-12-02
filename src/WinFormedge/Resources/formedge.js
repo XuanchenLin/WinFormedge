@@ -203,13 +203,13 @@
         });
 
         if (HAS_TITLE_BAR) {
-            htmlEl?.classList.add("window__titlbar--shown");
-            htmlEl?.classList.remove("window__titlbar--hidden");
+            htmlEl?.classList.add("window__titlebar--shown");
+            htmlEl?.classList.remove("window__titlebar--hidden");
 
         }
         else {
-            htmlEl?.classList.add("window__titlbar--hidden");
-            htmlEl?.classList.remove("window__titlbar--shown");
+            htmlEl?.classList.add("window__titlebar--hidden");
+            htmlEl?.classList.remove("window__titlebar--shown");
         }
     }
 

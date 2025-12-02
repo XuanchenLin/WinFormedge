@@ -90,4 +90,5 @@ public sealed class DefaultWindowSettings : WindowSettings
 
         return form;
     }
+
 }

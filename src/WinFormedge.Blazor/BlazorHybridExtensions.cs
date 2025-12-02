@@ -17,7 +17,7 @@ public static class BlazorHybridExtensions
 
     public static IServiceProvider SetVirtualHostNameToBlazorHybrid(this Formedge formedge, BlazorHybridOptions options)
     {
-        formedge.RegisterWebResourceHander(new BlazorHybridResourceHandler(options, formedge));
+        formedge.RegisterWebResourceHandler(new BlazorHybridResourceHandler(options, formedge));
 
         return AppBuilderExtensions.ServiceProvider!;
     }

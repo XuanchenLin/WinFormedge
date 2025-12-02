@@ -18,6 +18,6 @@ public static class RegisterEmbeddedFileResourceExtension
     /// <param name="options">The options specifying the embedded resource mapping.</param>
     public static void SetVirtualHostNameToEmbeddedResourcesMapping(this Formedge formedge, EmbeddedFileResourceOptions options)
     {
-        formedge.RegisterWebResourceHander(new EmbeddedFileResourceHandler(options));
+        formedge.RegisterWebResourceHandler(new EmbeddedFileResourceHandler(options));
     }
 }
