@@ -84,4 +84,7 @@ public abstract class WindowSettings
     /// Gets the JavaScript code specified for the window, if any.
     /// </summary>
     internal protected virtual string? WindowSpecifiedJavaScript => null;
+
+    internal Color BackColor { get; set; } = WinFormedgeApp.Current.DefaultBackColor;
+
 }

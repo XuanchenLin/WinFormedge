@@ -20,6 +20,11 @@ public partial class _WinFormClassDisabler
 /// </summary>
 internal abstract class FormBase : Form
 {
+    protected virtual Color? GetBackColorWithAlpha()
+    {
+        return null;
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="FormBase"/> class.
     /// </summary>
@@ -137,30 +142,30 @@ internal abstract class FormBase : Form
         }
     }
 
-    /// <inheritdoc/>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public new Color BackColor
-    {
-        get => _backColor ?? base.BackColor;
-        set
-        {
-            if (value == Color.Transparent)
-            {
-                _backColor = null;
-                base.BackColor = Color.White;
-            }
-            else if (value.A != 255)
-            {
-                _backColor = value;
-                base.BackColor = Color.FromArgb(255, value.R, value.G, value.B);
-            }
-            else
-            {
-                _backColor = value;
-                base.BackColor = Color.FromArgb(255, value.R, value.G, value.B);
-            }
-        }
-    }
+    ///// <inheritdoc/>
+    //[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    //public new Color BackColor
+    //{
+    //    get => _backColor ?? base.BackColor;
+    //    set
+    //    {
+    //        if (value == Color.Transparent)
+    //        {
+    //            _backColor = null;
+    //            base.BackColor = Color.White;
+    //        }
+    //        else if (value.A != 255)
+    //        {
+    //            _backColor = value;
+    //            base.BackColor = Color.FromArgb(255, value.R, value.G, value.B);
+    //        }
+    //        else
+    //        {
+    //            _backColor = value;
+    //            base.BackColor = Color.FromArgb(255, value.R, value.G, value.B);
+    //        }
+    //    }
+    //}
 
     /// <summary>
     /// Gets or sets the window edge offsets for borderless resizing.
@@ -464,7 +469,6 @@ internal abstract class FormBase : Form
 
     private WebView2BorderlessResizer _windowBorderResizer;
 
-    private Color? _backColor = null;
 
     private MARGINS[] SHADOW_DECORATORS = [
             new MARGINS(){ cxLeftWidth = 0, cxRightWidth = 0, cyTopHeight = 0, cyBottomHeight = 0 },
@@ -802,7 +806,7 @@ internal abstract class FormBase : Form
         this.Name = "WinFormiumForm";
         this.Text = "WinFormium";
         this.AutoScaleMode = AutoScaleMode.Dpi;
-        this.BackColor = Color.Transparent;
+        this.BackColor = Color.White;
         this.ResumeLayout(false);
     }
 
@@ -1147,9 +1151,11 @@ internal abstract class FormBase : Form
             WindowAccentCompositor compositor = new(Handle, true);
             var mode = WinFormedgeApp.Current.GetSystemColorMode();
 
-            if (_backColor != null)
+            var backColor = GetBackColorWithAlpha();
+
+            if (backColor != null)
             {
-                compositor.Composite(_backColor.Value);
+                compositor.Composite(backColor.Value);
             }
             else
             {

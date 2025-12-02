@@ -92,25 +92,27 @@ public partial class Formedge
     /// </summary>
     internal Color SolidBackColor => Color.FromArgb(255, BackColor.R, BackColor.G, BackColor.B);
 
+    Color? _backColorCache = null;
+
     /// <summary>
     /// Gets or sets the background color of the browser.
     /// </summary>
     internal protected Color BackColor
     {
-        get => _defaultBackgroundColor;
+        get => _windowStyleSettings?.BackColor ?? (_backColorCache.HasValue? _backColorCache.Value : WinFormedgeApp.Current.DefaultBackColor);
         set
         {
-            if (WebView.Initialized)
+            if (IsWindowCreated && _windowStyleSettings is not null)
             {
-                _defaultBackgroundColor = WebView.Controller.DefaultBackgroundColor = value;
+                _backColorCache = _windowStyleSettings!.BackColor = value;
+
+                var colorWithoutAlpha = Color.FromArgb(255, _windowStyleSettings!.BackColor.R, _windowStyleSettings!.BackColor.G, _windowStyleSettings!.BackColor.B);
+                HostWindow.BackColor = colorWithoutAlpha;
             }
             else
             {
-                _defaultBackgroundColor = value;
+                _backColorCache = value;
             }
-
-            var colorWithoutAlpha = Color.FromArgb(255, _defaultBackgroundColor.R, _defaultBackgroundColor.G, _defaultBackgroundColor.B);
-            HostWindow.BackColor = colorWithoutAlpha;
         }
     }
 
@@ -134,7 +136,24 @@ public partial class Formedge
     /// <returns>A task that represents the asynchronous operation. The task result contains the script result as a JSON-encoded string.</returns>
     public Task<string> ExecuteScriptAsync(string script)
     {
+        if (CoreWebView2 is null) throw new InvalidOperationException("CoreWebView2 is not initialized.");
+
         return CoreWebView2?.ExecuteScriptAsync(script) ?? Task.FromResult<string>(string.Empty);
+    }
+
+    /// <summary>
+    /// Executes the specified JavaScript code in the context of the current web page and returns the result
+    /// asynchronously.
+    /// </summary>
+    /// <param name="script">The JavaScript code to execute. Cannot be null.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a CoreWebView2ExecuteScriptResult
+    /// object with the result of the script execution.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if the underlying CoreWebView2 instance is not initialized.</exception>
+    public Task<CoreWebView2ExecuteScriptResult> ExecuteScriptWithResultAsync(string script)
+    {
+        if(CoreWebView2 is null) throw new InvalidOperationException("CoreWebView2 is not initialized.");
+
+        return CoreWebView2.ExecuteScriptWithResultAsync(script);
     }
 
     /// <summary>

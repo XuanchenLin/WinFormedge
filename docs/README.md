@@ -1,42 +1,44 @@
-﻿# WinFormedge 文档
+﻿# WinFormedge Documentation
 
-WinFormedge 是一个基于 Microsoft WebView2 构建的开源 .NET 库，使开发者能够使用 HTML、CSS 和 JavaScript 轻松创建现代化的 WinForm 应用程序。
+WinFormedge is an open-source .NET library built on Microsoft WebView2 that enables developers to easily create modern WinForm applications using HTML, CSS, and JavaScript.
 
-## 目录
+## Table of Contents
 
-- [快速开始](getting-started.md)
-- [API 参考](api-reference/README.md)
-  - [核心类](api-reference/core-classes.md)
-  - [配置选项](api-reference/configuration.md)
-  - [窗口管理](api-reference/window-management.md)
-  - [Web资源管理](api-reference/web-resources.md)
-- [示例](examples/README.md)
-- [高级特性](advanced-features.md)
-- [常见问题](faq.md)
-- [贡献指南](contributing.md)
+- [Getting Started](getting-started.md)
+- [API Reference](api-reference/README.md)
+  - [Core Classes](api-reference/core-classes.md)
+  - [Configuration](api-reference/configuration.md)
+  - [Window Management](api-reference/window-management.md)
+  - [Web Resources](api-reference/web-resources.md)
+- [Examples](examples/README.md)
+- [Advanced Features](advanced-features.md)
+- [FAQ](faq.md)
+- [Contributing Guide](contributing.md)
 
-## 项目概述
+## Project Overview
 
-WinFormedge 允许开发者：
+WinFormedge allows developers to:
 
-- ✨ 使用现代 Web 技术构建 WinForm 应用程序
-- 🎨 创建具有透明背景、模糊效果和自定义窗口样式的现代化界面
-- 🔧 轻松集成 HTML、CSS 和 JavaScript 到桌面应用程序
-- 📱 支持响应式设计和触摸交互
-- 🛠️ 提供强大的开发工具和调试支持
+- ✨ Build WinForm applications using modern web technologies
+- 🎨 Create modern interfaces with transparent backgrounds, blur effects, and custom window styles
+- 🔧 Easily integrate HTML, CSS, and JavaScript into desktop applications
+- 📱 Support responsive design and touch interactions
+- 🛠️ Provide powerful development tools and debugging support
 
-## 系统要求
+## System Requirements
 
-### 开发环境
-- Visual Studio 2022
-- .NET 8.0 或更高版本
+### Development Environment
 
-### 运行环境
-- Windows 10 版本 1903 或更高版本
-- Microsoft Edge WebView2 Runtime
+- Visual Studio 2022 or later
+- .NET 8.0 / 9.0 /10.0
 
-> **注意**: 这是一个 **仅限 Windows** 的库，不兼容其他操作系统。
+### Runtime Environment
 
-## 许可证
+- Windows 10 version 1903 or later
+- Microsoft Edge WebView2 Runtime (version 1.0.3595.46 or later)
 
-本项目基于 MIT 许可证开源。
+> **Note**: This is a **Windows-only** library and is not compatible with other operating systems.
+
+## License
+
+This project is open source under the MIT License.

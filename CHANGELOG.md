@@ -1,9 +1,15 @@
-﻿
-## Change Logs
+﻿## Change Logs
+
+### 2025/12/2
+
+- 修复了在某些系统上使用 FluentUI 组件时出现的样式问题。
+- 更新了示例项目中的依赖项版本，以确保与最新的 WinFormedge 版本兼容。
+- 添加了对 .NET 10 的支持，确保 WinFormedge 在最新的 .NET 版本上运行良好。
+- 修改了若干问题。
+
 ### 2025/10/28
 
 - 修改了 WinFormedge.Blazor 依赖注入的方式
-    
   现在通过 `AppBuilder` 的扩展方法 `AddBlazorHybridSupport` 来实现 Blazor 的全局依赖注入支持，同时取消了原有窗口级别 Blazor 设置选项里的 `ConfigureServices`。
 
 ```C#
@@ -21,8 +27,8 @@ var app = WinFormedgeApp.CreateAppBuilder()
     .Build();
 
 ```
-  详见 **BlazorHybridExamples** 文件夹中的示例项目。
 
+详见 **BlazorHybridExamples** 文件夹中的示例项目。
 
 ### 2025/7/4
 
@@ -30,19 +36,15 @@ var app = WinFormedgeApp.CreateAppBuilder()
 
 通过几个群友在实际项目中的使用反馈，修复了若干 Bugs，目前已经可以在实际项目中使用了。
 
-
-
 ### 2025/6/16
 
 - 添加了基于 Microsoft FluentUI Blazor 的示例。
 
 ![Preview](./screenshots/2025-06-16_011000.png)
 
-
-### 2026/6/14
+### 2025/6/14
 
 - 添加了对 BlazorHybrid 的支持，现在可以使用 Blazor 创建桌面应用程序了。`WinFormedge.Blazor` 即为 BlazorHybrid 的实现，提供了一个简单的 Blazor 框架集成示例。
-
 
 使用 NuGet 安装 WinFormedge.Blazor 以体验该项目。
 
@@ -50,8 +52,7 @@ var app = WinFormedgeApp.CreateAppBuilder()
 PM> Install-Package WinFormedge.Blazor
 ```
 
-
-### 2026/6/11
+### 2025/6/11
 
 - 修复了若干 Bugs，并且完善了 JavaScript 前端代码。
 - 增加了完整的示例项目 `MinimalExampleApp`，展示了如何使用 Formedge 创建一个完整的桌面应用程序。
@@ -61,7 +62,6 @@ PM> Install-Package WinFormedge.Blazor
 
 **演示界面**
 ![Preview 1](./screenshots/2025-06-11_014008.png)
-
 
 ### 2025/5/11
 

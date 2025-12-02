@@ -3,6 +3,7 @@
 // This project is licensed under the MIT License.
 // See the LICENSE file in the project root for more information.
 
+
 namespace WinFormedge.HostForms;
 #region FormIconDisablerPlaceHolder
 public partial class _WinFormClassDisabler
@@ -26,6 +27,11 @@ class DefaultWindow : FormBase
         ShadowDecorated = settings.ShowWindowDecorators;
         WindowEdgeOffsets = settings.WindowEdgeOffsets;
         Resizable = settings.Resizable;
+    }
+
+    protected override Color? GetBackColorWithAlpha()
+    {
+        return _settings.BackColor;
     }
 
     /// <inheritdoc/>

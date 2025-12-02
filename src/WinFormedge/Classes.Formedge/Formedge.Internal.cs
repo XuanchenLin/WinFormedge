@@ -3,8 +3,6 @@
 // This project is licensed under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System.Drawing;
-
 namespace WinFormedge;
 /// <summary>
 /// Provides the core implementation for the Formedge window, including window creation, event handling, 
@@ -12,9 +10,6 @@ namespace WinFormedge;
 /// </summary>
 public abstract partial class Formedge : IDisposable
 {
-    private Color _defaultBackgroundColor = WinFormedgeApp.Current.IsDarkMode ? Color.DimGray : Color.White;
-
-
     private readonly HostWindowBuilder _hostWindowBuilder;
 
     /// <summary>
@@ -96,6 +91,11 @@ public abstract partial class Formedge : IDisposable
             if (_windowStyleSettings is null)
             {
                 _windowStyleSettings = ConfigureWindowSettings(_hostWindowBuilder);
+
+                if (_backColorCache.HasValue)
+                {
+                    _windowStyleSettings.BackColor = _backColorCache.Value;
+                }
             }
 
             return _windowStyleSettings;
@@ -175,7 +175,7 @@ public abstract partial class Formedge : IDisposable
     /// Registers a custom web resource handler for the WebView2 instance.
     /// </summary>
     /// <param name="resourceHandler">The web resource handler to register.</param>
-    public void RegisterWebResourceHander(WebResourceHandler resourceHandler)
+    public void RegisterWebResourceHandler(WebResourceHandler resourceHandler)
     {
         WebView.RegisterWebResourceHander(resourceHandler);
     }
@@ -186,7 +186,7 @@ public abstract partial class Formedge : IDisposable
     /// <param name="options">The embedded file resource options to use for mapping.</param>
     public void SetVirtualHostNameToEmbeddedResourcesMapping(EmbeddedFileResourceOptions options)
     {
-        RegisterWebResourceHander(new EmbeddedFileResourceHandler(options));
+        RegisterWebResourceHandler(new EmbeddedFileResourceHandler(options));
     }
 
     /// <summary>
@@ -195,7 +195,7 @@ public abstract partial class Formedge : IDisposable
     /// <param name="hostName">The virtual host name.</param>
     /// <param name="folderPath">The local folder path.</param>
     /// <param name="accessKind">The access kind for the resource.</param>
-    public void SetVirtualHostNameToFolderMapping(string hostName, string folderPath, CoreWebView2HostResourceAccessKind accessKind)
+    public void SetVirtualHostNameToFolderMapping(string hostName, string folderPath, CoreWebView2HostResourceAccessKind accessKind = CoreWebView2HostResourceAccessKind.Allow)
     {
         if (CoreWebView2 != null)
         {
@@ -413,6 +413,12 @@ public abstract partial class Formedge : IDisposable
         _hostWindow.TopMost = _topMost;
         _hostWindow.Text = _windowCaption;
         _hostWindow.Enabled = _enabled;
+
+        var defaultBackgroundColor = _windowStyleSettings?.BackColor ?? WinFormedgeApp.Current.DefaultBackColor;
+        var colorWithoutAlpha = Color.FromArgb(255, defaultBackgroundColor.R, defaultBackgroundColor.G, defaultBackgroundColor.B);
+
+        _hostWindow.BackColor = colorWithoutAlpha;
+
         if (_icon is not null)
         {
             _hostWindow.Icon = _icon;
@@ -807,7 +813,7 @@ public abstract partial class Formedge : IDisposable
         var controller = WebView.Controller;
         var webview = WebView.Browser;
 
-        controller.DefaultBackgroundColor = BackColor;
+        controller.DefaultBackgroundColor = Color.Transparent;
 
         WebView.ConfigureSettings += ConfigureWebView2Settings;
         //WebView.ConfigureProfile += ConfigureWebView2Profile;

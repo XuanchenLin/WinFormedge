@@ -113,6 +113,8 @@ public class WinFormedgeApp
     /// </summary>
     internal bool IsDarkMode => GetSystemColorMode() == SystemColorMode.Dark;
 
+    internal Color DefaultBackColor => IsDarkMode ? Color.DimGray : Color.White;
+
     /// <summary>
     /// Gets the application startup logic instance.
     /// </summary>

@@ -10,13 +10,14 @@ using Microsoft.Web.WebView2.Core;
 using WinFormedge;
 
 namespace MinimalExampleApp;
+
 public class MainWindow : Formedge
 {
-//#if DEBUG
-//    public const string DEMO_HOST_ADDR = "http://127.0.0.1:8080";
-//#else
-//    public const string DEMO_HOST_ADDR = "https://localresources.app";
-//#endif
+    //#if DEBUG
+    //    public const string DEMO_HOST_ADDR = "http://127.0.0.1:8080";
+    //#else
+    //    public const string DEMO_HOST_ADDR = "https://localresources.app";
+    //#endif
 
     public const string DEMO_HOST_ADDR = "https://localresources.app";
 
@@ -31,14 +32,14 @@ public class MainWindow : Formedge
         Icon = ExampleIcon;
         AllowFullscreen = true;
         Load += MainWindow_Load;
-        
+
 
         Load += (_, _) =>
         {
             // Set the JavaScript object for the main window
-            if(CoreWebView2 is not null)
+            if (CoreWebView2 is not null)
             {
-                
+
                 CoreWebView2.AddHostObjectToScript("mainWindow", new MainWindowJsObject(this));
 
                 SetVirtualHostNameToEmbeddedResourcesMapping(new WinFormedge.WebResource.EmbeddedFileResourceOptions
@@ -81,7 +82,7 @@ public class MainWindowJsObject
     private List<Formedge> _demoWindows { get; } = new();
 
     private class KioskDemoWindow : Formedge
-{
+    {
         public KioskDemoWindow()
         {
             Url = $"{MainWindow.DEMO_HOST_ADDR}/home/window-styles/kiosk/";
@@ -104,7 +105,7 @@ public class MainWindowJsObject
     }
 
 
-    public MainWindowJsObject(MainWindow mainWindow) 
+    public MainWindowJsObject(MainWindow mainWindow)
     {
         _mainWindow = mainWindow;
     }
@@ -139,7 +140,7 @@ public class MainWindowJsObject
 
         string[] win11Supports = ["Mica", "MicaAlt", "Transient"];
 
-        if (!OperatingSystem.IsWindowsVersionAtLeast(10,0, 22000) && win11Supports.Contains(backdrop))
+        if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000) && win11Supports.Contains(backdrop))
         {
             MessageBox.Show(_mainWindow, "选中的背景类型选项需要 Windows 11 版本。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;

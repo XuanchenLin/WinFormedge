@@ -3,8 +3,6 @@
 // This project is licensed under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System.Runtime;
-
 namespace WinFormedge;
 /// <summary>
 /// Provides window settings for a kiosk-style window, which is typically fullscreen and borderless.
