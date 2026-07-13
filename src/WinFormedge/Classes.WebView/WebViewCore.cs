@@ -20,6 +20,7 @@ internal partial class WebViewCore
     /// Holds the current WebView2 controller instance.
     /// </summary>
     private CoreWebView2Controller? _controller;
+    private Exception? _initializationException;
 
     /// <summary>
     /// Stores a deferred URL to navigate to after initialization.
@@ -129,7 +130,7 @@ internal partial class WebViewCore
     /// Gets the current WebView2 controller instance.
     /// </summary>
     /// <exception cref="NullReferenceException">Thrown if the controller is not initialized.</exception>
-    internal CoreWebView2Controller Controller => _controller ?? throw new NullReferenceException(nameof(Controller));
+    internal CoreWebView2Controller Controller => _controller ?? throw new InvalidOperationException("WebView2 controller is not initialized.", _initializationException);
 
     /// <summary>
     /// Gets the current WebView2 environment instance.
@@ -225,8 +226,10 @@ internal partial class WebViewCore
     /// Asynchronously creates and initializes the WebView2 controller and browser instance.
     /// Configures settings, event handlers, and resource management.
     /// </summary>
-    private async void CreateWebView2()
+    private async Task CreateWebView2Async()
     {
+        _initializationException = null;
+
         var opts = WebViewEnvironment.CreateCoreWebView2ControllerOptions();
 
         Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--autoplay-policy=no-user-gesture-required");
@@ -262,7 +265,7 @@ internal partial class WebViewCore
         webview.Settings.IsZoomControlEnabled = false;
         webview.Settings.IsStatusBarEnabled = false;
         webview.Settings.IsSwipeNavigationEnabled = false;
-        webview.Settings.IsReputationCheckingRequired = false;
+        webview.Settings.IsReputationCheckingRequired = true;
         webview.Settings.IsPinchZoomEnabled = false;
         webview.Settings.IsNonClientRegionSupportEnabled = true;
 
@@ -379,23 +382,34 @@ internal partial class WebViewCore
     /// </summary>
     /// <param name="sender">The event sender.</param>
     /// <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    private void HostHandleCreated(object? sender, EventArgs e)
+    private async void HostHandleCreated(object? sender, EventArgs e)
     {
-        if (Container.RecreatingHandle)
+        try
         {
-            if (_temporaryContainerControl == null) throw new NullReferenceException("Temporary container control is null.");
+            if (Container.RecreatingHandle)
+            {
+                if (_temporaryContainerControl == null) throw new NullReferenceException("Temporary container control is null.");
 
-            Controller.ParentWindow = Container.Handle;
+                if (Initialized)
+                {
+                    Controller.ParentWindow = Container.Handle;
+                }
 
-            _temporaryContainerControl.Dispose();
-            _temporaryContainerControl = null;
+                _temporaryContainerControl.Dispose();
+                _temporaryContainerControl = null;
+            }
+            else
+            {
+                await CreateWebView2Async();
+            }
+
+            HandleSystemColorMode();
         }
-        else
+        catch (Exception ex)
         {
-            CreateWebView2();
+            _initializationException = ex;
+            WinFormedgeApp.Current.Startup?.OnApplicationException(ex);
         }
-
-        HandleSystemColorMode();
     }
 
     /// <summary>
@@ -410,7 +424,11 @@ internal partial class WebViewCore
         {
             _temporaryContainerControl = new Control();
             _temporaryContainerControl.CreateControl();
-            Controller.ParentWindow = _temporaryContainerControl.Handle;
+
+            if (Initialized)
+            {
+                Controller.ParentWindow = _temporaryContainerControl.Handle;
+            }
         }
     }
 
