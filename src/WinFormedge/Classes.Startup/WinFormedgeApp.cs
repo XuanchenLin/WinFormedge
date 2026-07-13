@@ -242,7 +242,7 @@ public class WinFormedgeApp
             AreBrowserExtensionsEnabled = false,
             ExclusiveUserDataFolderAccess = false,
             AdditionalBrowserArguments = string.Empty,
-            EnableTrackingPrevention = false,
+            EnableTrackingPrevention = true,
             IsCustomCrashReportingEnabled = true,
             ReleaseChannels = CoreWebView2ReleaseChannels.Stable,
             ScrollBarStyle = FluentOverlayStyleScrollbar ? CoreWebView2ScrollbarStyle.FluentOverlay : CoreWebView2ScrollbarStyle.Default,
@@ -308,5 +308,4 @@ public class WinFormedgeApp
         Application.Run(RunningApplicationContext);
     }
 }
-
 

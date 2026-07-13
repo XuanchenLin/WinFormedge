@@ -977,9 +977,9 @@ public abstract class WebResourceHandler
 
             args.Response = webview.Environment.CreateWebResourceResponse(response.ContentBody is null ? null : new ManagedStream(response.ContentBody), response.HttpStatus, StatusCodes.GetStatusPhrase(response.HttpStatus), headers);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            args.Response = webview.Environment.CreateWebResourceResponse(null, StatusCodes.Status500InternalServerError, ex.Message, string.Empty);
+            args.Response = webview.Environment.CreateWebResourceResponse(null, StatusCodes.Status500InternalServerError, StatusCodes.GetStatusPhrase(StatusCodes.Status500InternalServerError), string.Empty);
 
         }
         //finally

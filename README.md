@@ -54,7 +54,7 @@ First of all, you should create a WinForm Application by using default project t
 
 **1. Replace initialization code by using WinFormedge application initialization procedure.**
 
-You should use `FormedgeApp` instead of `Application` class to initialize your WinForm application in the `program.cs` file. The `FormedgeApp` class is a builder for creating a WinFormedge application. It provides methods for configuring the application and running it.
+You should use `WinFormedgeApp` instead of `Application` class to initialize your WinForm application in the `program.cs` file. The `WinFormedgeApp` class is a builder for creating a WinFormedge application. It provides methods for configuring the application and running it.
 
 ```csharp
 using WinFormedge;
@@ -68,7 +68,7 @@ internal static class Program
     {
         ApplicationConfiguration.Initialize();
 
-        var app = FormedgeApp.CreateBuilder()
+        var app = WinFormedgeApp.CreateAppBuilder()
             .UseDevTools()
             .UseWinFormedgeApp<MyFormedgeApp>().Build();
 
@@ -77,13 +77,13 @@ internal static class Program
 }
 ```
 
-When the `FormedgeApp` class is created, it will automatically initialize the WebView2 environment and run the message loop.
+When the `WinFormedgeApp` class is created, it will automatically initialize the WebView2 environment and run the message loop.
 
 **2. Create a AppStartup class.**
 
 The `AppStartup` class is the entry point of your WinFormedge application. It provides methods for configuring the application. You can override the `OnApplicationLaunched` method to perform any initialization tasks before the application starts.
 
-And you must override the `OnApplicationStartup` method to create the main window of your application. If the `OnApplicationStartup` method returns values created by `StartupSettings` class, the `FormedgeApp` class will create the main window of your application. Otherwise if the `OnApplicationStartup` method returns `null` the application will be closed.
+And you must override the `OnApplicationStartup` method to create the main window of your application. If the `OnApplicationStartup` method returns values created by `StartupSettings` class, the `WinFormedgeApp` class will create the main window of your application. Otherwise if the `OnApplicationStartup` method returns `null` the application will be closed.
 
 ```csharp
 using WinFormedge;

@@ -77,7 +77,7 @@ internal sealed class WebResourceManager
 
         matchedHandlers = matchedHandlers.Where(x => uri.AbsolutePath.StartsWith(x.Uri.AbsolutePath));
 
-        var targetHandler = matchedHandlers.OrderBy(x => x.Uri.AbsolutePath.Length).FirstOrDefault();
+        var targetHandler = matchedHandlers.OrderByDescending(x => x.Uri.AbsolutePath.Length).FirstOrDefault();
 
         if (targetHandler == null)
         {
@@ -151,17 +151,20 @@ internal sealed class WebResourceManager
     /// <param name="hostName">The host name of the handler to unregister.</param>
     public void UnregisterWebResourceHander(string scheme, string hostName)
     {
-        var handler = Handlers.Find(x=>x.Scheme == scheme && x.HostName == hostName);
+        var handlers = Handlers
+            .Where(x => x.Scheme.Equals(scheme, StringComparison.InvariantCultureIgnoreCase)
+                && x.HostName.Equals(hostName, StringComparison.InvariantCultureIgnoreCase))
+            .ToList();
 
-        if (handler != null)
+        foreach (var handler in handlers)
         {
             Handlers.Remove(handler);
-        }
 
-        if (_initialized)
-        {
-            var url = GetFilterUrl(scheme, hostName);
-            _webView2!.RemoveWebResourceRequestedFilter(url + "*", CoreWebView2WebResourceContext.All);
+            if (_initialized)
+            {
+                var url = GetFilterUrl(handler.Scheme, handler.HostName);
+                _webView2!.RemoveWebResourceRequestedFilter(url + "*", handler.WebResourceContext);
+            }
         }
     }
 }
