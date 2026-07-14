@@ -7,7 +7,10 @@ on:
 jobs:
 
   build:
-
+    permissions:
+      id-token: write
+      contents: read
+      
     runs-on: windows-latest
 
     env:
