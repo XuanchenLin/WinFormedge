@@ -12,6 +12,7 @@ jobs:
       contents: read
       
     runs-on: windows-latest
+    environment: release
 
     env:
       Solution_Name: "WinFormedge.sln"
