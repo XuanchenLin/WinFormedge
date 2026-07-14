@@ -1,4 +1,4 @@
-﻿name: Build and Publish
+name: Build and Publish
 
 on:
   push:
@@ -56,7 +56,13 @@ jobs:
           $targetNugetExe = "nuget.exe"
           Invoke-WebRequest $sourceNugetExe -OutFile $targetNugetExe
 
+      - name: Nuget Authorization (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
       - name: Push Nuget package
         run: |
-          .\nuget.exe push .\bin\*.nupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_KEY }} -NoSymbols -SkipDuplicate
-          .\nuget.exe push .\bin\*.snupkg -Source https://api.nuget.org/v3/index.json -ApiKey ${{ secrets.NUGET_KEY }} -SkipDuplicate
+          .\nuget.exe push .\bin\*.nupkg -ApiKey ${{steps.login.outputs.NUGET_API_KEY}} -NoSymbols -SkipDuplicate -Source https://api.nuget.org/v3/index.json
+          .\nuget.exe push .\bin\*.snupkg -ApiKey ${{steps.login.outputs.NUGET_API_KEY}} -SkipDuplicate -Source https://api.nuget.org/v3/index.json
