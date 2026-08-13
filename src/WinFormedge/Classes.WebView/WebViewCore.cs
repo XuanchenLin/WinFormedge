@@ -1,4 +1,4 @@
-﻿// This file is part of the WinFormedge project.
+// This file is part of the WinFormedge project.
 // Copyright (c) 2025 Xuanchen Lin all rights reserved.
 // This project is licensed under the MIT License.
 // See the LICENSE file in the project root for more information.
@@ -249,7 +249,7 @@ internal partial class WebViewCore
 
         controller.ShouldDetectMonitorScaleChanges = true;
         controller.Bounds = Container.ClientRectangle;
-        controller.DefaultBackgroundColor = Color.Transparent;
+        controller.DefaultBackgroundColor = Container.BackColor; //Color.Transparent;
 
         var webview = controller!.CoreWebView2;
 
