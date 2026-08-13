@@ -1,4 +1,4 @@
-﻿// This file is part of the WinFormedge project.
+// This file is part of the WinFormedge project.
 // Copyright (c) 2025 Xuanchen Lin all rights reserved.
 // This project is licensed under the MIT License.
 // See the LICENSE file in the project root for more information.
@@ -73,12 +73,14 @@ public abstract partial class Formedge : IDisposable
                 {
                     ProfileName = ProfileName,
                     IsInPrivateMode = IsInPrivateMode,
+                    
                 };
 
 
 
-                WebView.WebViewCreated += (_, _) => WebViewCreatedCore();
+                WebView.WebViewCreated += (_, _) => WebViewCreatedCore(WindowStyleSettings);
                 WindowStyleSettings.WndProc += WebView.HostWndProc;
+
             }
 
             return _webViewCore;
@@ -804,7 +806,7 @@ public abstract partial class Formedge : IDisposable
     /// <summary>
     /// Called when the WebView2 browser is created. Sets up host objects, scripts, and event handlers.
     /// </summary>
-    private void WebViewCreatedCore()
+    private void WebViewCreatedCore(WindowSettings windowStyleSettings)
     {
         if (WebView.Browser == null) throw new InvalidOperationException();
 
@@ -813,10 +815,9 @@ public abstract partial class Formedge : IDisposable
         var controller = WebView.Controller;
         var webview = WebView.Browser;
 
-        controller.DefaultBackgroundColor = Color.Transparent;
+        controller.DefaultBackgroundColor = windowStyleSettings.BackColor;
 
         WebView.ConfigureSettings += ConfigureWebView2Settings;
-        //WebView.ConfigureProfile += ConfigureWebView2Profile;
         controller.GotFocus += OnGotFocus;
         controller.LostFocus += OnLostFocus;
 
